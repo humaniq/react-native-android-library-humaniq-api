@@ -6,8 +6,8 @@ This project implements API of Humaniq Mobile for react engine.
 3. Link the library:
     * Add the following to `android/settings.gradle`:
         ```
-        include ':react-native-android-library-boilerplate'
-        project(':react-native-android-library-boilerplate').projectDir = new File(settingsDir, '../node_modules/react-native-android-library-humaniq-api')
+        include ':react-native-android-library-humaniq-api'
+        project(':react-native-android-library-humaniq-api').projectDir = new File(settingsDir, '../node_modules/react-native-android-library-humaniq-api')
         ```
 
     * Add the following to `android/app/build.gradle`:
