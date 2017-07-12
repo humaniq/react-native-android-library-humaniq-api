@@ -16,7 +16,7 @@ import retrofit2.http.Path;
 
 import com.humaniq.apilib.models.AddressState;
 import com.humaniq.apilib.models.response.BaseResponse;
-import com.humaniq.apilib.models.response.Transaction;
+import com.humaniq.apilib.models.Transaction;
 
 /**
  * Wallet service
