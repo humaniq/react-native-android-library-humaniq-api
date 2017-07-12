@@ -29,17 +29,10 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
     private static final String DURATION_SHORT_KEY = "SHORT";
     private static final String DURATION_LONG_KEY = "LONG";
-    com.facebook.react.bridge.Callback callback;
 
     public ProfileModule(ReactApplicationContext reactContext) {
         super(reactContext);
         ServiceBuilder.init();
-        callback = new com.facebook.react.bridge.Callback() {
-            @Override
-            public void invoke(Object... args) {
-
-            }
-        };
     }
 
     @Override

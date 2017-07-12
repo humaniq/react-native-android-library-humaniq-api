@@ -27,7 +27,7 @@ public class Package implements ReactPackage {
             ReactApplicationContext reactContext) {
         List<NativeModule> modules = new ArrayList<>();
 
-        modules.add(new Module(reactContext));
+//        modules.add(new Module(reactContext));
         modules.add(new ProfileModule(reactContext));
 
         return modules;
