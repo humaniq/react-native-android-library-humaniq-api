@@ -2,7 +2,7 @@
 This project implements API of Humaniq Mobile for react engine.
 
 ## Getting started
-1. Do `npm install --save git+https://github.com/gritsay/react-native-android-library-humaniq-api.git` in your main project.
+1. Do `npm install --save git+https://github.com/humaniq/react-native-android-library-humaniq-api.git` in your main project.
 3. Link the library:
     * Add the following to `android/settings.gradle`:
         ```
