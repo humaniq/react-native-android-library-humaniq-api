@@ -43,3 +43,9 @@ This project implements API of Humaniq Mobile for react engine.
     HumaniqApiLib.show('Boilerplate runs fine', HumaniqApiLib.LONG)
     ```
 5. You can test and develop your library by importing the `node_modules` library into **Android Studio** if you don't want to install it from _git_ all the time.
+
+
+or 
+
+
+react-native link
