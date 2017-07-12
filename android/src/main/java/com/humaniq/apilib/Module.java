@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.humaniq.apilib.services.ServiceBuilder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,6 +17,8 @@ public class Module extends ReactContextBaseJavaModule {
 
   public Module(ReactApplicationContext reactContext) {
     super(reactContext);
+    ServiceBuilder.init();
+
   }
 
   @Override
