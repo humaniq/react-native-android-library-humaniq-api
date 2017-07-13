@@ -51,8 +51,9 @@ public class Module extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void show(String message, int duration) {
-    Toast.makeText(getReactApplicationContext(), message, duration).show();
+  public void show(String message) {
+    Toast.makeText(getReactApplicationContext(), message,
+    Toast.LENGTH_LONG).show();
   }
 
   @ReactMethod
@@ -79,6 +80,7 @@ public class Module extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getTransactions(String id, final Promise promise) {
+ ServiceBuilder.init();
     ServiceBuilder.getProfileService().getAddressTransactions(id)
             .enqueue(new retrofit2.Callback<BaseResponse<List<Transaction>>>() {
               @Override
@@ -93,16 +95,17 @@ public class Module extends ReactContextBaseJavaModule {
                     collectionTransaction.putString("transaction", collectionTransaction.getString("transaction"));
                     collectionTransaction.putInt("type", collectionTransaction.getInt("type"));
                     collectionTransaction.putInt("status", collectionTransaction.getInt("status"));
-                    collectionTransaction.putInt("amount", collectionTransaction.getInt("amount"));
-                    collectionTransaction.putInt("receivedTransactions", collectionTransaction.getInt("receivedTransactions"));
-                    collectionTransaction.putInt("sentTransactions", collectionTransaction.getInt("sentTransactions"));
-                    collectionTransaction.putInt("invalidTransactions", collectionTransaction.getInt("invalidTransactions"));
-                    collectionTransaction.putInt("timestamp", collectionTransaction.getInt("timestamp"));
+                    collectionTransaction.putString("amount", collectionTransaction.getString("amount"));
+                    collectionTransaction.putInt("receivedTransactions", collectionTransaction.getInt("received_transactions"));
+                    collectionTransaction.putInt("sentTransactions", collectionTransaction.getInt("sent_transactions"));
+                    //collectionTransaction.putInt("invalidTransactions", collectionTransaction.getInt("invalid_transactions"));
+                  //  collectionTransaction.putInt("timestamp", collectionTransaction.getInt("timestamp"));
                     array.pushMap(collectionTransaction);
                   }
+//Toast.makeText(getReactApplicationContext(),"hello", Toast.LENGTH_SHORT).show();
+                 promise.resolve(array);
 
-                  promise.resolve(array);
-                } catch (JSONException e) {
+} catch (JSONException e) {
                   promise.reject("", e);
                 }
               }

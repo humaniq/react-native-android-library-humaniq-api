@@ -29,18 +29,18 @@ public class ProfileModuleTest extends TestCase {
     private CountDownLatch lock = new CountDownLatch(1);
     public void testGetTransactions() throws Exception {
 
-        ServiceBuilder.init();
-        ServiceBuilder.getProfileService().getAddressTransactions("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
-                .enqueue(new Callback<BaseResponse<List<Transaction>>>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse<List<Transaction>>> call,
-                                           Response<BaseResponse<List<Transaction>>> response) {
+//        ServiceBuilder.init();
+//        ServiceBuilder.getProfileService().getAddressTransactions("0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+//                .enqueue(new Callback<BaseResponse<List<Transaction>>>() {
+//                    @Override
+//                    public void onResponse(Call<BaseResponse<List<Transaction>>> call,
+//                                           Response<BaseResponse<List<Transaction>>> response) {
 
                         try {
                             WritableArray array = new WritableNativeArray();
 
-                            for(Transaction transaction : response.body().data) {
-                                WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(transaction.toJsonString()));
+//                            for(Transaction transaction : response.body().data) {
+                                WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(new Transaction().toJsonString()));
                                 collectionTransaction.putString("transaction", collectionTransaction.getString("transaction"));
                                 collectionTransaction.putInt("type", collectionTransaction.getInt("type"));
                                 collectionTransaction.putInt("status", collectionTransaction.getInt("status"));
@@ -50,24 +50,24 @@ public class ProfileModuleTest extends TestCase {
                                 collectionTransaction.putInt("invalidTransactions", collectionTransaction.getInt("invalidTransactions"));
                                 collectionTransaction.putInt("timestamp", collectionTransaction.getInt("timestamp"));
                                 array.pushMap(collectionTransaction);
-                            }
+//                            }
 
                             array.toString();
 //                            promise.resolve(array);
                         } catch (JSONException e) {
 //                            promise.reject("", e);
                         }
-                    }
+//                    }
 
-                    @Override
-                    public void onFailure(Call<BaseResponse<List<Transaction>>> call,
-                                          Throwable t) {
+//                    @Override
+//                    public void onFailure(Call<BaseResponse<List<Transaction>>> call,
+//                                          Throwable t) {
+//
+////                        promise.reject("", t);
+//                    }
+//                });
 
-//                        promise.reject("", t);
-                    }
-                });
-
-        lock.await(200000, TimeUnit.MILLISECONDS);
+//        lock.await(200000, TimeUnit.MILLISECONDS);
     }
 
 }

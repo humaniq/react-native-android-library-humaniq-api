@@ -1,27 +1,88 @@
 {
-  "name": "react-native-android-library-humaniq-api",
-  "version": "0.0.2",
-  "author": "Alex Gritsay aleksandr.gritsay@gmail.com",
-  "private": false,
-  "license": "Unlicense",
-  "repository": {
-    "type": "git",
-    "url": ""
+  "_args": [
+    [
+      {
+        "raw": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+        "scope": null,
+        "escapedName": null,
+        "name": null,
+        "rawSpec": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+        "spec": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+        "type": "hosted",
+        "hosted": {
+          "type": "github",
+          "ssh": "git@github.com:humaniq/react-native-android-library-humaniq-api.git",
+          "sshUrl": "git+ssh://git@github.com/humaniq/react-native-android-library-humaniq-api.git",
+          "httpsUrl": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+          "gitUrl": "git://github.com/humaniq/react-native-android-library-humaniq-api.git",
+          "shortcut": "github:humaniq/react-native-android-library-humaniq-api",
+          "directUrl": "https://raw.githubusercontent.com/humaniq/react-native-android-library-humaniq-api/master/package.json"
+        }
+      },
+      "/home/ognev/Projects/shopify/AwesomeProject"
+    ]
+  ],
+  "_from": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+  "_id": "react-native-android-library-humaniq-api@0.0.2",
+  "_inCache": true,
+  "_location": "/react-native-android-library-humaniq-api",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+    "scope": null,
+    "escapedName": null,
+    "name": null,
+    "rawSpec": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+    "spec": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+    "type": "hosted",
+    "hosted": {
+      "type": "github",
+      "ssh": "git@github.com:humaniq/react-native-android-library-humaniq-api.git",
+      "sshUrl": "git+ssh://git@github.com/humaniq/react-native-android-library-humaniq-api.git",
+      "httpsUrl": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+      "gitUrl": "git://github.com/humaniq/react-native-android-library-humaniq-api.git",
+      "shortcut": "github:humaniq/react-native-android-library-humaniq-api",
+      "directUrl": "https://raw.githubusercontent.com/humaniq/react-native-android-library-humaniq-api/master/package.json"
+    }
   },
-  "bugs": {
-    "url": ""
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git#01df6c8b5f108ac4e89155de5b5c17b02cd6f955",
+  "_shasum": "77fab916a0aa44e9ab6cf2a027c76bf64a142a79",
+  "_shrinkwrap": null,
+  "_spec": "git+https://github.com/humaniq/react-native-android-library-humaniq-api.git",
+  "_where": "/home/ognev/Projects/shopify/AwesomeProject",
+  "author": {
+    "name": "Alex Gritsay aleksandr.gritsay@gmail.com"
   },
+  "dependencies": {},
+  "description": "This project implements API of Humaniq Mobile for react engine.",
+  "devDependencies": {},
+  "gitHead": "01df6c8b5f108ac4e89155de5b5c17b02cd6f955",
   "homepage": "",
   "keywords": [
     "react-native",
     "android",
     "library"
   ],
+  "license": "Unlicense",
+  "name": "react-native-android-library-humaniq-api",
+  "optionalDependencies": {},
+  "peerDependencies": {
+    "react-native": ">=0.38.0"
+  },
+  "private": false,
+  "readme": "## React Native Android Humaniq API implementation\nThis project implements API of Humaniq Mobile for react engine.\n\n## Getting started\n1. Do `npm install --save git+https://github.com/humaniq/react-native-android-library-humaniq-api.git` in your main project.\n3. Link the library:\n    * Add the following to `android/settings.gradle`:\n        ```\n        include ':react-native-android-library-humaniq-api'\n        project(':react-native-android-library-humaniq-api').projectDir = new File(settingsDir, '../node_modules/react-native-android-library-humaniq-api')\n        ```\n\n    * Add the following to `android/app/build.gradle`:\n        ```xml\n        ...\n\n        dependencies {\n            ...\n            compile project(':react-native-android-library-humaniq-api')\n        }\n        ```\n    * Add the following to `android/app/src/main/java/**/MainApplication.java`:\n        ```java\n        package com.motivation;\n\n        import io.cmichel.boilerplate.Package;  // add this for react-native-android-library-humaniq-api\n\n        public class MainApplication extends Application implements ReactApplication {\n\n            @Override\n            protected List<ReactPackage> getPackages() {\n                return Arrays.<ReactPackage>asList(\n                    new MainReactPackage(),\n                    new Package()     // add this for react-native-android-library-humaniq-api\n                );\n            }\n        }\n        ```\n4. Simply `import/require` it by the name defined in your library's `package.json`:\n\n    ```javascript\n    import HumaniqApiLib from 'react-native-android-library-humaniq-api'\n    HumaniqApiLib.show('Boilerplate runs fine', HumaniqApiLib.LONG)\n    ```\n5. You can test and develop your library by importing the `node_modules` library into **Android Studio** if you don't want to install it from _git_ all the time.\n\n\nor \n\n\nreact-native link",
+  "readmeFilename": "README.md",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest"
   },
-  "peerDependencies": {
-    "react-native": ">=0.38.0"
-  }
+  "version": "0.0.4"
 }

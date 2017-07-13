@@ -42,10 +42,16 @@ repositories {
 dependencies {
     testCompile 'junit:junit:4.12'
 
+//    compile 'com.facebook.react:react-native:+'
+//    compile 'com.squareup.retrofit2:retrofit:2.3.0'
+//    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
+//    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+//    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
     compile 'com.facebook.react:react-native:+'
-    compile 'com.squareup.retrofit2:retrofit:2.3.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
-    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    compile 'com.squareup.retrofit2:retrofit:+'
+    compile 'com.squareup.okhttp3:logging-interceptor:+'
+    compile group: 'com.google.code.gson', name: 'gson', version: '+'
+    compile 'com.squareup.retrofit2:converter-gson:+'
 }
 
