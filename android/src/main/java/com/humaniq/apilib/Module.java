@@ -96,7 +96,7 @@ public class Module extends ReactContextBaseJavaModule {
               "        type: 0," +
               "        name: \"Антон\"," +
               "        surname: \"Петров\"," +
-              "        pic: '\"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+              "        pic: \"http://www.gstatic.com/webp/gallery/5.jpg\"," +
               "        time: '15.07.2017'," +
               "        currency: 'HMQ'" +
               "    }"));
@@ -144,12 +144,12 @@ public class Module extends ReactContextBaseJavaModule {
               "        time: '16.07.2017'," +
               "        currency: 'HMQ'" +
               "    }"));
-
+      writableArray.pushMap(collectionTransaction4);
+      writableArray.pushMap(collectionTransaction5);
       writableArray.pushMap(collectionTransaction1);
       writableArray.pushMap(collectionTransaction2);
       writableArray.pushMap(collectionTransaction3);
-      writableArray.pushMap(collectionTransaction4);
-      writableArray.pushMap(collectionTransaction5);
+
     } catch (JSONException e) {
       e.printStackTrace();
     }
