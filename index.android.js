@@ -2,5 +2,7 @@
 
 import { NativeModules } from 'react-native'
 // name as defined via ReactContextBaseJavaModule's getName
-module.exports = NativeModules.HumaniqApiLib
+const { HumaniqApiLib } = NativeModules
+const { HumaniqProfileApiLib } = NativeModules
+//module.exports = NativeModules.HumaniqApiLib
 

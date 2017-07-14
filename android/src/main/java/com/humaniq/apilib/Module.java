@@ -2,7 +2,6 @@ package com.humaniq.apilib;
 
 import android.widget.Toast;
 
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -10,6 +9,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.google.gson.Gson;
 import com.humaniq.apilib.constructor.ModelUtils;
 import com.humaniq.apilib.models.AddressState;
 import com.humaniq.apilib.models.Transaction;
@@ -60,12 +60,13 @@ public class Module extends ReactContextBaseJavaModule {
   public void getAddressState(String id, final Promise promise) {
     ServiceBuilder.getProfileService().
             getAddressState(id)
-            .enqueue(new retrofit2.Callback<BaseResponse<String>>() {
+            .enqueue(new retrofit2.Callback<BaseResponse<AddressState>>() {
               @Override
-              public void onResponse(Call<BaseResponse<String>> call,
-                                     Response<BaseResponse<String>> response) {
+              public void onResponse(Call<BaseResponse<AddressState>> call,
+                                     Response<BaseResponse<AddressState>> response) {
                 try {
-                  WritableMap addressState = ModelUtils.convertJsonToMap(new JSONObject(response.body().data));
+                  WritableMap addressState =
+                          ModelUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
 
                   promise.resolve(addressState);
 
@@ -75,7 +76,7 @@ public class Module extends ReactContextBaseJavaModule {
               }
 
               @Override
-              public void onFailure(Call<BaseResponse<String>> call,
+              public void onFailure(Call<BaseResponse<AddressState>> call,
                                     Throwable t) {
                 promise.reject(t);
               }
