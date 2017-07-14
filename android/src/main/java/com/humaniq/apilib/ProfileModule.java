@@ -187,11 +187,12 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                     "        time: '17.07.2017'," +
                     "        currency: 'HMQ'" +
                     "    }"));
-            writableArray.pushMap(collectionTransaction4);
-            writableArray.pushMap(collectionTransaction5);
+
             writableArray.pushMap(collectionTransaction6);
             writableArray.pushMap(collectionTransaction7);
             writableArray.pushMap(collectionTransaction8);
+            writableArray.pushMap(collectionTransaction4);
+            writableArray.pushMap(collectionTransaction5);
             writableArray.pushMap(collectionTransaction1);
             writableArray.pushMap(collectionTransaction2);
             writableArray.pushMap(collectionTransaction3);
