@@ -86,43 +86,45 @@ public class Module extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getTransactions(String id, final Promise promise) {
- ServiceBuilder.init();
-    ServiceBuilder.getProfileService().getAddressTransactions(id)
-            .enqueue(new retrofit2.Callback<BaseResponse<List<Transaction>>>() {
-              @Override
-              public void onResponse(Call<BaseResponse<List<Transaction>>> call,
-                                     Response<BaseResponse<List<Transaction>>> response) {
 
-                try {
-                  WritableArray array = new WritableNativeArray();
-
-                  for(Transaction transaction : response.body().data) {
-                    WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(transaction.toJsonString()));
-                    collectionTransaction.putString("transaction", collectionTransaction.getString("transaction"));
-                    collectionTransaction.putInt("type", collectionTransaction.getInt("type"));
-                    collectionTransaction.putInt("status", collectionTransaction.getInt("status"));
-                    collectionTransaction.putString("amount", collectionTransaction.getString("amount"));
-                    collectionTransaction.putInt("receivedTransactions", collectionTransaction.getInt("received_transactions"));
-                    collectionTransaction.putInt("sentTransactions", collectionTransaction.getInt("sent_transactions"));
-                    //collectionTransaction.putInt("invalidTransactions", collectionTransaction.getInt("invalid_transactions"));
-                  //  collectionTransaction.putInt("timestamp", collectionTransaction.getInt("timestamp"));
-                    array.pushMap(collectionTransaction);
-                  }
-//Toast.makeText(getReactApplicationContext(),"hello", Toast.LENGTH_SHORT).show();
-                 promise.resolve(array);
-
-} catch (JSONException e) {
-                  promise.reject("", e);
-                }
-              }
-
-              @Override
-              public void onFailure(Call<BaseResponse<List<Transaction>>> call,
-                                    Throwable t) {
-
-                promise.reject("", t);
-              }
-            });
+    WritableArray writableArray = new WritableNativeArray();
+//    WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(""));
+//    ServiceBuilder.getProfileService().getAddressTransactions(id)
+//            .enqueue(new retrofit2.Callback<BaseResponse<List<Transaction>>>() {
+//              @Override
+//              public void onResponse(Call<BaseResponse<List<Transaction>>> call,
+//                                     Response<BaseResponse<List<Transaction>>> response) {
+//
+//                try {
+//                  WritableArray array = new WritableNativeArray();
+//
+//                  for(Transaction transaction : response.body().data) {
+//                    WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(transaction.toJsonString()));
+//                    collectionTransaction.putString("transaction", collectionTransaction.getString("transaction"));
+//                    collectionTransaction.putInt("type", collectionTransaction.getInt("type"));
+//                    collectionTransaction.putInt("status", collectionTransaction.getInt("status"));
+//                    collectionTransaction.putString("amount", collectionTransaction.getString("amount"));
+//                    collectionTransaction.putInt("receivedTransactions", collectionTransaction.getInt("received_transactions"));
+//                    collectionTransaction.putInt("sentTransactions", collectionTransaction.getInt("sent_transactions"));
+//                    //collectionTransaction.putInt("invalidTransactions", collectionTransaction.getInt("invalid_transactions"));
+//                  //  collectionTransaction.putInt("timestamp", collectionTransaction.getInt("timestamp"));
+//                    array.pushMap(collectionTransaction);
+//                  }
+////Toast.makeText(getReactApplicationContext(),"hello", Toast.LENGTH_SHORT).show();
+//                 promise.resolve(array);
+//
+//} catch (JSONException e) {
+//                  promise.reject("", e);
+//                }
+//              }
+//
+//              @Override
+//              public void onFailure(Call<BaseResponse<List<Transaction>>> call,
+//                                    Throwable t) {
+//
+//                promise.reject("", t);
+//              }
+//            });
   }
 
 }

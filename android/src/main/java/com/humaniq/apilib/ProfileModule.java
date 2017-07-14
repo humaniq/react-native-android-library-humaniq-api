@@ -87,33 +87,33 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                     }
                 });
     }
-
-    @ReactMethod
-    public void getAddressState(String id, final Promise promise) {
-        ServiceBuilder.getProfileService().
-                getAddressState("0x1111111111111111111111111111111111111111")
-                .enqueue(new retrofit2.Callback<BaseResponse<String>>() {
-                    @Override
-                    public void onResponse(Call<BaseResponse<String>> call,
-                                           Response<BaseResponse<String>> response) {
-                        try {
-                            WritableMap addressState = ModelUtils.convertJsonToMap(new JSONObject(response.body().data));
-
-                            promise.resolve(addressState);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<BaseResponse<String>> call,
-                                          Throwable t) {
-                        promise.reject(t);
-                    }
-                });
-
-    }
+//
+//    @ReactMethod
+//    public void getAddressState(String id, final Promise promise) {
+//        ServiceBuilder.getProfileService().
+//                getAddressState("0x1111111111111111111111111111111111111111")
+//                .enqueue(new retrofit2.Callback<BaseResponse<String>>() {
+//                    @Override
+//                    public void onResponse(Call<BaseResponse<String>> call,
+//                                           Response<BaseResponse<String>> response) {
+//                        try {
+//                            WritableMap addressState = ModelUtils.convertJsonToMap(new JSONObject(response.body().data));
+//
+//                            promise.resolve(addressState);
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<BaseResponse<String>> call,
+//                                          Throwable t) {
+//                        promise.reject(t);
+//                    }
+//                });
+//
+//    }
 
 
 }
