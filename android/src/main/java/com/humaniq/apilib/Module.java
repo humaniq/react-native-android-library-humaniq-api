@@ -66,7 +66,6 @@ public class Module extends ReactContextBaseJavaModule {
                       "  }"));
 
       promise.resolve(balanceMock);
-      promise.resolve(balanceMock);
 
     } catch (JSONException e) {
       e.printStackTrace();
