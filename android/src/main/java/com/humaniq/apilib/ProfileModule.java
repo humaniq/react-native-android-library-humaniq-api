@@ -16,6 +16,22 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+*
+* import HumaniqApiLib from 'react-native-android-library-humaniq-api'
+import HumaniqProfileApiLib from 'react-native-android-library-humaniq-api'
+* HumaniqProfileApiLib.getTransactions('0x1111111111111111111111111111111111111111').then((addressState) => {
+      // console.log(array);
+      console.warn(JSON.stringify(addressState))
+        //HumaniqApiLib.show(addressState.address);
+    });
+
+
+        HumaniqApiLib.getTransactions('0x1111111111111111111111111111111111111111').then((array) => {
+          // console.log(array);
+          console.warn(JSON.stringify(array))
+            // HumaniqApiLib.show(array[0].name);
+        });*/
 public class ProfileModule extends ReactContextBaseJavaModule {
 
     public ProfileModule(ReactApplicationContext reactContext) {
@@ -98,7 +114,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             WritableMap collectionTransaction2 = ModelConverterUtils.convertJsonToMap(new JSONObject("{" +
                     "        phone: \"+1 (646) 883 99 11\"," +
                     "        amount: \"+30.01\"," +
-                    "        type: 0," +
+                    "        type: 1," +
                     "        name: \"Сергей\"," +
                     "        surname: \"Павлов\"," +
                     "        pic: \"http://www.gstatic.com/webp/gallery/2.jpg\"," +
@@ -138,8 +154,44 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                     "        time: '16.07.2017'," +
                     "        currency: 'HMQ'" +
                     "    }"));
+
+            WritableMap collectionTransaction6 = ModelConverterUtils.convertJsonToMap(new JSONObject("{" +
+                    "        phone: \"+1 (678) 890 55 34\"," +
+                    "        amount: \"-9.09\"," +
+                    "        type: 1," +
+                    "        name: \"Кирил\"," +
+                    "        surname: \"Романенко\"," +
+                    "        pic: \"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+                    "        time: '17.07.2017'," +
+                    "        currency: 'HMQ'" +
+                    "    }"));
+
+            WritableMap collectionTransaction7 = ModelConverterUtils.convertJsonToMap(new JSONObject("{" +
+                    "        phone: \"+1 (678) 890 55 34\"," +
+                    "        amount: \"-31.00\"," +
+                    "        type: 0," +
+                    "        name: \"Анастасия\"," +
+                    "        surname: \"Минеева\"," +
+                    "        pic: \"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+                    "        time: '17.07.2017'," +
+                    "        currency: 'HMQ'" +
+                    "    }"));
+
+            WritableMap collectionTransaction8 = ModelConverterUtils.convertJsonToMap(new JSONObject("{" +
+                    "        phone: \"+1 (678) 890 55 34\"," +
+                    "        amount: \"-20.01\"," +
+                    "        type: 1," +
+                    "        name: \"Мария\"," +
+                    "        surname: \"Коржун\"," +
+                    "        pic: \"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+                    "        time: '17.07.2017'," +
+                    "        currency: 'HMQ'" +
+                    "    }"));
             writableArray.pushMap(collectionTransaction4);
             writableArray.pushMap(collectionTransaction5);
+            writableArray.pushMap(collectionTransaction6);
+            writableArray.pushMap(collectionTransaction7);
+            writableArray.pushMap(collectionTransaction8);
             writableArray.pushMap(collectionTransaction1);
             writableArray.pushMap(collectionTransaction2);
             writableArray.pushMap(collectionTransaction3);
