@@ -58,29 +58,43 @@ public class Module extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void getAddressState(String id, final Promise promise) {
-    ServiceBuilder.getProfileService().
-            getAddressState(id)
-            .enqueue(new retrofit2.Callback<BaseResponse<AddressState>>() {
-              @Override
-              public void onResponse(Call<BaseResponse<AddressState>> call,
-                                     Response<BaseResponse<AddressState>> response) {
-                try {
-                  WritableMap addressState =
-                          ModelUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+    try {
+      WritableMap balanceMock =
+              ModelUtils.convertJsonToMap(new JSONObject(" {" +
+                      "    \"HMQ\": 190.6," +
+                      "    \"USD\": 22.62422" +
+                      "  }"));
 
-                  promise.resolve(addressState);
+      promise.resolve(balanceMock);
+      promise.resolve(balanceMock);
 
-                } catch (JSONException e) {
-                  e.printStackTrace();
-                }
-              }
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
 
-              @Override
-              public void onFailure(Call<BaseResponse<AddressState>> call,
-                                    Throwable t) {
-                promise.reject(t);
-              }
-            });
+//    ServiceBuilder.getProfileService().
+//            getAddressState(id)
+//            .enqueue(new retrofit2.Callback<BaseResponse<AddressState>>() {
+//              @Override
+//              public void onResponse(Call<BaseResponse<AddressState>> call,
+//                                     Response<BaseResponse<AddressState>> response) {
+//                try {
+//                  WritableMap addressState =
+//                          ModelUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+//
+//                  promise.resolve(addressState);
+//
+//                } catch (JSONException e) {
+//                  e.printStackTrace();
+//                }
+//              }
+//
+//              @Override
+//              public void onFailure(Call<BaseResponse<AddressState>> call,
+//                                    Throwable t) {
+//                promise.reject(t);
+//              }
+//            });
 
   }
 
