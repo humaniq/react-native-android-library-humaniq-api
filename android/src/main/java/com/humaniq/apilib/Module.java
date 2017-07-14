@@ -88,7 +88,73 @@ public class Module extends ReactContextBaseJavaModule {
   public void getTransactions(String id, final Promise promise) {
 
     WritableArray writableArray = new WritableNativeArray();
-//    WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(""));
+    try {
+
+      WritableMap collectionTransaction1 = ModelUtils.convertJsonToMap(new JSONObject("{" +
+              "        phone: \"+1 (416) 464 71 35\"," +
+              "        amount: \"+12.08\"," +
+              "        type: 0," +
+              "        name: \"Антон\"," +
+              "        surname: \"Петров\"," +
+              "        pic: '\"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+              "        time: '15.07.2017'," +
+              "        currency: 'HMQ'" +
+              "    }"));
+
+      WritableMap collectionTransaction2 = ModelUtils.convertJsonToMap(new JSONObject("{" +
+              "        phone: \"+1 (646) 883 99 11\"," +
+              "        amount: \"+30.01\"," +
+              "        type: 0," +
+              "        name: \"Сергей\"," +
+              "        surname: \"Павлов\"," +
+              "        pic: \"http://www.gstatic.com/webp/gallery/2.jpg\"," +
+              "        time: '15.07.2017'," +
+              "        currency: 'HMQ'" +
+              "    }"));
+
+      WritableMap collectionTransaction3 = ModelUtils.convertJsonToMap(new JSONObject("{" +
+              "        phone: \"+1 (707) 715 55 11\"," +
+              "        amount: \"+20.44\"," +
+              "        type: 0," +
+              "        name: \"Анатолий\"," +
+              "        surname: \"Романов\"," +
+              "        pic: \"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+              "        time: '15.07.2017'," +
+              "        currency: 'HMQ'" +
+              "    }"));
+
+      WritableMap collectionTransaction4 = ModelUtils.convertJsonToMap(new JSONObject("{" +
+              "        phone: \"+1 (808) 890 55 11\"," +
+              "        amount: \"+45.09\"," +
+              "        type: 0," +
+              "        name: \"Анатолий\"," +
+              "        surname: \"Романов\"," +
+              "        pic: \"http://www.gstatic.com/webp/gallery/2.jpg\"," +
+              "        time: '16.07.2017'," +
+              "        currency: 'HMQ'" +
+              "    }"));
+
+      WritableMap collectionTransaction5 = ModelUtils.convertJsonToMap(new JSONObject("{" +
+              "        phone: \"+1 (808) 890 55 11\"," +
+              "        amount: \"+99.09\"," +
+              "        type: 0," +
+              "        name: \"Иван\"," +
+              "        surname: \"Сергеев\"," +
+              "        pic: \"http://www.gstatic.com/webp/gallery/5.jpg\"," +
+              "        time: '16.07.2017'," +
+              "        currency: 'HMQ'" +
+              "    }"));
+
+      writableArray.pushMap(collectionTransaction1);
+      writableArray.pushMap(collectionTransaction2);
+      writableArray.pushMap(collectionTransaction3);
+      writableArray.pushMap(collectionTransaction4);
+      writableArray.pushMap(collectionTransaction5);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    promise.resolve(writableArray);
 //    ServiceBuilder.getProfileService().getAddressTransactions(id)
 //            .enqueue(new retrofit2.Callback<BaseResponse<List<Transaction>>>() {
 //              @Override
