@@ -50,7 +50,7 @@ or
 
 react-native link
 
-#IMPORTANT!
+## IMPORTANT!
 If build failed with:
 
       ```UNEXPECTED TOP-LEVEL EXCEPTION:
