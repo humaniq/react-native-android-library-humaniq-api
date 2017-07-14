@@ -18,7 +18,7 @@ import java.util.Iterator;
  * Created by ognev on 7/12/17.
  */
 
-public class ModelUtils {
+public class ModelConverterUtils {
 
     public static WritableMap convertJsonToMap(JSONObject jsonObject) throws JSONException {
         WritableMap map = new WritableNativeMap();

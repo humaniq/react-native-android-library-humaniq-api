@@ -1,26 +1,17 @@
 package com.humaniq.apilib;
 
-import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
-import com.humaniq.apilib.constructor.ModelUtils;
+import com.humaniq.apilib.constructor.ModelConverterUtils;
 import com.humaniq.apilib.models.Transaction;
-import com.humaniq.apilib.models.response.BaseResponse;
-import com.humaniq.apilib.services.ServiceBuilder;
 
 import junit.framework.TestCase;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by ognev on 7/12/17.
@@ -40,7 +31,7 @@ public class ProfileModuleTest extends TestCase {
                             WritableArray array = new WritableNativeArray();
 
 //                            for(Transaction transaction : response.body().data) {
-                                WritableMap collectionTransaction = ModelUtils.convertJsonToMap(new JSONObject(new Transaction().toJsonString()));
+                                WritableMap collectionTransaction = ModelConverterUtils.convertJsonToMap(new JSONObject(new Transaction().toJsonString()));
                                 collectionTransaction.putString("transaction", collectionTransaction.getString("transaction"));
                                 collectionTransaction.putInt("type", collectionTransaction.getInt("type"));
                                 collectionTransaction.putInt("status", collectionTransaction.getInt("status"));
