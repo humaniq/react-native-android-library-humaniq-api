@@ -25,7 +25,7 @@ import com.humaniq.apilib.models.Transaction;
 public interface WalletService {
 
     @GET("get/address/state/{id}")
-    Call<BaseResponse<AddressState>> getAddressState(@Path("id") String id);
+    Call<BaseResponse<String>> getAddressState(@Path("id") String id);
 
     @GET("get/address/transactions/{id}")
     Call<BaseResponse<List<Transaction>>> getAddressTransactions(@Path("id") String id);

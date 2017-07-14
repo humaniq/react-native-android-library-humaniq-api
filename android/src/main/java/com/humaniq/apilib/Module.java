@@ -57,24 +57,29 @@ public class Module extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void stateResponseCall(Callback errorCallback,
-                                final Callback successCallbac) {
+  public void getAddressState(String id, final Promise promise) {
+    ServiceBuilder.getProfileService().
+            getAddressState(id)
+            .enqueue(new retrofit2.Callback<BaseResponse<String>>() {
+              @Override
+              public void onResponse(Call<BaseResponse<String>> call,
+                                     Response<BaseResponse<String>> response) {
+                try {
+                  WritableMap addressState = ModelUtils.convertJsonToMap(new JSONObject(response.body().data));
 
-    Call<BaseResponse<AddressState>> stateResponseCall =
-            ServiceBuilder.getProfileService().
-                    getAddressState("0x1111111111111111111111111111111111111111");
+                  promise.resolve(addressState);
 
-    stateResponseCall.enqueue(new retrofit2.Callback<BaseResponse<AddressState>>() {
-      @Override
-      public void onResponse(Call<BaseResponse<AddressState>> call, Response<BaseResponse<AddressState>> response) {
-        successCallbac.invoke(response.body());
-      }
+                } catch (JSONException e) {
+                  e.printStackTrace();
+                }
+              }
 
-      @Override
-      public void onFailure(Call<BaseResponse<AddressState>> call, Throwable t) {
-        successCallbac.invoke(t.getLocalizedMessage());
-      }
-    });
+              @Override
+              public void onFailure(Call<BaseResponse<String>> call,
+                                    Throwable t) {
+                promise.reject(t);
+              }
+            });
 
   }
 
