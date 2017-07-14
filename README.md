@@ -49,3 +49,13 @@ or
 
 
 react-native link
+
+## IMPORTANT!
+If build failed with:
+
+     UNEXPECTED TOP-LEVEL EXCEPTION:
+         com.android.dex.DexException: Multiple dex files define Lokhttp3/internal/ws/RealWebSocket$1;
+
+Exclude okhttp module in app build.gradle file(android/app/build.gradle):
+         
+      compile (project(':react-native-android-library-humaniq-api')) {exclude module: 'okhttp'}
