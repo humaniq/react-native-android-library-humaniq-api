@@ -30,6 +30,7 @@ public class Package implements ReactPackage {
         modules.add(new Module(reactContext));
         modules.add(new ProfileModule(reactContext));
         modules.add(new DownloadModule(reactContext));
+        modules.add(new ContactsModule(reactContext));
 
         return modules;
     }

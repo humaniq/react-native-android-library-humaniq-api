@@ -1,4 +1,4 @@
-package com.humaniq.apilib.services;
+package com.humaniq.apilib.services.restService;
 
 /**
  * Created by gritsay on 7/12/17.
@@ -23,13 +23,13 @@ public class ServiceBuilder {
 
     }
 
-    public static void init() {
+    public static void init(String baseURL) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(C.BASE_URL)
+                .baseUrl(baseURL)
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -37,5 +37,9 @@ public class ServiceBuilder {
 
     public static WalletService getProfileService() {
         return retrofit.create(WalletService.class);
+    }
+
+    public static ContactService getContactsService() {
+        return retrofit.create(ContactService.class);
     }
 }
