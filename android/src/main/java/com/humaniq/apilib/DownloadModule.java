@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.facebook.common.internal.Files;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -18,12 +19,15 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.humaniq.apilib.constructor.ModelConverterUtils;
 import com.humaniq.apilib.services.restService.ServiceBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +54,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
+        new Prefs(reactContext);
     }
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -71,7 +76,35 @@ public class DownloadModule extends ReactContextBaseJavaModule {
                         String uriString = c
                                 .getString(c
                                         .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-                        downloadPromise.resolve(uriString);
+
+                        Prefs.saveDownloadedUri(uriString);
+
+                        String fileName =
+                                c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
+
+                        File file = new File(uriString);
+
+                        FileOutputStream outputStream = null;
+                        try {
+                            outputStream =
+                                    getReactApplicationContext().
+                                            openFileOutput(fileName, Context.MODE_PRIVATE);
+                            outputStream.write(Files.toByteArray(file));
+                            outputStream.close();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                        file.delete();
+
+                        WritableMap writableMap = new WritableNativeMap();
+                        writableMap.putString("uri", getReactApplicationContext()
+                                .getFilesDir() + "/" + fileName);
+
+                        Prefs.saveLocalUri(getReactApplicationContext()
+                                .getFilesDir() + "/" + fileName);
+                        downloadPromise.resolve(writableMap);
                     } else if(DownloadManager.STATUS_FAILED == c
                             .getInt(columnIndex)) {
                         downloadPromise.reject(new Throwable("error"));
@@ -97,19 +130,29 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void downloadVideoFile(String uri, final Promise downloadPromise) {
 
-        this.downloadPromise = downloadPromise;
-        if(getReactApplicationContext() != null) {
-            getReactApplicationContext().
-                    registerReceiver(receiver, new IntentFilter(
-                            DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-
-            dm = (DownloadManager) getReactApplicationContext()
-                    .getSystemService(getReactApplicationContext().DOWNLOAD_SERVICE);
-            DownloadManager.Request request = new DownloadManager.Request(
-                    Uri.parse("http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"));
-            enqueue = dm.enqueue(request);
+        if(Prefs.isUriAlreadyDownloaded(uri)) {
+            WritableMap localUri = new WritableNativeMap();
+            localUri.putString("uri", Prefs.getLocalUri());
+            downloadPromise.resolve(localUri);
         } else {
-            Log.w("null", "null context");
+            this.downloadPromise = downloadPromise;
+            if (getReactApplicationContext() != null) {
+                getReactApplicationContext().
+                        registerReceiver(receiver, new IntentFilter(
+                                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+                dm = (DownloadManager) getReactApplicationContext()
+                        .getSystemService(getReactApplicationContext().DOWNLOAD_SERVICE);
+                DownloadManager.Request request = new DownloadManager.Request(
+                        Uri.parse("http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"));
+                request.setVisibleInDownloadsUi(false);
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+                request.allowScanningByMediaScanner();
+
+                enqueue = dm.enqueue(request);
+            } else {
+                Log.w("null", "null context");
+            }
         }
     }
 
