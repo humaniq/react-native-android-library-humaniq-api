@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -72,7 +74,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
                         downloadPromise.resolve(uriString);
                     } else if(DownloadManager.STATUS_FAILED == c
                             .getInt(columnIndex)) {
-                        downloadPromise.reject("failed");
+                        downloadPromise.reject(new Throwable("error"));
                     }
                 }
             }
@@ -96,15 +98,19 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     public void downloadVideoFile(String uri, final Promise downloadPromise) {
 
         this.downloadPromise = downloadPromise;
-        getReactApplicationContext().
-                registerReceiver(receiver, new IntentFilter(
-                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        if(getReactApplicationContext() != null) {
+            getReactApplicationContext().
+                    registerReceiver(receiver, new IntentFilter(
+                            DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
-        dm = (DownloadManager) getReactApplicationContext()
-                .getSystemService(getReactApplicationContext().DOWNLOAD_SERVICE);
-        DownloadManager.Request request = new DownloadManager.Request(
-                Uri.parse("http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"));
-        enqueue = dm.enqueue(request);
+            dm = (DownloadManager) getReactApplicationContext()
+                    .getSystemService(getReactApplicationContext().DOWNLOAD_SERVICE);
+            DownloadManager.Request request = new DownloadManager.Request(
+                    Uri.parse("http://clips.vorwaerts-gmbh.de/VfE_html5.mp4"));
+            enqueue = dm.enqueue(request);
+        } else {
+            Log.w("null", "null context");
+        }
     }
 
     @ReactMethod
