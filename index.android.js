@@ -6,4 +6,5 @@ import { NativeModules } from 'react-native'
 
 module.exports = NativeModules.HumaniqApiLib
 module.exports = NativeModules.HumaniqProfileApiLib
+module.exports = NativeModules.HumaniqDownloadFileLib
 
