@@ -8,7 +8,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.humaniq.apilib.constructor.ModelConverterUtils;
-import com.humaniq.apilib.services.ServiceBuilder;
+import com.humaniq.apilib.services.restService.ServiceBuilder;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
     public ProfileModule(ReactApplicationContext reactContext) {
         super(reactContext);
-        ServiceBuilder.init();
+        ServiceBuilder.init(C.BASE_URL);
     }
 
     @Override

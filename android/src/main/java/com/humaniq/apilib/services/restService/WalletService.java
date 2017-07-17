@@ -1,4 +1,4 @@
-package com.humaniq.apilib.services;
+package com.humaniq.apilib.services.restService;
 
 /**
  * Created by gritsay on 7/12/17.
@@ -12,6 +12,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 import com.humaniq.apilib.models.AddressState;
@@ -35,4 +36,6 @@ public interface WalletService {
 
     @POST("/create/address")
     Call<BaseResponse<String>> createAddress(@Body JsonObject body);
+
+
 }
