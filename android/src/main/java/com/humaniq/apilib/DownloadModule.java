@@ -102,12 +102,13 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
                         }
 //
+                        File outFile = new File(
+                                getReactApplicationContext()
+                                        .getCacheDir(), fileName);
                         WritableMap writableMap = new WritableNativeMap();
-                        writableMap.putString("uri", getReactApplicationContext()
-                                .getFilesDir() + "/" + fileName);
+                        writableMap.putString("uri", outFile.getAbsolutePath());
 
-                        Prefs.saveLocalUri(getReactApplicationContext()
-                                .getFilesDir() + "/" + fileName);
+                        Prefs.saveLocalUri(outFile.getAbsolutePath());
                         downloadPromise.resolve(writableMap);
 
                         stopProgressChecker();
