@@ -76,7 +76,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
                         File file = new File(Uri.parse(uriString).getPath());
 
                         File file1 = new File(
-                                getReactApplicationContext().getCacheDir(), fileName);
+                                getReactApplicationContext().getFilesDir(), fileName);
                         if(!file1.exists()) {
                             try {
                                 file1.createNewFile();
@@ -106,7 +106,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 //
                         File outFile = new File(
                                 getReactApplicationContext()
-                                        .getCacheDir(), fileName);
+                                        .getFilesDir(), fileName);
                         WritableMap writableMap = new WritableNativeMap();
                         writableMap.putString("uri", outFile.getAbsolutePath());
 
