@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.facebook.common.internal.Files;
 import com.facebook.react.bridge.Promise;
@@ -39,6 +40,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     private static final int PROGRESS_DELAY = 1000;
     Handler handler;
     private boolean isProgressCheckerRunning = false;
+    private String downloadUri;
 
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -66,7 +68,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
                                 .getString(c
                                         .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
-                        Prefs.saveDownloadedUri(uriString);
+                        Prefs.saveDownloadedUri(downloadUri);
 
                         final String fileName =
                                 c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
@@ -213,11 +215,14 @@ Sends an event to the JS module.
 
     @ReactMethod
     public void downloadVideoFile(String uri, final Promise downloadPromise) {
+        this.downloadUri = uri;
         if(Prefs.isUriAlreadyDownloaded(uri)) {
+            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
             WritableMap localUri = new WritableNativeMap();
             localUri.putString("uri", Prefs.getLocalUri());
             downloadPromise.resolve(localUri);
         } else {
+            Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
             this.downloadPromise = downloadPromise;
             if (getReactApplicationContext() != null) {
 
