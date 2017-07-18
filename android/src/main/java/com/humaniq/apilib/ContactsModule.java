@@ -1,6 +1,10 @@
 package com.humaniq.apilib;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -26,6 +30,7 @@ import retrofit2.Response;
  */
 
 public class ContactsModule extends ReactContextBaseJavaModule {
+    private final String LOG_TAG = "ContactsModule";
     public ContactsModule(ReactApplicationContext reactContext) {
         super(reactContext);
         ServiceBuilder.init(C.CONTACTS_BASE_URL);
@@ -36,75 +41,75 @@ public class ContactsModule extends ReactContextBaseJavaModule {
         return "HumaniqContactsApiLib";
     }
 
+    private ArrayList<String> getAllContacts() {
+        ArrayList<String> result = null;
+
+        Log.d(LOG_TAG, "getContact()");
+        ContentResolver cr = getReactApplicationContext().getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null, null);
+
+        if (cur.getCount() > 0) {
+            result = new ArrayList<String>();
+            Log.d(LOG_TAG,"many contacts");
+            while (cur.moveToNext()) {
+                String id = cur.getString(
+                        cur.getColumnIndex(ContactsContract.Contacts._ID));
+//                String name = cur.getString(cur.getColumnIndex(
+//                        ContactsContract.Contacts.DISPLAY_NAME));
+                if (cur.getInt(cur.getColumnIndex(
+                        ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    Cursor pCur = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID +" = ?",
+                            new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        String phoneNo = pCur.getString(pCur.getColumnIndex(
+                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        result.add(phoneNo);
+                    }
+                    pCur.close();
+                }
+            }
+        } else Log.d(LOG_TAG, "No contacts");
+
+        return result;
+    }
+
     @ReactMethod
-    public void extractPhoneNumbers (final Promise promise) {
-          ArrayList<String> arrayList = new ArrayList<String>();
-          arrayList.add("+79620505555");
-           ServiceBuilder.getContactsService().extractPhoneNumbers(arrayList).enqueue(new Callback<ContactsResponse>() {
-              @Override
-              public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
-                  if (!response.isSuccessful()) {
-                      Log.d("MainActivity","error");
-                      Log.d("MainActivity",response.errorBody().toString());
+    public void extractPhoneNumbers(final Promise promise) {
+        ArrayList<String> arrayList = new ArrayList<String>();
+        arrayList.add("+79620505555");
+        ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
+            @Override
+            public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(LOG_TAG, "OnResponse - Error request");
+                    Log.d(LOG_TAG, response.errorBody().toString());
 
-                  } else {
-                      Log.d("MainActivity","not error");
-                      ContactsResponse res = response.body();
-
-
-                      Gson gson = new Gson();
-                      String jsonString = gson.toJson(res);
-                      try {
-                          JSONObject jsonObject = new JSONObject(jsonString);
-                          promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
-                      } catch (JSONException e) {
-                          e.printStackTrace();
-                          promise.reject(e);
-                      }
-                  }
-              }
-              @Override
-              public void onFailure(Call<ContactsResponse> call, Throwable t) {
-                  Log.d("MainActivity","error = "+t);
-              }
-          });
+                } else {
+                    Log.d(LOG_TAG, "OnResponse - Success request");
+                    ContactsResponse res = response.body();
 
 
-      }
-//    public void extractPhoneNumbers (final Promise promise) {
-//        ArrayList<String> phoneNumbers = new ArrayList<String>();
-//
-//        //stub
-//        phoneNumbers.add("+79620505555");
-//        phoneNumbers.add("+79620505556");
-//
-//        ServiceBuilder.getContactsService().extractPhoneNumbers(phoneNumbers).enqueue(new retrofit2.Callback<ContactsResponse>() {
-//            @Override
-//            public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
-//                ContactsResponse contacts =  response.body();
-//                Gson gson = new Gson();
-//                Log.d("!!!!", response.body().toString());
-//                String jsonString = gson.toJson(contacts.getData());
-//                try {
-//                    JSONObject jsonObject = new JSONObject(jsonString);
-//
-//                    //return promise object
-//                    promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    promise.reject(e);
-//                }
-//
-//                //WritableMap collectionTransaction1 = ModelConverterUtils.convertJsonToMap()
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ContactsResponse> call, Throwable t) {
-//                promise.reject(t);
-//            }
-//        });
-//    }
+                    Gson gson = new Gson();
+                    String jsonString = gson.toJson(res);
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonString);
+                        promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        promise.reject(e);
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ContactsResponse> call, Throwable t) {
+                Log.d(LOG_TAG, "onFailure = " + t);
+            }
+        });
+    }
 
 }
