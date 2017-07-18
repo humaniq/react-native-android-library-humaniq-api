@@ -81,35 +81,37 @@ public class ContactsModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void extractAllPhoneNumbers(final Promise promise) {
-        ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
-            @Override
-            public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
-                if (!response.isSuccessful()) {
-                    Log.d(LOG_TAG, "OnResponse - Error request");
-                    Log.d(LOG_TAG, response.errorBody().toString());
+        if (getAllContacts()!=null) {
+            ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
+                @Override
+                public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
+                    if (!response.isSuccessful()) {
+                        Log.d(LOG_TAG, "OnResponse - Error request");
+                        Log.d(LOG_TAG, response.errorBody().toString());
 
-                } else {
-                    Log.d(LOG_TAG, "OnResponse - Success request");
-                    ContactsResponse res = response.body();
+                    } else {
+                        Log.d(LOG_TAG, "OnResponse - Success request");
+                        ContactsResponse res = response.body();
 
 
-                    Gson gson = new Gson();
-                    String jsonString = gson.toJson(res);
-                    try {
-                        JSONObject jsonObject = new JSONObject(jsonString);
-                        promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        promise.reject(e);
+                        Gson gson = new Gson();
+                        String jsonString = gson.toJson(res);
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonString);
+                            promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            promise.reject(e);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ContactsResponse> call, Throwable t) {
-                Log.d(LOG_TAG, "onFailure = " + t);
-            }
-        });
+                @Override
+                public void onFailure(Call<ContactsResponse> call, Throwable t) {
+                    Log.d(LOG_TAG, "onFailure = " + t);
+                }
+            });
+        } else promise.reject("-1", "Haven't any contacts on mobile device");
     }
 
     public void synchronizePhoneNumber(ArrayList<String> contact) {
