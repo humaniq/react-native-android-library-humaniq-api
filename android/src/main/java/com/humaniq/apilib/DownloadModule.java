@@ -7,6 +7,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.widget.Toast;
 
 import com.facebook.common.internal.Files;
 import com.facebook.react.bridge.Promise;
@@ -15,11 +19,17 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
+import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 
 public class DownloadModule extends ReactContextBaseJavaModule {
@@ -27,9 +37,15 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     private DownloadManager dm;
     private Promise downloadPromise;
 
+    private static final int PROGRESS_DELAY = 1000;
+    Handler handler;
+    private boolean isProgressCheckerRunning = false;
+    private String downloadUri;
+
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
         new Prefs(reactContext);
+//        handler = new Handler();
     }
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -52,18 +68,30 @@ public class DownloadModule extends ReactContextBaseJavaModule {
                                 .getString(c
                                         .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
 
-                        Prefs.saveDownloadedUri(uriString);
+                        Prefs.saveDownloadedUri(downloadUri);
 
-                        String fileName =
+                        final String fileName =
                                 c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
 
-                        File file = new File(uriString);
+                        File file = new File(Uri.parse(uriString).getPath());
 
+                        File file1 = new File(
+                                getReactApplicationContext().getFilesDir(), fileName);
+                        if(!file1.exists()) {
+                            try {
+                                file1.createNewFile();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         FileOutputStream outputStream = null;
                         try {
-                            outputStream =
-                                    getReactApplicationContext().
-                                            openFileOutput(fileName, Context.MODE_PRIVATE);
+                            outputStream = new FileOutputStream(file1);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        try {
                             outputStream.write(Files.toByteArray(file));
                             outputStream.close();
 
@@ -71,20 +99,105 @@ public class DownloadModule extends ReactContextBaseJavaModule {
                             e.printStackTrace();
                         }
 
-                        file.delete();
+                        if(!file.delete()) {
+                            file.delete();
 
+                        }
+//
+                        File outFile = new File(
+                                getReactApplicationContext()
+                                        .getFilesDir(), fileName);
                         WritableMap writableMap = new WritableNativeMap();
-                        writableMap.putString("uri", getReactApplicationContext()
-                                .getFilesDir() + "/" + fileName);
+                        writableMap.putString("uri", outFile.getAbsolutePath());
 
-                        Prefs.saveLocalUri(getReactApplicationContext()
-                                .getFilesDir() + "/" + fileName);
+                        Prefs.saveLocalUri(outFile.getAbsolutePath());
                         downloadPromise.resolve(writableMap);
+
+                        stopProgressChecker();
+
+
                     } else if(DownloadManager.STATUS_FAILED == c
                             .getInt(columnIndex)) {
                         downloadPromise.reject(new Throwable("error"));
+                        stopProgressChecker();
                     }
                 }
+            }
+        }
+    };
+
+
+    /*
+Sends an event to the JS module.
+ */
+    private void sendEvent(String eventName, @Nullable WritableMap params) {
+        this.getReactApplicationContext().
+                getJSModule(DeviceEventManagerModule.
+                        RCTDeviceEventEmitter.class).emit("RNFileUploader-" + eventName, params);
+    }
+
+
+    /**
+     * Checks download progress.
+     */
+    private void checkProgress() {
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterByStatus(~(DownloadManager.STATUS_FAILED | DownloadManager.STATUS_SUCCESSFUL));
+        Cursor cursor = dm.query(query);
+        if (!cursor.moveToFirst()) {
+            cursor.close();
+            return;
+        }
+        do {
+            long reference = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+            final long progress = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+            // do whatever you need with the progress
+//            WritableMap writableMap = new WritableNativeMap();
+//            writableMap.putString("uri", getReactApplicationContext()
+//                    .getFilesDir() + "/" + fileName);
+            getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+                @Override
+                public void run() {
+                    WritableMap writableMap = new WritableNativeMap();
+                    writableMap.putInt("progress", (int) progress);
+                    sendEvent("progress", writableMap);
+
+                }
+            });
+        } while (cursor.moveToNext());
+        cursor.close();
+    }
+
+    /**
+     * Starts watching download progress.
+     *
+     * This method is safe to call multiple times. Starting an already running progress checker is a no-op.
+     */
+    private void startProgressChecker() {
+//        if (!isProgressCheckerRunning) {
+//            progressChecker.run();
+//            isProgressCheckerRunning = true;
+//        }
+    }
+
+    /**
+     * Stops watching download progress.
+     */
+    private void stopProgressChecker() {
+//        handler.removeCallbacks(progressChecker);
+//        isProgressCheckerRunning = false;
+    }
+
+    /**
+     * Checks download progress and updates status, then re-schedules itself.
+     */
+    private Runnable progressChecker = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                checkProgress();
+            } finally {
+                handler.postDelayed(progressChecker, PROGRESS_DELAY);
             }
         }
     };
@@ -102,26 +215,36 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
     @ReactMethod
     public void downloadVideoFile(String uri, final Promise downloadPromise) {
+        this.downloadUri = uri;
         if(Prefs.isUriAlreadyDownloaded(uri)) {
+            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
             WritableMap localUri = new WritableNativeMap();
             localUri.putString("uri", Prefs.getLocalUri());
             downloadPromise.resolve(localUri);
         } else {
+            Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
             this.downloadPromise = downloadPromise;
             if (getReactApplicationContext() != null) {
+
                 getReactApplicationContext().
                         registerReceiver(receiver, new IntentFilter(
-                                DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                        DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
-                dm = (DownloadManager) getReactApplicationContext()
-                        .getSystemService(getReactApplicationContext().DOWNLOAD_SERVICE);
+                dm = (DownloadManager)getReactApplicationContext()
+                .getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Request request = new DownloadManager.Request(
                         Uri.parse(uri));
                 request.setVisibleInDownloadsUi(false);
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
                 request.allowScanningByMediaScanner();
 
+                request.setDestinationInExternalFilesDir(getReactApplicationContext(), DIRECTORY_DOWNLOADS,
+                        "instruction.mp4");
+
+
                 enqueue = dm.enqueue(request);
+
+                startProgressChecker();
             }
         }
     }
