@@ -164,8 +164,8 @@ Sends an event to the JS module.
         int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
         int progress = (int) ((bytes_downloaded * 100l) / bytes_total);
-        Toast.makeText(getReactApplicationContext(), "progress: " + (++progress), Toast.LENGTH_SHORT)
-                .show();
+//        Toast.makeText(getReactApplicationContext(), "progress: " + (++progress), Toast.LENGTH_SHORT)
+//                .show();
         final int finalProgress = progress;
         getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override
@@ -236,7 +236,7 @@ Sends an event to the JS module.
                         DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         if (Prefs.isUriAlreadyDownloaded(uri)) {
-            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
             WritableMap localUri = new WritableNativeMap();
             localUri.putString("uri", Prefs.getLocalUri());
             downloadPromise.resolve(localUri);
@@ -265,7 +265,7 @@ Sends an event to the JS module.
             if (!Prefs.isDownloading()) {
                 if (!Prefs.isUriAlreadyDownloaded(uri)) {
                     Prefs.setDownloading(true);
-                    Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
                     DownloadManager.Request request = new DownloadManager.Request(
                             Uri.parse(uri));
                     request.setVisibleInDownloadsUi(false);
