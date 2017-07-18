@@ -15,8 +15,9 @@ import retrofit2.http.POST;
  */
 
 public interface ContactService {
-    @POST("/extract_registered_phone_numbers")
+    @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
     Call<ContactsResponse> extractPhoneNumbers(@Body ArrayList<String> data);
+
 
 
 }
