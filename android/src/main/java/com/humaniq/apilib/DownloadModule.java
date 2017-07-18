@@ -233,7 +233,7 @@ Sends an event to the JS module.
                 dm = (DownloadManager)getReactApplicationContext()
                 .getSystemService(DOWNLOAD_SERVICE);
                 DownloadManager.Request request = new DownloadManager.Request(
-                        Uri.parse("https://archive.org/download/1mbFile/1mb.mp4"));
+                        Uri.parse(uri));
                 request.setVisibleInDownloadsUi(false);
                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
                 request.allowScanningByMediaScanner();
