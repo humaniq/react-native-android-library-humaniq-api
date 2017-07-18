@@ -7,6 +7,8 @@ public class Prefs {
     private static final String URI = "URI";
     private static final String LOCAL = "LOCAL_URI";
     private static final String APP_PREFERENCES = "humaniq_java_api_prefs";
+    private static final String IS_DOWNLOADING = "IS_DOWNLOADING";
+    private static final String DOWNLOAD_ID = "DOWNLOAD_ID";
     private static SharedPreferences sharedPreferences;
 
 
@@ -27,9 +29,17 @@ public class Prefs {
         return sharedPreferences.getString(URI, null);
     }
 
+    public static boolean isDownloading() {
+        return sharedPreferences.getBoolean(IS_DOWNLOADING, false);
+    }
+
 
     public static String getLocalUri() {
         return sharedPreferences.getString(LOCAL, null);
+    }
+
+    public static long getDownloadId() {
+        return sharedPreferences.getLong(DOWNLOAD_ID,  0);
     }
 
     public static boolean isUriAlreadyDownloaded(String uri) {
@@ -37,5 +47,11 @@ public class Prefs {
     }
 
 
+    public static void setDownloading(boolean downloading) {
+        sharedPreferences.edit().putBoolean(IS_DOWNLOADING, downloading).commit();
+    }
 
+    public static void saveDownloadId(long enqueue) {
+        sharedPreferences.edit().putLong(DOWNLOAD_ID, enqueue).commit();
+    }
 }

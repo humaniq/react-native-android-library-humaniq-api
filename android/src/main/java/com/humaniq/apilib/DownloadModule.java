@@ -31,13 +31,16 @@ import java.util.Map;
 import static android.content.Context.DOWNLOAD_SERVICE;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
+/*
+       Module helps to download files to internal storage and gives URI to react native callback
+ */
 
 public class DownloadModule extends ReactContextBaseJavaModule {
     private long enqueue;
     private DownloadManager dm;
     private Promise downloadPromise;
 
-    private static final int PROGRESS_DELAY = 1000;
+    private static final int PROGRESS_DELAY = 500;
     Handler handler;
     private boolean isProgressCheckerRunning = false;
     private String downloadUri;
@@ -45,6 +48,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     public DownloadModule(ReactApplicationContext reactContext) {
         super(reactContext);
         new Prefs(reactContext);
+//        Looper.prepare();
 //        handler = new Handler();
     }
 
@@ -53,78 +57,81 @@ public class DownloadModule extends ReactContextBaseJavaModule {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (DownloadManager.ACTION_DOWNLOAD_COMPLETE.equals(action)) {
-                long downloadId = intent.getLongExtra(
-                        DownloadManager.EXTRA_DOWNLOAD_ID, 0);
-                DownloadManager.Query query = new DownloadManager.Query();
-                query.setFilterById(enqueue);
-                Cursor c = dm.query(query);
-                if (c.moveToFirst()) {
-                    int columnIndex = c
-                            .getColumnIndex(DownloadManager.COLUMN_STATUS);
-                    if (DownloadManager.STATUS_SUCCESSFUL == c
-                            .getInt(columnIndex)) {
-
-                        String uriString = c
-                                .getString(c
-                                        .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
-
-                        Prefs.saveDownloadedUri(downloadUri);
-
-                        final String fileName =
-                                c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
-
-                        File file = new File(Uri.parse(uriString).getPath());
-
-                        File file1 = new File(
-                                getReactApplicationContext().getFilesDir(), fileName);
-                        if(!file1.exists()) {
-                            try {
-                                file1.createNewFile();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        FileOutputStream outputStream = null;
-                        try {
-                            outputStream = new FileOutputStream(file1);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-
-                        try {
-                            outputStream.write(Files.toByteArray(file));
-                            outputStream.close();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-
-                        if(!file.delete()) {
-                            file.delete();
-
-                        }
-//
-                        File outFile = new File(
-                                getReactApplicationContext()
-                                        .getFilesDir(), fileName);
-                        WritableMap writableMap = new WritableNativeMap();
-                        writableMap.putString("uri", outFile.getAbsolutePath());
-
-                        Prefs.saveLocalUri(outFile.getAbsolutePath());
-                        downloadPromise.resolve(writableMap);
-
-                        stopProgressChecker();
-
-
-                    } else if(DownloadManager.STATUS_FAILED == c
-                            .getInt(columnIndex)) {
-                        downloadPromise.reject(new Throwable("error"));
-                        stopProgressChecker();
-                    }
-                }
+                saveToLocalStorage();
             }
         }
     };
+
+    private void saveToLocalStorage() {
+        DownloadManager.Query query = new DownloadManager.Query();
+        query.setFilterById(enqueue);
+        Cursor c = dm.query(query);
+        if (c.moveToFirst()) {
+            int columnIndex = c
+                    .getColumnIndex(DownloadManager.COLUMN_STATUS);
+            if (DownloadManager.STATUS_SUCCESSFUL == c
+                    .getInt(columnIndex)) {
+
+                String uriString = c
+                        .getString(c
+                                .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI));
+
+                Prefs.saveDownloadedUri(downloadUri);
+
+                final String fileName =
+                        c.getString(c.getColumnIndex(DownloadManager.COLUMN_TITLE));
+
+                File file = new File(Uri.parse(uriString).getPath());
+
+                File file1 = new File(
+                        getReactApplicationContext().getFilesDir(), fileName);
+                if (!file1.exists()) {
+                    try {
+                        file1.createNewFile();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(file1);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    outputStream.write(Files.toByteArray(file));
+                    outputStream.close();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if (!file.delete()) {
+                    file.delete();
+
+                }
+//
+                File outFile = new File(
+                        getReactApplicationContext()
+                                .getFilesDir(), fileName);
+                WritableMap writableMap = new WritableNativeMap();
+                writableMap.putString("uri", outFile.getAbsolutePath());
+
+                Prefs.saveLocalUri(outFile.getAbsolutePath());
+                downloadPromise.resolve(writableMap);
+
+//                        stopProgressChecker();
+
+
+                Prefs.setDownloading(false);
+            } else if (DownloadManager.STATUS_FAILED == c
+                    .getInt(columnIndex)) {
+                downloadPromise.reject(new Throwable("error"));
+//                        stopProgressChecker();
+            }
+        }
+    }
 
 
     /*
@@ -133,7 +140,7 @@ Sends an event to the JS module.
     private void sendEvent(String eventName, @Nullable WritableMap params) {
         this.getReactApplicationContext().
                 getJSModule(DeviceEventManagerModule.
-                        RCTDeviceEventEmitter.class).emit("RNFileUploader-" + eventName, params);
+                        RCTDeviceEventEmitter.class).emit(eventName, params);
     }
 
 
@@ -141,51 +148,54 @@ Sends an event to the JS module.
      * Checks download progress.
      */
     private void checkProgress() {
+        handler.postDelayed(progressChecker, PROGRESS_DELAY);
+
         DownloadManager.Query query = new DownloadManager.Query();
-        query.setFilterByStatus(~(DownloadManager.STATUS_FAILED | DownloadManager.STATUS_SUCCESSFUL));
+        query.setFilterById(enqueue);
         Cursor cursor = dm.query(query);
         if (!cursor.moveToFirst()) {
             cursor.close();
             return;
         }
-        do {
-            long reference = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
-            final long progress = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-            // do whatever you need with the progress
-//            WritableMap writableMap = new WritableNativeMap();
-//            writableMap.putString("uri", getReactApplicationContext()
-//                    .getFilesDir() + "/" + fileName);
-            getReactApplicationContext().runOnUiQueueThread(new Runnable() {
-                @Override
-                public void run() {
-                    WritableMap writableMap = new WritableNativeMap();
-                    writableMap.putInt("progress", (int) progress);
-                    sendEvent("progress", writableMap);
+        long reference = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
 
-                }
-            });
-        } while (cursor.moveToNext());
-        cursor.close();
+        int bytes_downloaded = cursor.getInt(cursor
+                .getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+        int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+        int progress = (int) ((bytes_downloaded * 100l) / bytes_total);
+//        Toast.makeText(getReactApplicationContext(), "progress: " + (++progress), Toast.LENGTH_SHORT)
+//                .show();
+        final int finalProgress = progress;
+        getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override
+            public void run() {
+                WritableMap writableMap = new WritableNativeMap();
+                writableMap.putInt("progress", finalProgress);
+                sendEvent("progress", writableMap);
+
+            }
+        });
     }
 
     /**
      * Starts watching download progress.
-     *
+     * <p>
      * This method is safe to call multiple times. Starting an already running progress checker is a no-op.
      */
     private void startProgressChecker() {
-//        if (!isProgressCheckerRunning) {
-//            progressChecker.run();
-//            isProgressCheckerRunning = true;
-//        }
+        if (!isProgressCheckerRunning) {
+            progressChecker.run();
+            isProgressCheckerRunning = true;
+        }
     }
 
     /**
      * Stops watching download progress.
      */
     private void stopProgressChecker() {
-//        handler.removeCallbacks(progressChecker);
-//        isProgressCheckerRunning = false;
+        handler.removeCallbacks(progressChecker);
+        isProgressCheckerRunning = false;
     }
 
     /**
@@ -216,35 +226,57 @@ Sends an event to the JS module.
     @ReactMethod
     public void downloadVideoFile(String uri, final Promise downloadPromise) {
         this.downloadUri = uri;
-        if(Prefs.isUriAlreadyDownloaded(uri)) {
-            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
+        this.downloadPromise = downloadPromise;
+        dm = (DownloadManager)
+                getReactApplicationContext().
+                        getSystemService(Context.DOWNLOAD_SERVICE);
+
+        getReactApplicationContext().
+                registerReceiver(receiver, new IntentFilter(
+                        DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+        if (Prefs.isUriAlreadyDownloaded(uri)) {
+//            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
             WritableMap localUri = new WritableNativeMap();
             localUri.putString("uri", Prefs.getLocalUri());
             downloadPromise.resolve(localUri);
         } else {
-            Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
-            this.downloadPromise = downloadPromise;
-            if (getReactApplicationContext() != null) {
+            // if file downloaded in background, save it to internal storage
+            Cursor c = dm.query(new DownloadManager.Query().setFilterById(Prefs.getDownloadId()));
+            if (c.moveToFirst()) {
+                int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                switch (status) {
+                    case DownloadManager.STATUS_PAUSED:
+                        break;
+                    case DownloadManager.STATUS_PENDING:
+                        break;
+                    case DownloadManager.STATUS_RUNNING:
+                        break;
+                    case DownloadManager.STATUS_SUCCESSFUL:
+                        Prefs.setDownloading(false);
+                        enqueue = Prefs.getDownloadId();
+                        saveToLocalStorage();
+                        break;
+                    case DownloadManager.STATUS_FAILED:
+                        break;
+                }
+            }
 
-                getReactApplicationContext().
-                        registerReceiver(receiver, new IntentFilter(
-                        DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+            if (!Prefs.isDownloading()) {
+                if (!Prefs.isUriAlreadyDownloaded(uri)) {
+                    Prefs.setDownloading(true);
+//                    Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
+                    DownloadManager.Request request = new DownloadManager.Request(
+                            Uri.parse(uri));
+                    request.setVisibleInDownloadsUi(false);
+                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
 
-                dm = (DownloadManager)getReactApplicationContext()
-                .getSystemService(DOWNLOAD_SERVICE);
-                DownloadManager.Request request = new DownloadManager.Request(
-                        Uri.parse(uri));
-                request.setVisibleInDownloadsUi(false);
-                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-                request.allowScanningByMediaScanner();
+                    request.setDestinationInExternalFilesDir(getReactApplicationContext(), DIRECTORY_DOWNLOADS,
+                            "instruction.mp4");
 
-                request.setDestinationInExternalFilesDir(getReactApplicationContext(), DIRECTORY_DOWNLOADS,
-                        "instruction.mp4");
-
-
-                enqueue = dm.enqueue(request);
-
-                startProgressChecker();
+                    enqueue = dm.enqueue(request);
+                    Prefs.saveDownloadId(enqueue);
+                }
             }
         }
     }
