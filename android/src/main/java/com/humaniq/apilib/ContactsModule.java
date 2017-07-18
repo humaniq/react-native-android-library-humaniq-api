@@ -50,9 +50,10 @@ public class ContactsModule extends ReactContextBaseJavaModule {
                   } else {
                       Log.d("MainActivity","not error");
                       ContactsResponse res = response.body();
-                      Log.d("MainActivity", Integer.toString(res.getData().size()));
+
+
                       Gson gson = new Gson();
-                      String jsonString = gson.toJson(res);
+                      String jsonString = gson.toJson(res.getData());
                       try {
                           JSONObject jsonObject = new JSONObject(jsonString);
                           promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
