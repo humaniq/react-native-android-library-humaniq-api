@@ -1,7 +1,9 @@
 package com.humaniq.apilib;
 
 import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.widget.Toast;
@@ -78,9 +80,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void extractPhoneNumbers(final Promise promise) {
-        ArrayList<String> arrayList = new ArrayList<String>();
-        arrayList.add("+79620505555");
+    public void extractAllPhoneNumbers(final Promise promise) {
         ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
             @Override
             public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
@@ -112,4 +112,54 @@ public class ContactsModule extends ReactContextBaseJavaModule {
         });
     }
 
+    public void synchronizePhoneNumber(ArrayList<String> contact) {
+        ServiceBuilder.getContactsService().extractPhoneNumbers(contact).enqueue(new Callback<ContactsResponse>() {
+            @Override
+            public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
+                if (!response.isSuccessful()) {
+                    Log.d(LOG_TAG, "OnResponse - Error request");
+                    Log.d(LOG_TAG, response.errorBody().toString());
+
+                } else {
+                    Log.d(LOG_TAG, "OnResponse - Success request");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContactsResponse> call, Throwable t) {
+                Log.d(LOG_TAG, "onFailure = " + t);
+            }
+        });
+    }
+
+    private class MyContentObserver extends ContentObserver {
+
+        public MyContentObserver() {
+            super(null);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            ArrayList<String> phoneNumber = new ArrayList<>();
+            super.onChange(selfChange, uri);
+            Log.d(LOG_TAG,"Contact has changed");
+
+            Cursor cursor = getReactApplicationContext().getContentResolver().query(
+                    ContactsContract.Contacts.CONTENT_URI, null,
+                    null, null, null);
+
+            if (!cursor.moveToFirst())
+                return;
+
+            cursor.moveToLast();
+            String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+            String phone = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            Log.d(LOG_TAG, "id = "+name + "\n name = "+ name);
+            phoneNumber.add(phone);
+            synchronizePhoneNumber (phoneNumber);
+
+
+        }
+    }
+    MyContentObserver contentObserver = new MyContentObserver();
 }
