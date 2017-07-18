@@ -34,7 +34,8 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void extractPhoneNumbers (ArrayList<String> phones, final Promise promise) {
+    //public void extractPhoneNumbers (ArrayList<String> phones, final Promise promise) {
+    public void extractPhoneNumbers (final Promise promise) {
         ArrayList<String> phoneNumbers = new ArrayList<String>();
 
         //stub
