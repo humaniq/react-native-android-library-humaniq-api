@@ -36,11 +36,11 @@ public class ContactsModule extends ReactContextBaseJavaModule {
         return "HumaniqContactsApiLib";
     }
 
-//    @ReactMethod
-      public void extractPhoneNumbers (final Promise promise) {
+    @ReactMethod
+    public void extractPhoneNumbers (final Promise promise) {
           ArrayList<String> arrayList = new ArrayList<String>();
           arrayList.add("+79620505555");
-          ServiceBuilder.getContactsService().extractPhoneNumbers(arrayList).enqueue(new Callback<ContactsResponse>() {
+           ServiceBuilder.getContactsService().extractPhoneNumbers(arrayList).enqueue(new Callback<ContactsResponse>() {
               @Override
               public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
                   if (!response.isSuccessful()) {
@@ -62,7 +62,6 @@ public class ContactsModule extends ReactContextBaseJavaModule {
                       }
                   }
               }
-
               @Override
               public void onFailure(Call<ContactsResponse> call, Throwable t) {
                   Log.d("MainActivity","error = "+t);
