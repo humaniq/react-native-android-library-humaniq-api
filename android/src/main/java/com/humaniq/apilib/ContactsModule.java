@@ -53,7 +53,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
 
 
                       Gson gson = new Gson();
-                      String jsonString = gson.toJson(res.getData());
+                      String jsonString = gson.toJson(res);
                       try {
                           JSONObject jsonObject = new JSONObject(jsonString);
                           promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
