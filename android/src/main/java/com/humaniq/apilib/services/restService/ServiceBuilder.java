@@ -8,12 +8,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import com.humaniq.apilib.C;
 
 /**
  * Builder for retrofit
  */
 
 public class ServiceBuilder {
+
+  public static Retrofit getRetrofit() {
+    return retrofit;
+  }
 
   private static Retrofit retrofit;
 
@@ -32,11 +37,16 @@ public class ServiceBuilder {
         .build();
   }
 
-  public static WalletService getProfileService() {
+  public static WalletService getWalletService() {
     return retrofit.create(WalletService.class);
+  }
+
+  public static ProfileService getProfileService() {
+    return retrofit.create(ProfileService.class);
   }
 
   public static ContactService getContactsService() {
     return retrofit.create(ContactService.class);
   }
+
 }
