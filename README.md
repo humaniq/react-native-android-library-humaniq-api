@@ -71,16 +71,17 @@ Exclude okhttp module in app build.gradle file(android/app/build.gradle):
    functions overview:
 
    for use this module firstly try to attach it, in this sample both modules (HumaniqDownloadFileLib, HumaniqContactsApiLib) will be attached:
-   import { HumaniqDownloadFileLib, HumaniqContactsApiLib} from 'react-native-android-library-humaniq-api';
+   ```import { HumaniqDownloadFileLib, HumaniqContactsApiLib} from 'react-native-android-library-humaniq-api';
    in .js file.
    after this action, current module will be available for use.
-
+    ```
        HumaniqContactsApiLib.extractAllPhoneNumbers().then((array) => {
            console.warn(array);
           });
+    ```
     in array object will use postman response, just redirect data from backend via java library to react-native app.
     Structure of data presented at https://gold-star-1172.postman.co/docs/collection/view/2376470-2edfad49-aac7-ed2e-5e42-edbf18a258b4#c8f6a1fe-0536-af9b-90e1-50e40213b615
-
+    ```
     {
   	  "success": true,
   	  "data": [
@@ -94,11 +95,10 @@ Exclude okhttp module in app build.gradle file(android/app/build.gradle):
 
 2. Profile module (module consist api functions for any profile data requests) - HumaniqProfileApiLib.
 	This module conists functions:
-
+  ```
 	public void getAddressState(String id, final Promise promise), 
  	public void getTransactions(String id, final Promise promise),
-
-
+  ```
 3. Download module (module consist api functions for download any files) - HumaniqDownloadFileLib
 	This module consists functions:
 	public void downloadVideoFile(String uri, final Promise downloadPromise);
