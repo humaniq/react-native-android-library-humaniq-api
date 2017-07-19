@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 class User {
 
   @SerializedName("account_id")
-  private long accountId;
+  private String accountId;
 
   @SerializedName("name")
   private User.Name name;
@@ -20,7 +20,7 @@ class User {
   @SerializedName("phone_number")
   private User.PhoneNumber phoneNumber;
 
-  public long getAccountId() {
+  public String getAccountId() {
     return accountId;
   }
 
