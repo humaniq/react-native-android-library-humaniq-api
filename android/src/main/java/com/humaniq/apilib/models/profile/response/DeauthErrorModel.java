@@ -7,10 +7,8 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class DeauthErrorModel {
-  @SerializedName("code")
-  private int code;
-  @SerializedName("message")
-  private String message;
+  @SerializedName("code") private int code;
+  @SerializedName("message") private String message;
 
   public int getCode() {
     return code;

@@ -7,8 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class UserId {
-  @SerializedName("account_id")
-  private String accountId;
+  @SerializedName("account_id") private String accountId;
 
   public UserId(String accountId) {
     this.accountId = accountId;

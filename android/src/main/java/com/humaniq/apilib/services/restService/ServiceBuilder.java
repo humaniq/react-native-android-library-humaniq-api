@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.humaniq.apilib.C;
 
 /**
  * Builder for retrofit
@@ -16,14 +15,14 @@ import com.humaniq.apilib.C;
 
 public class ServiceBuilder {
 
-  public static Retrofit getRetrofit() {
-    return retrofit;
-  }
-
   private static Retrofit retrofit;
 
   private ServiceBuilder() {
 
+  }
+
+  public static Retrofit getRetrofit() {
+    return retrofit;
   }
 
   public static void init(String baseURL) {
@@ -48,5 +47,4 @@ public class ServiceBuilder {
   public static ContactService getContactsService() {
     return retrofit.create(ContactService.class);
   }
-
 }
