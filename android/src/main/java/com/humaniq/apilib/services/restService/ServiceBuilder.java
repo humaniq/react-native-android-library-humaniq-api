@@ -10,36 +10,43 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import com.humaniq.apilib.C;
 
-
 /**
  * Builder for retrofit
  */
 
 public class ServiceBuilder {
 
-    private static Retrofit retrofit;
+  public static Retrofit getRetrofit() {
+    return retrofit;
+  }
 
-    private ServiceBuilder() {
+  private static Retrofit retrofit;
 
-    }
+  private ServiceBuilder() {
 
-    public static void init(String baseURL) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+  }
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl(baseURL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }
+  public static void init(String baseURL) {
+    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-    public static WalletService getProfileService() {
-        return retrofit.create(WalletService.class);
-    }
+    retrofit = new Retrofit.Builder().baseUrl(baseURL)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build();
+  }
 
-    public static ContactService getContactsService() {
-        return retrofit.create(ContactService.class);
-    }
+  public static WalletService getWalletService() {
+    return retrofit.create(WalletService.class);
+  }
+
+  public static ProfileService getProfileService() {
+    return retrofit.create(ProfileService.class);
+  }
+
+  public static ContactService getContactsService() {
+    return retrofit.create(ContactService.class);
+  }
+
 }
