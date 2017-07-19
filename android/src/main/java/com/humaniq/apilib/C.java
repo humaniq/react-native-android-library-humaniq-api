@@ -5,6 +5,6 @@ package com.humaniq.apilib;
  */
 
 public class C {
-    public static final String BASE_URL = "http://195.93.181.143:2222/";
-    public static final String CONTACTS_BASE_URL = "https://beta-api.humaniq.co";
+  public static final String BASE_URL = "http://195.93.181.143:2222/";
+  public static final String CONTACTS_BASE_URL = "https://beta-api.humaniq.co";
 }

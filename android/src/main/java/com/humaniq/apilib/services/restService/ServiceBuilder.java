@@ -8,8 +8,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import com.humaniq.apilib.C;
-
 
 /**
  * Builder for retrofit
@@ -17,29 +15,28 @@ import com.humaniq.apilib.C;
 
 public class ServiceBuilder {
 
-    private static Retrofit retrofit;
+  private static Retrofit retrofit;
 
-    private ServiceBuilder() {
+  private ServiceBuilder() {
 
-    }
+  }
 
-    public static void init(String baseURL) {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+  public static void init(String baseURL) {
+    HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+    interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl(baseURL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-    }
+    retrofit = new Retrofit.Builder().baseUrl(baseURL)
+        .client(client)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build();
+  }
 
-    public static WalletService getProfileService() {
-        return retrofit.create(WalletService.class);
-    }
+  public static WalletService getProfileService() {
+    return retrofit.create(WalletService.class);
+  }
 
-    public static ContactService getContactsService() {
-        return retrofit.create(ContactService.class);
-    }
+  public static ContactService getContactsService() {
+    return retrofit.create(ContactService.class);
+  }
 }

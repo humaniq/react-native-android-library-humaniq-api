@@ -7,23 +7,23 @@ import java.util.ArrayList;
  */
 
 public class ContactsResponse {
-    private boolean success;
-    private ArrayList<String> data;
+  private boolean success;
+  private ArrayList<String> data;
 
-    public boolean isSuccess() {
-        return success;
-    }
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 
-    public ArrayList<String> getData() {
-        return data;
-    }
+  public ArrayList<String> getData() {
+    return data;
+  }
 
-    public void setData(ArrayList<String> data) {
-        this.data = data;
-    }
+  public void setData(ArrayList<String> data) {
+    this.data = data;
+  }
 }
 

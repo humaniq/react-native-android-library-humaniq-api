@@ -6,67 +6,51 @@ package com.humaniq.apilib.models;
 
 import com.google.gson.annotations.SerializedName;
 
-
 public class AddressState {
-    @SerializedName("user_id")
-    private String userId;
+  @SerializedName("user_id") private String userId;
 
-    private int status;
+  private int status;
 
-    private int currency;
+  private int currency;
 
-    @SerializedName("backup_currency")
-    private int backupCurrency;
+  @SerializedName("backup_currency") private int backupCurrency;
 
-    private String address;
+  private String address;
 
-    private long balance;
+  private long balance;
 
-    @SerializedName("available_balance")
-    private long availableBalance;
+  @SerializedName("available_balance") private long availableBalance;
 
-    private int gwei;
+  private int gwei;
 
-    private long received;
+  private long received;
 
-    private long sent;
+  private long sent;
 
-    @SerializedName("service_charge")
-    private int serviceCharche;
+  @SerializedName("service_charge") private int serviceCharche;
 
-    @SerializedName("signup_timestamp")
-    private int signupTimestamp;
+  @SerializedName("signup_timestamp") private int signupTimestamp;
 
-    @SerializedName("sent_tx")
-    private int sentTx;
+  @SerializedName("sent_tx") private int sentTx;
 
-    @SerializedName("received_tx")
-    private int receivedTx;
+  @SerializedName("received_tx") private int receivedTx;
 
-    @SerializedName("pending_sent_tx")
-    private int pendingSentTx;
+  @SerializedName("pending_sent_tx") private int pendingSentTx;
 
-    @SerializedName("pending_received_tx")
-    private int pendingReceivedTx;
+  @SerializedName("pending_received_tx") private int pendingReceivedTx;
 
-    @SerializedName("invalid_tx")
-    private int invalidTx;
+  @SerializedName("invalid_tx") private int invalidTx;
 
-    @SerializedName("total_tx")
-    private int totalTx;
+  @SerializedName("total_tx") private int totalTx;
 
-    @SerializedName("received_bonus_tx")
-    private int receivedBonusTx;
+  @SerializedName("received_bonus_tx") private int receivedBonusTx;
 
-    @SerializedName("available_bonus")
-    private int availableBonus;
+  @SerializedName("available_bonus") private int availableBonus;
 
-    @SerializedName("used_bonus")
-    private int usedBonus;
+  @SerializedName("used_bonus") private int usedBonus;
 
-    @Override
-    public String toString() {
-        return super.toString();
-    }
+  @Override public String toString() {
+    return super.toString();
+  }
 }
 

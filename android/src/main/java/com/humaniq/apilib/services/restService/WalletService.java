@@ -5,19 +5,15 @@ package com.humaniq.apilib.services.restService;
  */
 
 import com.google.gson.JsonObject;
-
+import com.humaniq.apilib.models.Balance;
+import com.humaniq.apilib.models.Transaction;
+import com.humaniq.apilib.models.response.BaseResponse;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
-import retrofit2.http.PUT;
 import retrofit2.http.Path;
-
-import com.humaniq.apilib.models.AddressState;
-import com.humaniq.apilib.models.response.BaseResponse;
-import com.humaniq.apilib.models.Transaction;
 
 /**
  * Wallet service
@@ -25,17 +21,15 @@ import com.humaniq.apilib.models.Transaction;
 
 public interface WalletService {
 
-    @GET("get/address/state/{id}")
-    Call<BaseResponse<AddressState>> getAddressState(@Path("id") String id);
+  @GET("wallet/api/v1/users/{user_id}/balance") Call<BaseResponse<Balance>> getUserBalance(
+      @Path("user_id") String id);
 
-    @GET("get/address/transactions/{id}")
-    Call<BaseResponse<List<Transaction>>> getAddressTransactions(@Path("id") String id);
+  @GET("wallet/api/v1/users/{user_id}/transactions/")
+  Call<BaseResponse<List<Transaction>>> getUserTransactions(@Path("id") String id);
 
-    @GET("get/last/block/number")
-    Call<BaseResponse<Long>> getLastBlockNumber();
+  //@GET("get/last/block/number")
+  //Call<BaseResponse<Long>> getLastBlockNumber();
 
-    @POST("/create/address")
-    Call<BaseResponse<String>> createAddress(@Body JsonObject body);
-
-
+  @POST("wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<String>> createTransaction(
+      @Body JsonObject body);
 }

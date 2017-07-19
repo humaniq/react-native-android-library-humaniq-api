@@ -1,11 +1,7 @@
 package com.humaniq.apilib.services.restService;
 
-import com.google.gson.JsonObject;
 import com.humaniq.apilib.models.contacts.response.ContactsResponse;
-import com.humaniq.apilib.models.response.BaseResponse;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -15,9 +11,6 @@ import retrofit2.http.POST;
  */
 
 public interface ContactService {
-    @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
-    Call<ContactsResponse> extractPhoneNumbers(@Body ArrayList<String> data);
-
-
-
+  @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
+  Call<ContactsResponse> extractPhoneNumbers(@Body ArrayList<String> data);
 }
