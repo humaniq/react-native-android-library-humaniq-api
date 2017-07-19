@@ -27,7 +27,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
   public ProfileModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    ServiceBuilder.init(C.BASE_URL);
+    ServiceBuilder.init(C.BASE_URL, reactContext);
   }
 
   @Override public String getName() {

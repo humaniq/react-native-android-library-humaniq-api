@@ -31,7 +31,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
 
   public ContactsModule(ReactApplicationContext reactContext) {
     super(reactContext);
-    ServiceBuilder.init(C.CONTACTS_BASE_URL);
+    ServiceBuilder.init(C.CONTACTS_BASE_URL, reactContext);
   }
 
   @Override public String getName() {

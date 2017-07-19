@@ -15,7 +15,7 @@ public class Module extends ReactContextBaseJavaModule {
 
   public Module(ReactApplicationContext reactContext) {
     super(reactContext);
-    ServiceBuilder.init(C.BASE_URL);
+    ServiceBuilder.init(C.BASE_URL, reactContext);
   }
 
   @Override public String getName() {

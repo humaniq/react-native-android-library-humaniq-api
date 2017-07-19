@@ -4,6 +4,8 @@ package com.humaniq.apilib.services.restService;
  * Created by gritsay on 7/12/17.
  */
 
+import android.content.Context;
+import com.humaniq.apilib.SelfSigningClientBuilder;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -25,13 +27,14 @@ public class ServiceBuilder {
     return retrofit;
   }
 
-  public static void init(String baseURL) {
+  public static void init(String baseURL, Context context) {
     HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
     interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-    OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
+    //OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
     retrofit = new Retrofit.Builder().baseUrl(baseURL)
-        .client(client)
+        //.client(client)
+        .client(SelfSigningClientBuilder.createClient(context))
         .addConverterFactory(GsonConverterFactory.create())
         .build();
   }

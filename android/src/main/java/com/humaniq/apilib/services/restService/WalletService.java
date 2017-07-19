@@ -26,16 +26,16 @@ import retrofit2.http.Query;
 
 public interface WalletService {
 
-  @GET("wallet/api/v1/users/{user_id}/balance") Call<BaseResponse<Balance>> getUserBalance(
+  @GET("/wallet/api/v1/users/{user_id}/balance") Call<BaseResponse<Balance>> getUserBalance(
       @Path("user_id") String id);
 
-  @GET("wallet/api/v1/users/{user_id}/transactions/")
+  @GET("/wallet/api/v1/users/{user_id}/transactions/")
   Call<BaseResponse<List<UserTransaction>>> getUserTransactions(
       @Path("user_id") String id, @Query("offset") int offset, @Query("limit") int limit);
 
   //@GET("get/last/block/number")
   //Call<BaseResponse<Long>> getLastBlockNumber();
 
-  @POST("wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<String>> createTransaction(
+  @POST("/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<String>> createTransaction(
       @Path("user_id") String userId, @Field("to_user_id") String toUserId, @Field("amount") float amount);
 }
