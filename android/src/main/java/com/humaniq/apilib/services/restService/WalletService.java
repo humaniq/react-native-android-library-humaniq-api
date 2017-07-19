@@ -18,6 +18,7 @@ import retrofit2.http.FieldMap;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Wallet service
@@ -29,7 +30,8 @@ public interface WalletService {
       @Path("user_id") String id);
 
   @GET("wallet/api/v1/users/{user_id}/transactions/")
-  Call<BaseResponse<List<UserTransaction>>> getUserTransactions(@Path("user_id") String id);
+  Call<BaseResponse<List<UserTransaction>>> getUserTransactions(
+      @Path("user_id") String id, @Query("offset") int offset, @Query("limit") int limit);
 
   //@GET("get/last/block/number")
   //Call<BaseResponse<Long>> getLastBlockNumber();

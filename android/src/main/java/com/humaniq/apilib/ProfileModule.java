@@ -59,9 +59,9 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     });
   }
 
-  @ReactMethod public void getTransactions(String id, final Promise promise) {
+  @ReactMethod public void getTransactions(String id, int offset, int limit, final Promise promise) {
     ServiceBuilder.getWalletService()
-        .getUserTransactions(id)
+        .getUserTransactions(id, offset, limit)
         .enqueue(new retrofit2.Callback<BaseResponse<List<UserTransaction>>>() {
           @Override public void onResponse(Call<BaseResponse<List<UserTransaction>>> call,
               Response<BaseResponse<List<UserTransaction>>> response) {
