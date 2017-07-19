@@ -6,6 +6,7 @@ package com.humaniq.apilib.models;
 
 import com.google.gson.annotations.SerializedName;
 
+// UNUSED
 public class Transaction {
 
   private String transaction;
