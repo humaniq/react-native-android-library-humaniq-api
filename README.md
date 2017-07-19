@@ -59,3 +59,51 @@ If build failed with:
 Exclude okhttp module in app build.gradle file(android/app/build.gradle):
          
       compile (project(':react-native-android-library-humaniq-api')) {exclude module: 'okhttp'}
+
+
+ ## HOW TO USE
+
+ The library contains  modules for different purposes of implementation api.
+
+1. Contacts module (module consist api functions for contact sychronization with backend) - HumaniqContactsApiLib
+   This module also contain a listener for new created contacts, in this case a created contact will be automatically syncronized with backend.
+
+   functions overview:
+
+   for use this module firstly try to attach it, in this sample both modules (HumaniqDownloadFileLib, HumaniqContactsApiLib) will be attached:
+   import { HumaniqDownloadFileLib, HumaniqContactsApiLib} from 'react-native-android-library-humaniq-api';
+   in .js file.
+   after this action, current module will be available for use.
+
+       HumaniqContactsApiLib.extractAllPhoneNumbers().then((array) => {
+           console.warn(array);
+          });
+    in array object will use postman response, just redirect data from backend via java library to react-native app.
+    Structure of data presented at https://gold-star-1172.postman.co/docs/collection/view/2376470-2edfad49-aac7-ed2e-5e42-edbf18a258b4#c8f6a1fe-0536-af9b-90e1-50e40213b615
+
+    {
+  	  "success": true,
+  	  "data": [
+        "+7(910)1234567",
+        "+7( 910) 987-65-43"
+  	   ]
+	}
+
+    #Attention
+    before use extractAllPhoneNumbers(), need to call and approve by user PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS permission from react side. More details presented at this link https://facebook.github.io/react-native/docs/permissionsandroid.html
+
+2. Profile module (module consist api functions for any profile data requests) - HumaniqProfileApiLib.
+	This module conists functions:
+
+	public void getAddressState(String id, final Promise promise), 
+ 	public void getTransactions(String id, final Promise promise),
+
+
+3. Download module (module consist api functions for download any files) - HumaniqDownloadFileLib
+	This module consists functions:
+	public void downloadVideoFile(String uri, final Promise downloadPromise);
+	this function allow you to download any-size files from internet.
+
+
+
+
