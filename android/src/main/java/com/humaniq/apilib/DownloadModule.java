@@ -23,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
@@ -32,24 +34,15 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 public class DownloadModule extends ReactContextBaseJavaModule {
   private static final int PROGRESS_DELAY = 500;
-  Handler handler;
+  private Runnable progressRunnable;
   private long enqueue;
   private DownloadManager dm;
   private Promise downloadPromise;
-  private boolean isProgressCheckerRunning = false;
   private String downloadUri;
-  /**
-   * Checks download progress and updates status, then re-schedules itself.
-   */
-  private Runnable progressChecker = new Runnable() {
-    @Override public void run() {
-      try {
-        checkProgress();
-      } finally {
-        handler.postDelayed(progressChecker, PROGRESS_DELAY);
-      }
-    }
-  };
+  private final ScheduledThreadPoolExecutor executor =
+      new ScheduledThreadPoolExecutor(1);
+
+
   BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
       String action = intent.getAction();
@@ -62,8 +55,16 @@ public class DownloadModule extends ReactContextBaseJavaModule {
   public DownloadModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
-    //        Looper.prepare();
-    //        handler = new Handler();
+
+    progressRunnable = new Runnable() {
+      @Override
+      public void run() {
+        checkProgress();
+      }
+    };
+
+    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
+
   }
 
   private void saveToLocalStorage() {
@@ -115,15 +116,17 @@ public class DownloadModule extends ReactContextBaseJavaModule {
         Prefs.saveLocalUri(outFile.getAbsolutePath());
         downloadPromise.resolve(writableMap);
 
-        stopProgressChecker();
+        executor.remove(progressRunnable);
 
         Prefs.setDownloading(false);
       } else if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
         downloadPromise.reject(new Throwable("error"));
-        stopProgressChecker();
+        executor.remove(progressRunnable);
       }
     }
   }
+
+
 
   /*
 Sends an event to the JS module.
@@ -138,8 +141,6 @@ Sends an event to the JS module.
    * Checks download progress.
    */
   private void checkProgress() {
-    handler.postDelayed(progressChecker, PROGRESS_DELAY);
-
     DownloadManager.Query query = new DownloadManager.Query();
     query.setFilterById(enqueue);
     Cursor cursor = dm.query(query);
@@ -156,36 +157,11 @@ Sends an event to the JS module.
     int progress = (int) ((bytes_downloaded * 100l) / bytes_total);
     //        Toast.makeText(getReactApplicationContext(), "progress: " + (++progress), Toast.LENGTH_SHORT)
     //                .show();
-    final int finalProgress = progress;
-    getReactApplicationContext().runOnUiQueueThread(new Runnable() {
-      @Override public void run() {
         WritableMap writableMap = new WritableNativeMap();
-        writableMap.putInt("progress", finalProgress);
+        writableMap.putInt("progress", progress);
         sendEvent("progress", writableMap);
-      }
-    });
   }
 
-  /**
-   * Starts watching download progress.
-   * <p>
-   * This method is safe to call multiple times. Starting an already running progress checker is a
-   * no-op.
-   */
-  private void startProgressChecker() {
-    if (!isProgressCheckerRunning) {
-      progressChecker.run();
-      isProgressCheckerRunning = true;
-    }
-  }
-
-  /**
-   * Stops watching download progress.
-   */
-  private void stopProgressChecker() {
-    handler.removeCallbacks(progressChecker);
-    isProgressCheckerRunning = false;
-  }
 
   @Override public String getName() {
     return "HumaniqDownloadFileLib";
