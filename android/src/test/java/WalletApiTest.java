@@ -1,11 +1,10 @@
 
-import android.content.Context;
 import com.humaniq.apilib.BuildConfig;
-import com.humaniq.apilib.C;
-import com.humaniq.apilib.models.UserTransaction;
-import com.humaniq.apilib.models.response.BaseResponse;
-import com.humaniq.apilib.services.restService.ServiceBuilder;
-import com.humaniq.apilib.services.restService.WalletService;
+import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
+import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.network.service.WalletService;
 import java.io.IOException;
 import java.util.List;
 import org.junit.Test;
@@ -31,7 +30,7 @@ public class WalletApiTest {
   @Test public void getTransactions() throws Exception {
 
     try {
-      ServiceBuilder.init(C.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
       Call<BaseResponse<List<UserTransaction>>> call = apiEndpoints.getUserTransactions(
