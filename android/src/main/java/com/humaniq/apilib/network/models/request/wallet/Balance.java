@@ -8,15 +8,31 @@ import com.google.gson.annotations.SerializedName;
 
 public class Balance {
 
-  @SerializedName("HMQ") private float hmq;
+  @SerializedName("token") private Currency tokenCurrency;
 
-  @SerializedName("USD") private float usd;
+  @SerializedName("default") private Currency defaultCurrency;
 
-  public float getHmq() {
-    return hmq;
+  @SerializedName("local") private Currency localCurrency;
+
+  public Currency getTokenCurrency() {
+    return tokenCurrency;
   }
 
-  public float getUsd() {
-    return usd;
+  public Currency getDefaultCurrency() {
+    return defaultCurrency;
   }
+
+  public Currency getLocalCurrency() {
+    return localCurrency;
+  }
+
+  private class Currency {
+    @SerializedName("currency")
+    private String currency;
+
+    @SerializedName("amount")
+    private String amount;
+  }
+
+
 }
