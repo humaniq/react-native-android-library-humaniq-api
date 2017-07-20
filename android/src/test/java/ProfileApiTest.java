@@ -33,10 +33,10 @@ public class ProfileApiTest {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       ProfileService apiEndpoints = ServiceBuilder.getProfileService();
 
-      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId(""));
+      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId("111"));
       Response<DeauthModel> response = call.execute();
       DeauthModel extractContactResponse = response.body();
-      System.out.println(new Gson().toJson(response.errorBody()));
+      System.out.println(response.errorBody().string());
       assertTrue(response.isSuccessful());
 
   } catch (Exception e) {
