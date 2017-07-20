@@ -9,11 +9,13 @@ import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import java.util.ArrayList;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+import org.robolectric.shadows.ShadowLog;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -28,15 +30,21 @@ import static org.junit.Assert.assertTrue;
 @Config(constants = BuildConfig.class)
 public class ProfileApiTest {
 
+  @Before
+  public void init() {
+    ShadowLog.stream = System.out;
+  }
+
   @Test public void deauthenticateUserRightResponse(){
     try {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       ProfileService apiEndpoints = ServiceBuilder.getProfileService();
 
-      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId("111"));
+      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId(""));
       Response<DeauthModel> response = call.execute();
       DeauthModel extractContactResponse = response.body();
       System.out.println(response.errorBody().string());
+      //ShadowLog.v("tag", response.errorBody().string());
       assertTrue(response.isSuccessful());
 
   } catch (Exception e) {

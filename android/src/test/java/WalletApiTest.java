@@ -1,4 +1,5 @@
 
+import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.profile.UserId;
@@ -41,6 +42,7 @@ public class WalletApiTest {
       //Magic is here at .execute() instead of .enqueue()
       Response<BaseResponse<Balance>> response = call.execute();
       BaseResponse data = response.body();
+      System.out.println(new Gson().toJson(data.data));
 
       assertTrue(response.isSuccessful());
 
@@ -81,27 +83,6 @@ public class WalletApiTest {
       //Magic is here at .execute() instead of .enqueue()
       Response<BaseResponse<List<UserTransaction>>> response = call.execute();
       BaseResponse data = response.body();
-
-      assertTrue(response.isSuccessful());
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-
-   @Test public void testDeauthenticateUser() throws Exception {
-
-    try {
-      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
-      ProfileService apiEndpoints = ServiceBuilder.getProfileService();
-
-      Call<DeauthModel> call = apiEndpoints.
-          deauthenticateUser(new UserId("223344556677"));
-
-      //Magic is here at .execute() instead of .enqueue()
-      Response<DeauthModel> response = call.execute();
-      DeauthModel data = response.body();
 
       assertTrue(response.isSuccessful());
 
