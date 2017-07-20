@@ -1,8 +1,12 @@
 
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.profile.UserId;
+import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.models.response.profile.DeauthModel;
+import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.network.service.WalletService;
 import java.io.IOException;
@@ -27,7 +31,45 @@ import static org.junit.Assert.assertTrue;
 public class WalletApiTest {
 
 
-  @Test public void getTransactions() throws Exception {
+  @Test public void testGetBalance() throws Exception {
+    try {
+      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      WalletService apiEndpoints = ServiceBuilder.getWalletService();
+
+      Call<BaseResponse<Balance>> call = apiEndpoints.getUserBalance("223344556677");
+
+      //Magic is here at .execute() instead of .enqueue()
+      Response<BaseResponse<Balance>> response = call.execute();
+      BaseResponse data = response.body();
+
+      assertTrue(response.isSuccessful());
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  @Test public void testCreateTransaction() throws Exception {
+    try {
+      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      WalletService apiEndpoints = ServiceBuilder.getWalletService();
+
+      Call<BaseResponse<Object>> call = apiEndpoints.
+          createTransaction("223344556677", "223344556677", 20f);
+
+      //Magic is here at .execute() instead of .enqueue()
+      Response<BaseResponse<Object>> response = call.execute();
+      BaseResponse data = response.body();
+
+      assertTrue(response.isSuccessful());
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test public void testGetTransactions() throws Exception {
 
     try {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
@@ -38,7 +80,7 @@ public class WalletApiTest {
 
       //Magic is here at .execute() instead of .enqueue()
       Response<BaseResponse<List<UserTransaction>>> response = call.execute();
-      BaseResponse authResponse = response.body();
+      BaseResponse data = response.body();
 
       assertTrue(response.isSuccessful());
 
@@ -46,4 +88,28 @@ public class WalletApiTest {
       e.printStackTrace();
     }
   }
+
+
+   @Test public void testDeauthenticateUser() throws Exception {
+
+    try {
+      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ProfileService apiEndpoints = ServiceBuilder.getProfileService();
+
+      Call<DeauthModel> call = apiEndpoints.
+          deauthenticateUser(new UserId("223344556677"));
+
+      //Magic is here at .execute() instead of .enqueue()
+      Response<DeauthModel> response = call.execute();
+      DeauthModel data = response.body();
+
+      assertTrue(response.isSuccessful());
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+
+
 }

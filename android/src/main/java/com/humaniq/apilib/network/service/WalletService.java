@@ -10,6 +10,7 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -30,7 +31,7 @@ public interface WalletService {
 
   //@GET("get/last/block/number")
   //Call<BaseResponse<Long>> getLastBlockNumber();
-
-  @POST("/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<String>> createTransaction(
+  @FormUrlEncoded
+  @POST(value = "/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<Object>> createTransaction(
       @Path("user_id") String userId, @Field("to_user_id") String toUserId, @Field("amount") float amount);
 }

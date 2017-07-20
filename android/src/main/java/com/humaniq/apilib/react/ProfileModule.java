@@ -103,24 +103,24 @@ public class ProfileModule extends ReactContextBaseJavaModule {
       float amount, final Promise promise) {
     ServiceBuilder.getWalletService()
         .createTransaction(fromUserId, toUserId, amount)
-        .enqueue(new Callback<BaseResponse<String>>() {
-          @Override public void onResponse(Call<BaseResponse<String>> call,
-              Response<BaseResponse<String>> response) {
+        .enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
             WritableMap writableMap = new WritableNativeMap();
             writableMap.putString("status", "OK");
             promise.resolve(writableMap);
           }
 
-          @Override public void onFailure(Call<BaseResponse<String>> call, Throwable t) {
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
             promise.reject(t);
           }
         });
 
   }
 
-  @ReactMethod public void deauthenticateUser(String id, final Promise promise) {
+  @ReactMethod public void deauthenticateUser(String accountId, final Promise promise) {
     ServiceBuilder.getProfileService()
-        .deauthenticateUser(new UserId(id))
+        .deauthenticateUser(new UserId(accountId))
         .enqueue(new Callback<DeauthModel>() {
           @Override public void onResponse(Call<DeauthModel> call, Response<DeauthModel> response) {
             if (response.body()!=null && !response.body().equals("")) {
