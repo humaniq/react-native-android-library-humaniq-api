@@ -10,18 +10,18 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Module extends ReactContextBaseJavaModule {
+public class ToastModule extends ReactContextBaseJavaModule {
 
   private static final String DURATION_SHORT_KEY = "SHORT";
   private static final String DURATION_LONG_KEY = "LONG";
 
-  public Module(ReactApplicationContext reactContext) {
+  public ToastModule(ReactApplicationContext reactContext) {
     super(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
   }
 
   @Override public String getName() {
-    return "HumaniqApiLib";
+    return "HumaniqToastApiLib";
   }
 
   @Override public Map<String, Object> getConstants() {

@@ -7,7 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.humaniq.apilib.react.ContactsModule;
 import com.humaniq.apilib.react.DownloadModule;
-import com.humaniq.apilib.react.Module;
+import com.humaniq.apilib.react.ToastModule;
 import com.humaniq.apilib.react.ProfileModule;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +26,7 @@ public class Package implements ReactPackage {
   @Override public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
     List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new Module(reactContext));
+    modules.add(new ToastModule(reactContext));
     modules.add(new ProfileModule(reactContext));
     modules.add(new DownloadModule(reactContext));
     modules.add(new ContactsModule(reactContext));

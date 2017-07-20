@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 
 /*
-       Module helps to download files to internal storage and gives URI to react native callback
+       ToastModule helps to download files to internal storage and gives URI to react native callback
  */
 
 public class DownloadModule extends ReactContextBaseJavaModule {
