@@ -1,13 +1,14 @@
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
+import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
+import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ContactService;
+import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
-;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -22,24 +23,25 @@ import static org.junit.Assert.assertTrue;
  * Created by gritsay on 7/20/17.
  */
 
+
 @RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class ContactApiTest {
+public class ProfileApiTest {
 
-
-  @Test public void extractContactsSuccess() throws Exception {
+  @Test public void deauthenticateUserRightResponse(){
     try {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
-      ContactService apiEndpoints = ServiceBuilder.getContactsService();
-      ArrayList<String> phones = new ArrayList<String>();
-      phones.add("");
-      Call<ContactsResponse> call = apiEndpoints.extractPhoneNumbers(phones);
-      Response<ContactsResponse> response = call.execute();
-      ContactsResponse extractContactResponse = response.body();
-      System.out.println(new Gson().toJson(response.body()));
+      ProfileService apiEndpoints = ServiceBuilder.getProfileService();
+
+      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId(""));
+      Response<DeauthModel> response = call.execute();
+      DeauthModel extractContactResponse = response.body();
+      System.out.println(new Gson().toJson(response.errorBody()));
       assertTrue(response.isSuccessful());
-    } catch (Exception e) {
-      e.printStackTrace();
+
+  } catch (Exception e) {
+      System.out.println(e);
     }
   }
+
 }

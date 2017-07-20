@@ -13,6 +13,6 @@ import retrofit2.http.POST;
 
 public interface ProfileService {
 
-  @POST("tapatybe/api/v1/deauthenticate/user") @SerializedName("account_id")
+  @POST("/tapatybe/api/v1/deauthenticate/user") @SerializedName("account_id")
   Call<DeauthModel> deauthenticateUser(@Body UserId userId);
 }

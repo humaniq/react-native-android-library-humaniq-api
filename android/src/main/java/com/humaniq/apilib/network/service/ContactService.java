@@ -2,6 +2,7 @@ package com.humaniq.apilib.network.service;
 
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import java.util.ArrayList;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -11,6 +12,7 @@ import retrofit2.http.POST;
  */
 
 public interface ContactService {
+
   @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
-  Call<ContactsResponse> extractPhoneNumbers(@Body ArrayList<String> data);
+  Call<ContactsResponse> extractPhoneNumbers(@Body List<String> data);
 }

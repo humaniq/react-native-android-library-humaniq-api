@@ -16,6 +16,7 @@ import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import java.util.ArrayList;
+import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -39,7 +40,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     return "HumaniqContactsApiLib";
   }
 
-  private ArrayList<String> getAllContacts() {
+  private List<String> getAllContacts() {
     ArrayList<String> result = null;
 
     Log.d(LOG_TAG, "getContact()");
