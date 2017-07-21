@@ -1,5 +1,6 @@
 package com.humaniq.apilib.react;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -9,6 +10,7 @@ import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.profile.UserId;
@@ -50,19 +52,25 @@ public class ProfileModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod public void getBalance(String id, final Promise promise) {
+    Log.d(LOG_TAG, "Balance Request: " + "id: " + id);
     ServiceBuilder.getWalletService().
         getUserBalance(id).enqueue(new retrofit2.Callback<BaseResponse<Balance>>() {
       @Override public void onResponse(Call<BaseResponse<Balance>> call,
           Response<BaseResponse<Balance>> response) {
-        try {
-          WritableMap addressState = ModelConverterUtils.convertJsonToMap(
-              new JSONObject(new Gson().toJson(response.body().data)));
-
-          promise.resolve(addressState);
-        } catch (JSONException e) {
-          e.printStackTrace();
+        Log.d(LOG_TAG, "Balance Response: " + response.isSuccessful());
+        if(response.body() != null && !response.body().equals("")) {
+          try {
+            WritableMap addressState = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            promise.resolve(addressState);
+          } catch (JSONException e) {
+            e.printStackTrace();
+            promise.reject(e);
+          }
+        } else {
+          promise.reject(new Throwable("fail"));
         }
       }
+
 
       @Override public void onFailure(Call<BaseResponse<Balance>> call, Throwable t) {
         promise.reject(t);
@@ -71,24 +79,30 @@ public class ProfileModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod public void getTransactions(String id, int offset, int limit, final Promise promise) {
+    Log.d(LOG_TAG,  "Transaction Request: id: " + id + ",  offset: " + offset + ", limit: " + limit);
     ServiceBuilder.getWalletService()
         .getUserTransactions(id, offset, limit)
         .enqueue(new retrofit2.Callback<BaseResponse<List<UserTransaction>>>() {
           @Override public void onResponse(Call<BaseResponse<List<UserTransaction>>> call,
               Response<BaseResponse<List<UserTransaction>>> response) {
+              Log.d(LOG_TAG, "Transaction Response: " + response.isSuccessful()
+                  + ",body: " + response.body());
+            if (response.body() != null && !response.body().equals("")) {
+              try {
 
-            try {
-              WritableArray array = new WritableNativeArray();
+                WritableArray array = new WritableNativeArray();
 
-              for (UserTransaction transaction : response.body().data) {
-                WritableMap collectionTransaction = ModelConverterUtils.
-                    convertJsonToMap(
-                        new JSONObject(new Gson().toJson(transaction, UserTransaction.class)));
-                array.pushMap(collectionTransaction);
+                for (UserTransaction transaction : response.body().data) {
+                  WritableMap collectionTransaction = ModelConverterUtils.
+                      convertJsonToMap(new JSONObject(new Gson().toJson(transaction, UserTransaction.class)));
+                  array.pushMap(collectionTransaction);
+                }
+                promise.resolve(array);
+              } catch (JSONException e) {
+                promise.reject("", e);
               }
-              promise.resolve(array);
-            } catch (JSONException e) {
-              promise.reject("", e);
+            } else {
+              promise.reject(new Throwable("fail"));
             }
           }
 
@@ -116,6 +130,52 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           }
         });
 
+  }
+
+  @ReactMethod public void editProfileName(
+      String firstName,
+      String lastName,
+      String photoId,
+      Promise promise) {
+
+    // TODO send data to server
+
+    WritableMap writableMap = new WritableNativeMap();
+    writableMap.putString("status", "OK");
+    promise.resolve(writableMap);
+
+  }
+
+  @ReactMethod public void uploadProfileAvatar(
+      String avatarPath,
+      Promise promise) {
+
+    // TODO upload avatar to server
+
+    WritableMap writableMap = new WritableNativeMap();
+    writableMap.putString("status", "OK");
+    promise.resolve(writableMap);
+  }
+
+  @ReactMethod public void changePhoneNumber(
+      String oldNumber,
+      String newNumber,
+      String code) {
+
+  }
+
+  @ReactMethod public void changeProfilePassword(
+      String oldPassword, String newPassword) {
+
+  }
+  /*
+    Sends an event OF TRANSACTION CHANGED to the JS module.
+  */
+  private void sendEvent(@Nullable WritableMap params) {
+    this.getReactApplicationContext().
+        getJSModule(DeviceEventManagerModule.
+            RCTDeviceEventEmitter.class).
+        emit(Constants.EVENT_TRANSACTION_CHANGED, params);
   }
 
   @ReactMethod public void deauthenticateUser(String accountId, final Promise promise) {

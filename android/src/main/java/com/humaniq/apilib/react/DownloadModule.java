@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,7 +34,6 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
  */
 
 public class DownloadModule extends ReactContextBaseJavaModule {
-  private static final int PROGRESS_DELAY = 500;
   private Runnable progressRunnable;
   private long enqueue;
   private DownloadManager dm;
@@ -129,12 +129,13 @@ public class DownloadModule extends ReactContextBaseJavaModule {
 
 
   /*
-Sends an event to the JS module.
+Sends an event OF PROGRESS CHANGED to the JS module.
 */
-  private void sendEvent(String eventName, @Nullable WritableMap params) {
+  private void sendEvent(@Nullable WritableMap params) {
     this.getReactApplicationContext().
         getJSModule(DeviceEventManagerModule.
-            RCTDeviceEventEmitter.class).emit(eventName, params);
+            RCTDeviceEventEmitter.class)
+        .emit(Constants.EVENT_PROGRESS_CHANGED, params);
   }
 
   /**
@@ -155,11 +156,9 @@ Sends an event to the JS module.
     int bytes_total = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
 
     int progress = (int) ((bytes_downloaded * 100l) / bytes_total);
-    //        Toast.makeText(getReactApplicationContext(), "progress: " + (++progress), Toast.LENGTH_SHORT)
-    //                .show();
         WritableMap writableMap = new WritableNativeMap();
         writableMap.putInt("progress", progress);
-        sendEvent("progress", writableMap);
+        sendEvent(writableMap);
   }
 
 
@@ -181,7 +180,6 @@ Sends an event to the JS module.
         registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
     if (Prefs.isUriAlreadyDownloaded(uri)) {
-      //            Toast.makeText(getReactApplicationContext(), Prefs.getLocalUri(), Toast.LENGTH_SHORT).show();
       WritableMap localUri = new WritableNativeMap();
       localUri.putString("uri", Prefs.getLocalUri());
       downloadPromise.resolve(localUri);
@@ -210,7 +208,6 @@ Sends an event to the JS module.
       if (!Prefs.isDownloading()) {
         if (!Prefs.isUriAlreadyDownloaded(uri)) {
           Prefs.setDownloading(true);
-          //                    Toast.makeText(getReactApplicationContext(), "download", Toast.LENGTH_SHORT).show();
           DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
           request.setVisibleInDownloadsUi(false);
           request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
