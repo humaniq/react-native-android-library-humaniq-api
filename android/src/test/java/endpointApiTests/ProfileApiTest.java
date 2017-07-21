@@ -1,3 +1,5 @@
+package endpointApiTests;
+
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
