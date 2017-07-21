@@ -83,6 +83,8 @@ public class WalletApiTest {
       //Magic is here at .execute() instead of .enqueue()
       Response<BaseResponse<List<UserTransaction>>> response = call.execute();
       BaseResponse data = response.body();
+      if(response.isSuccessful())
+      System.out.println(new Gson().toJson(data.data));
 
       assertTrue(response.isSuccessful());
 
