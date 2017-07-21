@@ -26,6 +26,8 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import okhttp3.ResponseBody;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,6 +39,9 @@ import retrofit2.Response;
 public class ProfileModule extends ReactContextBaseJavaModule {
 
   private static final String LOG_TAG = "ProfileModule";
+  private Runnable eventRunnable;
+  private final ScheduledThreadPoolExecutor executor =
+      new ScheduledThreadPoolExecutor(1);
 
   public ProfileModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -104,6 +109,8 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             } else {
               promise.reject(new Throwable("fail"));
             }
+
+            emulateTransactionEventChanged(); // todo remove after successful testing
           }
 
           @Override
@@ -176,6 +183,61 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         getJSModule(DeviceEventManagerModule.
             RCTDeviceEventEmitter.class).
         emit(Constants.EVENT_TRANSACTION_CHANGED, params);
+  }
+  private void emulateTransactionEventChanged() {
+    eventRunnable = new Runnable() {
+      @Override
+      public void run() {
+        try {
+          WritableMap changedTransaction = ModelConverterUtils.
+              convertJsonToMap(new JSONObject("{"
+                  + "    \"type\": 1,"
+                  + "    \"status\": 2,"
+                  + "    \"timestamp\": 1500594517,"
+                  + "    \"amount\": -40,"
+                  + "    \"from_address\": \"0xd4bb4bca1545508fc2ea9cb866a89cfa50ffaf6b\","
+                  + "    \"to_address\": \"0x3d02c55481e58c6ddccab14f667f0625c4da6507\","
+                  + "    \"from_user\": {"
+                  + "      \"account_id\": \"\","
+                  + "      \"name\": {"
+                  + "        \"first_name\": \"John\","
+                  + "        \"last_name\": \"Doe\""
+                  + "      },"
+                  + "      \"profile_photo\": {"
+                  + "        \"url\": \"\","
+                  + "        \"expiry\": \"0\""
+                  + "      },"
+                  + "      \"phone_number\": {"
+                  + "        \"country_code\": \"0\","
+                  + "        \"phone_number\": \"000000\""
+                  + "      }"
+                  + "    },"
+                  + "    \"to_user\": {"
+                  + "      \"account_id\": \"\","
+                  + "      \"name\": {"
+                  + "        \"first_name\": \"John\","
+                  + "        \"last_name\": \"Doe\""
+                  + "      },"
+                  + "      \"profile_photo\": {"
+                  + "        \"url\": \"\","
+                  + "        \"expiry\": \"0\""
+                  + "      },"
+                  + "      \"phone_number\": {"
+                  + "        \"country_code\": \"0\","
+                  + "        \"phone_number\": \"000000\""
+                  + "      }"
+                  + "    }"
+                  + "  }"));
+          sendEvent(changedTransaction);
+        } catch (JSONException e) {
+          e.printStackTrace();
+        }
+
+      }
+    };
+
+    this.executor.scheduleWithFixedDelay(eventRunnable, 10, 10, TimeUnit.SECONDS);
+
   }
 
   @ReactMethod public void deauthenticateUser(String accountId, final Promise promise) {
