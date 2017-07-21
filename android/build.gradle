@@ -44,13 +44,14 @@ repositories {
 }
 
 dependencies {
-    testCompile "org.robolectric:robolectric:3.3.2"
     compile 'com.facebook.react:react-native:+'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.8.1'
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+
     androidTestCompile 'junit:junit:4.12'
+    testCompile "org.robolectric:robolectric:3.3.2"
     testCompile 'junit:junit:4.12'
     testCompile 'com.squareup.okhttp3:mockwebserver:3.8.1'
 }
