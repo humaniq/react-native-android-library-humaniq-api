@@ -41,6 +41,9 @@ android {
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://repo.eclipse.org/content/repositories/paho-snapshots/"
+    }
 }
 
 dependencies {
@@ -54,5 +57,9 @@ dependencies {
     testCompile "org.robolectric:robolectric:3.3.2"
     testCompile 'junit:junit:4.12'
     testCompile 'com.squareup.okhttp3:mockwebserver:3.8.1'
+
+//    message broker
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
 }
 

@@ -13,6 +13,8 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.profile.AccountAvatar;
+import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
@@ -139,35 +141,64 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
   }
 
-  @ReactMethod public void editProfileName(
+  @ReactMethod public void updateUserPerson(
+      String accountId,
       String firstName,
       String lastName,
-      String photoId,
-      Promise promise) {
+      final Promise promise) {
 
-    // TODO send data to server
+    AccountPerson accountPerson = new AccountPerson();
+    accountPerson.setAccountId(accountId);
+    AccountPerson.Person person = new AccountPerson.Person();
+    person.setFirstName(firstName);
+    person.setLastName(lastName);
+    accountPerson.setPerson(person);
 
-    WritableMap writableMap = new WritableNativeMap();
-    writableMap.putString("status", "OK");
-    promise.resolve(writableMap);
+    ServiceBuilder.getProfileService()
+        .updateAccountPerson(accountPerson)
+        .enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
+            WritableMap writableMap = new WritableNativeMap();
+            writableMap.putString("status", "OK");
+            promise.resolve(writableMap);
+          }
 
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+
+          }
+        });
   }
 
   @ReactMethod public void uploadProfileAvatar(
-      String avatarPath,
-      Promise promise) {
+      String accountId,
+      String avatarBse64,
+      final Promise promise) {
 
-    // TODO upload avatar to server
+    AccountAvatar accountAvatar = new AccountAvatar();
+    accountAvatar.setAccountId(accountId);
+    accountAvatar.setFacialImage(avatarBse64);
+    ServiceBuilder.getProfileService()
+        .updateAccountAvatar(accountAvatar)
+        .enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
+            WritableMap avatarRespone = null;
+            if(response.body() != null && !"".equals(response.body())) {
+              try {
+                avatarRespone = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response)));
+                promise.resolve(avatarRespone);
+              } catch (JSONException e) {
+                e.printStackTrace();
+              }
+            }
+          }
 
-    WritableMap writableMap = new WritableNativeMap();
-    writableMap.putString("status", "OK");
-    promise.resolve(writableMap);
-  }
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
 
-  @ReactMethod public void changePhoneNumber(
-      String oldNumber,
-      String newNumber,
-      String code) {
 
   }
 

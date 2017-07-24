@@ -3,7 +3,9 @@ package endpointApiTests;
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
+import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
@@ -51,6 +53,31 @@ public class ProfileApiTest {
 
   } catch (Exception e) {
       System.out.println(e);
+    }
+  }
+
+  @Test public void testupdateUserPerson() {
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      ProfileService service = ServiceBuilder.getProfileService();
+
+      AccountPerson accountPerson = new AccountPerson();
+      accountPerson.setAccountId("");
+      AccountPerson.Person person = new AccountPerson.Person();
+      person.setFirstName("test");
+      person.setLastName("test");
+      accountPerson.setPerson(person);
+
+      Call<BaseResponse<Object>> call = service.updateAccountPerson(accountPerson);
+
+      Response<BaseResponse<Object>> response = call.execute();
+
+      BaseResponse<Object> baseResponse = response.body();
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
     }
   }
 
