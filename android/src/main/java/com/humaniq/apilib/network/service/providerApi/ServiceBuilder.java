@@ -5,6 +5,7 @@ package com.humaniq.apilib.network.service.providerApi;
  */
 
 import android.content.Context;
+import com.humaniq.apilib.network.service.BlockchainService;
 import com.humaniq.apilib.utils.SelfSigningClientBuilder;
 import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
@@ -51,5 +52,8 @@ public class ServiceBuilder {
 
   public static ContactService getContactsService() {
     return retrofit.create(ContactService.class);
+  }
+  public static BlockchainService getBlockchainService() {
+    return retrofit.create(BlockchainService.class);
   }
 }
