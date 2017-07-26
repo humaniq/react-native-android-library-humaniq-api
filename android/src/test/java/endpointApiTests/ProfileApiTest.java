@@ -9,6 +9,7 @@ import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ContactService;
@@ -97,8 +98,8 @@ public class ProfileApiTest {
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
-      Call<BasePayload<AccountPerson>> call = service.getAccountProfile("1567498755333161994");
-      Response<BasePayload<AccountPerson>> payload = call.execute();
+      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1567498755333161994");
+      Response<BasePayload<AccountProfile>> payload = call.execute();
       Log.d("profile", payload.body().payload.getPerson().getFirstName());
 
     }catch (Exception e) {
