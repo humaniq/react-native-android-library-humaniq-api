@@ -25,10 +25,10 @@ public interface ProfileService {
   @POST("/tapatybe/api/v1/deauthenticate/user")
   Call<DeauthModel> deauthenticateUser(@Body UserId userId);
 
-  @GET("/tapatybe/api/v1/accaunt/profile")
+  @GET("/tapatybe/api/v1/account/profile")
   Call<BasePayload<AccountPerson>> getAccountProfile(@Query("account_id") String accauntId);
 
-  @GET("/tapatybe/api/v1/accaunt/profiles")
+  @GET("/tapatybe/api/v1/account/profiles")
   Call<BaseResponse<Object>> getAccountProfiles(@QueryMap Map<String, String> accauntId);
 
 
