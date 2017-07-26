@@ -26,7 +26,7 @@ public interface ProfileService {
   Call<DeauthModel> deauthenticateUser(@Body UserId userId);
 
   @GET("/tapatybe/api/v1/accaunt/profile")
-  Call<BaseResponse<Object>> getAccountProfile(@Query("account_id") String accauntId);
+  Call<BasePayload<AccountPerson>> getAccountProfile(@Query("account_id") String accauntId);
 
   @GET("/tapatybe/api/v1/accaunt/profiles")
   Call<BaseResponse<Object>> getAccountProfiles(@QueryMap Map<String, String> accauntId);
