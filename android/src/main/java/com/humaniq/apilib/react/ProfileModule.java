@@ -20,6 +20,7 @@ import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.utils.ModelConverterUtils;
@@ -248,9 +249,9 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
   @ReactMethod public void getAccountProfile(String accountId, final Promise promise) {
     ServiceBuilder.getProfileService().getAccountProfile(accountId)
-        .enqueue(new Callback<BasePayload<AccountPerson>>() {
-          @Override public void onResponse(Call<BasePayload<AccountPerson>> call,
-              Response<BasePayload<AccountPerson>> response) {
+        .enqueue(new Callback<BasePayload<AccountProfile>>() {
+          @Override public void onResponse(Call<BasePayload<AccountProfile>> call,
+              Response<BasePayload<AccountProfile>> response) {
             if(response.body() != null && response.body().code == Codes.ACCOUNT_PROFILE_RETRIEVED) {
               try {
                 WritableMap profile = ModelConverterUtils
@@ -264,7 +265,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             }
           }
 
-          @Override public void onFailure(Call<BasePayload<AccountPerson>> call, Throwable t) {
+          @Override public void onFailure(Call<BasePayload<AccountProfile>> call, Throwable t) {
             promise.reject(t);
           }
         });
