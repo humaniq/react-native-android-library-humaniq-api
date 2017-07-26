@@ -56,17 +56,17 @@ public class ProfileApiTest {
     }
   }
 
-  @Test public void testupdateUserPerson() {
+  @Test public void testUpdateUserPerson() {
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
 
       AccountPerson accountPerson = new AccountPerson();
-      accountPerson.setAccountId("");
+      accountPerson.setAccountId("1567498755333161994");
       AccountPerson.Person person = new AccountPerson.Person();
-      person.setFirstName("test");
-      person.setLastName("test");
+      person.setFirstName("Anton");
+      person.setLastName("Mozgovoy");
       accountPerson.setPerson(person);
 
       Call<BaseResponse<Object>> call = service.updateAccountPerson(accountPerson);
@@ -79,6 +79,22 @@ public class ProfileApiTest {
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  @Test public void testUpdateAccountPassword() {
+
+  }
+
+  @Test public void testUpdateAccountAvatar() {
+
+  }
+
+  @Test public void testGetAccountProfile() {
+
+  }
+
+  @Test public void getGetAccountProfiles() {
+
   }
 
 }
