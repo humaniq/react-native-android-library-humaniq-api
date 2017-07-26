@@ -7,7 +7,6 @@ import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
-import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import java.util.Map;
 import retrofit2.Call;
@@ -26,11 +25,10 @@ public interface ProfileService {
   @POST("/tapatybe/api/v1/deauthenticate/user")
   Call<DeauthModel> deauthenticateUser(@Body UserId userId);
 
-
   @GET("/tapatybe/api/v1/account/profile")
-  Call<BasePayload<AccountProfile>> getAccountProfile(@Query("account_id") String accauntId);
+  Call<BasePayload<AccountPerson>> getAccountProfile(@Query("account_id") String accauntId);
 
-  @GET("/tapatybe/api/v1/accaunt/profiles")
+  @GET("/tapatybe/api/v1/account/profiles")
   Call<BaseResponse<Object>> getAccountProfiles(@QueryMap Map<String, String> accauntId);
 
 

@@ -245,6 +245,30 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           }
         });
   }
+
+  @ReactMethod public void getAccountProfile(String accountId, final Promise promise) {
+    ServiceBuilder.getProfileService().getAccountProfile(accountId)
+        .enqueue(new Callback<BasePayload<AccountPerson>>() {
+          @Override public void onResponse(Call<BasePayload<AccountPerson>> call,
+              Response<BasePayload<AccountPerson>> response) {
+            if(response.body() != null && response.body().code == Codes.ACCOUNT_PROFILE_RETRIEVED) {
+              try {
+                WritableMap profile = ModelConverterUtils
+                    .convertJsonToMap(new JSONObject(new Gson()
+                        .toJson(response.body().payload, AccountPerson.class)));
+                promise.resolve(profile);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            }
+          }
+
+          @Override public void onFailure(Call<BasePayload<AccountPerson>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
+  }
   /*
     Sends an event OF TRANSACTION CHANGED to the JS module.
   */

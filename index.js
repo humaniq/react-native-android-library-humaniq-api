@@ -7,5 +7,6 @@ const HumaniqToastApiLib = NativeModules.HumaniqToastApiLib
 const HumaniqProfileApiLib = NativeModules.HumaniqProfileApiLib
 const HumaniqDownloadFileLib = NativeModules.HumaniqDownloadFileLib
 const HumaniqContactsApiLib = NativeModules.HumaniqContactsApiLib
+const HumaniqBlockchainApiLib = NativeModules.HumaniqBlockchainApiLib
 
-export {HumaniqToastApiLib, HumaniqProfileApiLib, HumaniqDownloadFileLib, HumaniqContactsApiLib}
+export {HumaniqToastApiLib, HumaniqProfileApiLib, HumaniqDownloadFileLib, HumaniqContactsApiLib, HumaniqBlockchainApiLib}
