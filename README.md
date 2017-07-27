@@ -17,10 +17,9 @@ After download latest version of java library (gate thrue java to api endpoint) 
    import {HumaniqToastApiLib} from 'react-native-android-library-humaniq-api';
    in .js file.
    after this action, current module will be available for use.
-    ```
+   ```
    HumaniqToastApiLib.show(‘Boilerplate runs fine’, HumaniqApiLib.LONG)
        
-
    There are different modules available for using:
 
    ContactModule, DownloadModule, ProfileModule, ToastModule - uses for test library.
@@ -31,7 +30,7 @@ After download latest version of java library (gate thrue java to api endpoint) 
    ```
    @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
    Call<ContactsResponse> extractPhoneNumbers(@Body List<String> data);
-
+ 	```
 
    this function may be call in react-native .js file:
     ``` 
