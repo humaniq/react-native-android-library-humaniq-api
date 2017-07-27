@@ -4,6 +4,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
@@ -86,7 +87,30 @@ public class ProfileApiTest {
   }
 
   @Test public void testUpdateAccountPassword() {
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
+    try {
+      ProfileService service = ServiceBuilder.getProfileService();
+
+      AccountPassword accountPassword = new AccountPassword();
+      accountPassword.setAccountId("1568161709003113564");
+      accountPassword.setNewPassword("12345678");
+      accountPassword.setOldPassword("123456");
+      //AccountPerson.Person person = new AccountPerson.Person();
+      //person.setFirstName("Anton");
+      //person.setLastName("Mozgovoy");
+      //accountPerson.setPerson(person);
+
+      Call<BasePayload<Object>> call = service.updateAccountPassword(accountPassword);
+
+      Response<BasePayload<Object>> response = call.execute();
+
+      BasePayload<Object> baseResponse = response.body();
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Test public void testUpdateAccountAvatar() {

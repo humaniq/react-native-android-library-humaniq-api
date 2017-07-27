@@ -238,6 +238,15 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
                 promise.reject(e);
               }
+            } else if(response != null && response.errorBody() != null) {
+              try {
+                promise.reject(new Throwable(response.errorBody().string()));
+              } catch (IOException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            } else {
+              promise.reject(new Throwable("unknown error"));
             }
           }
 
