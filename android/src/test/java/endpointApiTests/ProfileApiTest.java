@@ -1,12 +1,15 @@
 package endpointApiTests;
 
+import android.util.Log;
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
+import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ContactService;
@@ -21,6 +24,7 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 import static org.junit.Assert.assertTrue;
@@ -56,29 +60,55 @@ public class ProfileApiTest {
     }
   }
 
-  @Test public void testupdateUserPerson() {
+  @Test public void testUpdateUserPerson() {
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
 
       AccountPerson accountPerson = new AccountPerson();
-      accountPerson.setAccountId("");
+      accountPerson.setAccountId("1567498755333161994");
       AccountPerson.Person person = new AccountPerson.Person();
-      person.setFirstName("test");
-      person.setLastName("test");
+      person.setFirstName("Anton");
+      person.setLastName("Mozgovoy");
       accountPerson.setPerson(person);
 
-      Call<BaseResponse<Object>> call = service.updateAccountPerson(accountPerson);
+      Call<BasePayload<AccountPerson>> call = service.updateAccountPerson(accountPerson);
 
-      Response<BaseResponse<Object>> response = call.execute();
+      Response<BasePayload<AccountPerson>> response = call.execute();
 
-      BaseResponse<Object> baseResponse = response.body();
+      BasePayload<AccountPerson> baseResponse = response.body();
 
       assertTrue(response.isSuccessful());
     } catch (Exception e) {
       e.printStackTrace();
     }
+  }
+
+  @Test public void testUpdateAccountPassword() {
+
+  }
+
+  @Test public void testUpdateAccountAvatar() {
+
+  }
+
+  @Test public void testGetAccountProfile() {
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      ProfileService service = ServiceBuilder.getProfileService();
+      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1567498755333161994");
+      Response<BasePayload<AccountProfile>> payload = call.execute();
+      Log.d("profile", payload.body().payload.getPerson().getFirstName());
+
+    }catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test public void getGetAccountProfiles() {
+
   }
 
 }

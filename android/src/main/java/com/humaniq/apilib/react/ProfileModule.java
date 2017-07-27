@@ -12,10 +12,15 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
+import com.humaniq.apilib.Codes;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.profile.AccountAvatar;
+import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
+import com.humaniq.apilib.network.models.response.BasePayload;
+import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.utils.ModelConverterUtils;
@@ -156,16 +161,23 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
     ServiceBuilder.getProfileService()
         .updateAccountPerson(accountPerson)
-        .enqueue(new Callback<BaseResponse<Object>>() {
-          @Override public void onResponse(Call<BaseResponse<Object>> call,
-              Response<BaseResponse<Object>> response) {
-            WritableMap writableMap = new WritableNativeMap();
-            writableMap.putString("status", "OK");
-            promise.resolve(writableMap);
+        .enqueue(new Callback<BasePayload<AccountPerson>>() {
+          @Override public void onResponse(Call<BasePayload<AccountPerson>> call,
+              Response<BasePayload<AccountPerson>> response) {
+            if (response != null && response.body() != null
+                && response.body().code == Codes.ACCOUNT_PERSONAL_UPDATE_SUCCESS) {
+              try {
+                WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body())));
+                promise.resolve(writableMap);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            }
           }
 
-          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
-
+          @Override public void onFailure(Call<BasePayload<AccountPerson>> call, Throwable t) {
+            promise.reject(t);
           }
         });
   }
@@ -180,9 +192,9 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     accountAvatar.setFacialImage(avatarBse64);
     ServiceBuilder.getProfileService()
         .updateAccountAvatar(accountAvatar)
-        .enqueue(new Callback<BaseResponse<Object>>() {
-          @Override public void onResponse(Call<BaseResponse<Object>> call,
-              Response<BaseResponse<Object>> response) {
+        .enqueue(new Callback<BasePayload<AccountAvatarResponse>>() {
+          @Override public void onResponse(Call<BasePayload<AccountAvatarResponse>> call,
+              Response<BasePayload<AccountAvatarResponse>> response) {
             WritableMap avatarRespone = null;
             if(response.body() != null && !"".equals(response.body())) {
               try {
@@ -194,7 +206,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             }
           }
 
-          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+          @Override public void onFailure(Call<BasePayload<AccountAvatarResponse>> call, Throwable t) {
             promise.reject(t);
           }
         });
@@ -203,8 +215,60 @@ public class ProfileModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod public void changeProfilePassword(
-      String oldPassword, String newPassword) {
+      String accountId,
+      String oldPassword, String newPassword,
+      final Promise promise) {
 
+    AccountPassword accountPassword = new AccountPassword();
+    accountPassword.setAccountId(accountId);
+    accountPassword.setOldPassword(oldPassword);
+    accountPassword.setNewPassword(newPassword);
+
+    ServiceBuilder.getProfileService()
+        .updateAccountPassword(accountPassword)
+        .enqueue(new Callback<BasePayload<Object>>() {
+          @Override public void onResponse(Call<BasePayload<Object>> call,
+              Response<BasePayload<Object>> response) {
+            if(response != null && response.body() != null
+                && response.body().code == Codes.ACCOUNT_PASSWORD_UPDATE_SUCCESS) {
+              try {
+                WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body())));
+                promise.resolve(writableMap);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            }
+          }
+
+          @Override public void onFailure(Call<BasePayload<Object>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
+  }
+
+  @ReactMethod public void getAccountProfile(String accountId, final Promise promise) {
+    ServiceBuilder.getProfileService().getAccountProfile(accountId)
+        .enqueue(new Callback<BasePayload<AccountProfile>>() {
+          @Override public void onResponse(Call<BasePayload<AccountProfile>> call,
+              Response<BasePayload<AccountProfile>> response) {
+            if(response.body() != null && response.body().code == Codes.ACCOUNT_PROFILE_RETRIEVED) {
+              try {
+                WritableMap profile = ModelConverterUtils
+                    .convertJsonToMap(new JSONObject(new Gson()
+                        .toJson(response.body().payload, AccountProfile.class)));
+                promise.resolve(profile);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            }
+          }
+
+          @Override public void onFailure(Call<BasePayload<AccountProfile>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
   }
   /*
     Sends an event OF TRANSACTION CHANGED to the JS module.

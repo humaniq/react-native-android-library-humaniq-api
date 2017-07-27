@@ -4,7 +4,10 @@ import com.humaniq.apilib.network.models.request.profile.AccountAvatar;
 import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
+import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import java.util.Map;
 import retrofit2.Call;
@@ -23,23 +26,23 @@ public interface ProfileService {
   @POST("/tapatybe/api/v1/deauthenticate/user")
   Call<DeauthModel> deauthenticateUser(@Body UserId userId);
 
-  @GET("/tapatybe/api/v1/accaunt/profile")
-  Call<BaseResponse<Object>> getAccountProfile(@Query("account_id") String accauntId);
+  @GET("/tapatybe/api/v1/account/profile")
+    Call<BasePayload<AccountProfile>> getAccountProfile(@Query("account_id") String accountId);
 
-  @GET("/tapatybe/api/v1/accaunt/profiles")
-  Call<BaseResponse<Object>> getAccountProfiles(@QueryMap Map<String, String> accauntId);
+  @GET("/tapatybe/api/v1/account/profiles")
+  Call<BaseResponse<Object>> getAccountProfiles(@QueryMap Map<String, String> accountId);
 
 
   @POST("/tapatybe/api/v1/account/person")
-  Call<BaseResponse<Object>> updateAccountPerson(@Body AccountPerson accountPerson);
+  Call<BasePayload<AccountPerson>> updateAccountPerson(@Body AccountPerson accountPerson);
 
 
   @POST("/tapatybe/api/v1/account/password")
-  Call<BaseResponse<Object>> updateAccountPassword(@Body AccountPassword accountPassword);
+  Call<BasePayload<Object>> updateAccountPassword(@Body AccountPassword accountPassword);
 
 
   @POST("/tapatybe/api/v1/account/avatar")
-  Call<BaseResponse<Object>> updateAccountAvatar(@Body AccountAvatar accountAvatar);
+  Call<BasePayload<AccountAvatarResponse>> updateAccountAvatar(@Body AccountAvatar accountAvatar);
 
 
 

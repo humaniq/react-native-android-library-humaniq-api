@@ -11,10 +11,10 @@ class User {
   @SerializedName("account_id")
   private String accountId;
 
-  @SerializedName("name")
+  @SerializedName("person")
   private User.Name name;
 
-  @SerializedName("profile_photo")
+  @SerializedName("avatar")
   private User.ProfilePhoto profilePhoto;
 
   @SerializedName("phone_number")
