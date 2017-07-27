@@ -14,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
@@ -37,7 +38,7 @@ public interface ProfileService {
   Call<BasePayload<AccountPerson>> updateAccountPerson(@Body AccountPerson accountPerson);
 
 
-  @POST("/tapatybe/api/v1/account/password")
+  @PUT("/tapatybe/api/v1/account/password")
   Call<BasePayload<Object>> updateAccountPassword(@Body AccountPassword accountPassword);
 
 
