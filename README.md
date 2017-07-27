@@ -14,18 +14,19 @@ After download latest version of java library (gate thrue java to api endpoint) 
 1. For check linked java library you can do instructions:
 
 
-   import {HumaniqToastApiLib} from 'react-native-android-library-humaniq-api';
-   in .js file.
    after this action, current module will be available for use.
+   
+   for sample toast message use this sample:
    ```
+   import {HumaniqToastApiLib} from 'react-native-android-library-humaniq-api';
    HumaniqToastApiLib.show(‘Boilerplate runs fine’, HumaniqApiLib.LONG)
-       
+   ```    
    There are different modules available for using:
 
    ContactModule, DownloadModule, ProfileModule, ToastModule - uses for test library.
 
    ContacnModule has implemented this api call:
-
+   
    https://gold-star-1172.postman.co/docs/collection/view/2376470-2edfad49-aac7-ed2e-5e42-edbf18a258b4#c8f6a1fe-0536-af9b-90e1-50e40213b615
    ```
    @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
