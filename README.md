@@ -38,10 +38,11 @@ After download latest version of java library (gate thrue java to api endpoint) 
        HumaniqToastApiLib.extractAllPhoneNumbers().then((array) => {
            console.warn(array);
           });
-
+ 	```
 2. in array object will use postman response, just redirect data from backend via java library to react-native app.
     
     Structure of data presented at 
+    ```
     {
   	  "success": true,
   	  "data": [
@@ -49,13 +50,13 @@ After download latest version of java library (gate thrue java to api endpoint) 
         "+7( 910) 987-65-43"
   	   ]
 	}
-
+     ```
     #Attention
     before use extractAllPhoneNumbers(), need to call and approve by user PermissionsAndroid.PERMISSIONS.WRITE_CONTACTS permission from react side. More details presented at this link https://facebook.github.io/react-native/docs/permissionsandroid.html
 
 2. Profile module (module consist api functions for any profile data requests) - HumaniqProfileApiLib.
 	This module conists functions:
-  ```
+    ```
 	public void getAddressState(String id, final Promise promise); 
  	public void getTransactions(String id, final Promise promise);
  	public void getTransactions(String id, int offset, int limit, final Promise promise);
@@ -65,7 +66,7 @@ After download latest version of java library (gate thrue java to api endpoint) 
  	public void uploadProfileAvatar(String accountId, String avatarBse64, final Promise promise);
  	public void changeProfilePassword(String oldPassword, String newPassword) - not yet released, only mock data;
  	public void deauthenticateUser(String accountId, final Promise promise);
-    
+    ```
 3. Download module (module consist api functions for download any files) - HumaniqDownloadFileLib
 	This module consists functions:
 	public void downloadVideoFile(String uri, final Promise downloadPromise);
@@ -73,11 +74,11 @@ After download latest version of java library (gate thrue java to api endpoint) 
     ```
 	public void downloadVideoFile(String uri, final Promise downloadPromise)
 	private void sendEvent(@Nullable WritableMap params) - every time provide progress status of file downloading. Use RCTDeviceEventEmitter class for this purpose.
-
+    ```
 4. Blockchain module contains this functions
 	```
 	public void transferHmq(String fromId, String toId, int amount, final Promise promise)
-
+    ```
 
 
 
