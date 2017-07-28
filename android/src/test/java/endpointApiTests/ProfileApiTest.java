@@ -94,8 +94,8 @@ public class ProfileApiTest {
 
       AccountPassword accountPassword = new AccountPassword();
       accountPassword.setAccountId("1568161709003113564");
+      accountPassword.setOldPassword("1234567");
       accountPassword.setNewPassword("1234567");
-      accountPassword.setOldPassword("123456");
       //AccountPerson.Person person = new AccountPerson.Person();
       //person.setFirstName("Anton");
       //person.setLastName("Mozgovoy");
