@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class ContactsResponse {
   private boolean success;
-  private ArrayList<String> data;
+  private ArrayList<Contact> data;
 
   public boolean isSuccess() {
     return success;
@@ -18,11 +18,11 @@ public class ContactsResponse {
     this.success = success;
   }
 
-  public ArrayList<String> getData() {
+  public ArrayList<Contact> getData() {
     return data;
   }
 
-  public void setData(ArrayList<String> data) {
+  public void setData(ArrayList<Contact> data) {
     this.data = data;
   }
 }

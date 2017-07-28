@@ -36,6 +36,9 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, reactContext);
   }
 
+  
+
+
   @Override public String getName() {
     return "HumaniqContactsApiLib";
   }
