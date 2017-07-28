@@ -35,5 +35,4 @@ public interface WalletService {
   @POST(value = "/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<Object>> createTransaction(
       @Path("user_id") String userId, @Field("to_user_id") String toUserId, @Field("amount") float amount);
 
-
 }

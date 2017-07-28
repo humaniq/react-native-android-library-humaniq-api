@@ -15,6 +15,7 @@ import com.humaniq.apilib.network.models.response.blockchain.TransferResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.utils.ModelConverterUtils;
+import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -50,10 +51,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
           public void onResponse(Call<TransferResponse> call, Response<TransferResponse> response) {
             WritableMap transferResponeMap = null;
             if (response.body() != null && !"".equals(response.body())) {
-              Log.d(LOG_TAG, "OnResponse - Error request");
-              Log.d(LOG_TAG, response.errorBody().toString());
-              promise.reject(response.errorBody().toString());
-            } else {
+              Log.d(LOG_TAG, "OnResponse - Right request");
               try {
                 transferResponeMap = ModelConverterUtils.convertJsonToMap(
                     new JSONObject(new Gson().toJson(response)));
@@ -62,10 +60,41 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
                 promise.reject(e);
               }
+            } else {
+              Log.d(LOG_TAG, "OnResponse - Error request");
+              Log.d(LOG_TAG, response.errorBody().toString());
+              promise.reject(response.errorBody().toString());
             }
           }
 
           @Override public void onFailure(Call<TransferResponse> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
+  }
+
+  @ReactMethod public void getUserAddressState(String userId, final Promise promise) {
+    Log.d(LOG_TAG, "User id = " + userId);
+    ServiceBuilder.getBlockchainService()
+        .getUserAddressState(userId)
+        .enqueue(new Callback<BaseResponse<List>>() {
+          @Override public void onResponse(Call<BaseResponse<List>> call,
+              Response<BaseResponse<List>> response) {
+            WritableMap responseArray = null;
+            if (response.body() != null && !"".equals(response.body())) {
+              Log.d(LOG_TAG, "OnResponse - Right request");
+              try {
+                responseArray = ModelConverterUtils.convertJsonToMap(
+                    new JSONObject(new Gson().toJson(response)));
+                promise.resolve(responseArray);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            }
+          }
+
+          @Override public void onFailure(Call<BaseResponse<List>> call, Throwable t) {
             promise.reject(t);
           }
         });
