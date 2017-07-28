@@ -77,9 +77,9 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
     Log.d(LOG_TAG, "User id = " + userId);
     ServiceBuilder.getBlockchainService()
         .getUserAddressState(userId)
-        .enqueue(new Callback<BaseResponse<List>>() {
-          @Override public void onResponse(Call<BaseResponse<List>> call,
-              Response<BaseResponse<List>> response) {
+        .enqueue(new Callback<BaseResponse>() {
+          @Override public void onResponse(Call<BaseResponse> call,
+              Response<BaseResponse> response) {
             WritableMap responseArray = null;
             if (response.body() != null && !"".equals(response.body())) {
               Log.d(LOG_TAG, "OnResponse - Right request");
@@ -94,7 +94,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
             }
           }
 
-          @Override public void onFailure(Call<BaseResponse<List>> call, Throwable t) {
+          @Override public void onFailure(Call<BaseResponse> call, Throwable t) {
             promise.reject(t);
           }
         });

@@ -3,6 +3,7 @@ package com.humaniq.apilib.network.service;
 import com.humaniq.apilib.network.models.request.blockchain.TransferRequest;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.models.response.blockchain.GetUserAddressStateModel;
 import com.humaniq.apilib.network.models.response.blockchain.TransferResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface BlockchainService {
   Call<TransferResponse> transferHmq (@Body TransferRequest transferRequest);
 
   @GET("/blockchain-api/v1/get/user/address/state/{user_id}")
-  Call <BaseResponse<List>>getUserAddressState(
+  Call <BaseResponse>getUserAddressState(
       @Path("user_id") String id
   );
 }
