@@ -3,6 +3,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import com.humaniq.apilib.R;
+import com.humaniq.apilib.network.service.providerApi.JwtTokenInterceptor;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,6 +64,8 @@ public class SelfSigningClientBuilder {
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
         }
+
+        client.interceptors().add(new JwtTokenInterceptor());
 
         return client;
     }

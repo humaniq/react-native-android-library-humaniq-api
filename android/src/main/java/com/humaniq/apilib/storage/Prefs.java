@@ -2,6 +2,7 @@ package com.humaniq.apilib.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 public class Prefs {
   private static final String URI = "URI";
@@ -9,6 +10,7 @@ public class Prefs {
   private static final String APP_PREFERENCES = "humaniq_java_api_prefs";
   private static final String IS_DOWNLOADING = "IS_DOWNLOADING";
   private static final String DOWNLOAD_ID = "DOWNLOAD_ID";
+  private static final String JWT_TOKEN = "JWT_TOKEN";
   private static SharedPreferences sharedPreferences;
 
   public Prefs(Context context) {
@@ -21,6 +23,14 @@ public class Prefs {
 
   public static void saveLocalUri(String uri) {
     sharedPreferences.edit().putString(LOCAL, uri).commit();
+  }
+
+  public static void saveJwtToken(String token) {
+    sharedPreferences.edit().putString(JWT_TOKEN, token).commit();
+  }
+
+  public static String getJwtToken() {
+    return sharedPreferences.getString(JWT_TOKEN, null);
   }
 
   public static String getDownloadedUri() {
@@ -49,5 +59,13 @@ public class Prefs {
 
   public static void saveDownloadId(long enqueue) {
     sharedPreferences.edit().putLong(DOWNLOAD_ID, enqueue).commit();
+  }
+
+  public static boolean hasToken() {
+    return !TextUtils.isEmpty(sharedPreferences.getString(JWT_TOKEN, null));
+  }
+
+  public static void clearJwtToken() {
+    sharedPreferences.edit().putString(JWT_TOKEN, null).commit();
   }
 }

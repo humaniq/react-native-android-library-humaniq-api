@@ -5,6 +5,7 @@ package com.humaniq.apilib.network.service.providerApi;
  */
 
 import android.content.Context;
+import com.humaniq.apilib.network.service.AuthorizationService;
 import com.humaniq.apilib.network.service.BlockchainService;
 import com.humaniq.apilib.utils.SelfSigningClientBuilder;
 import com.humaniq.apilib.network.service.ContactService;
@@ -55,5 +56,9 @@ public class ServiceBuilder {
   }
   public static BlockchainService getBlockchainService() {
     return retrofit.create(BlockchainService.class);
+  }
+
+  public static AuthorizationService getAuthorizationService() {
+    return retrofit.create(AuthorizationService.class);
   }
 }
