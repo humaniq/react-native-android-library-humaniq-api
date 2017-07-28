@@ -59,13 +59,13 @@ public class SelfSigningClientBuilder {
 
             client = new OkHttpClient.Builder()
                     .sslSocketFactory(sslContext.getSocketFactory())
+                .addInterceptor(new JwtTokenInterceptor())
                     .build();
 
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
         }
 
-        client.interceptors().add(new JwtTokenInterceptor());
 
         return client;
     }
