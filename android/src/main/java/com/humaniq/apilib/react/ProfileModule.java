@@ -48,6 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
+import retrofit2.http.QueryMap;
 
 public class ProfileModule extends ReactContextBaseJavaModule {
 
@@ -321,6 +322,42 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           }
 
           @Override public void onFailure(Call<BasePayload<AccountProfile>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
+  }
+
+  @ReactMethod public void getAccountProfiles(List<String> accountIds, final Promise promise) {
+    String query = "";
+    for(int i = 0; i < accountIds.size(); i++) {
+        query += accountIds.get(i) + "&account_id=";
+    }
+
+    ServiceBuilder.getProfileService().getAccountProfiles(query)
+        .enqueue(new Callback<BasePayload<List<AccountProfile>>>() {
+          @Override public void onResponse(Call<BasePayload<List<AccountProfile>>> call,
+              Response<BasePayload<List<AccountProfile>>> response) {
+            if(response.body() != null && response.body().code == Codes.ACCOUNT_PROFILE_RETRIEVED) {
+              try {
+                WritableArray writableArray = new WritableNativeArray();
+                for(AccountProfile accountProfile : response.body().payload) {
+                  WritableMap profile = ModelConverterUtils.convertJsonToMap(
+                      new JSONObject(new Gson().toJson(accountProfile, AccountProfile.class)));
+                  writableArray.pushMap(profile);
+                }
+                promise.resolve(writableArray);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            } else if(response.errorBody() != null) {
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+            } else {
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+            }
+          }
+
+          @Override public void onFailure(Call<BasePayload<List<AccountProfile>>> call, Throwable t) {
             promise.reject(t);
           }
         });
