@@ -1,5 +1,8 @@
 package com.humaniq.apilib.react;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.widget.Toast;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -21,6 +24,10 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.utils.ResponseWrapperUtils;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -112,10 +119,30 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
         });
   }
 
+  private String encodeImage(String path)
+  {
+    File imagefile = new File(path);
+    FileInputStream fis = null;
+    try{
+      fis = new FileInputStream(imagefile);
+    } catch(FileNotFoundException e){
+      e.printStackTrace();
+    }
+    Bitmap bm = BitmapFactory.decodeStream(fis);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
+    byte[] b = baos.toByteArray();
+    String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+    //Base64.de
+    return encImage;
+
+  }
+
   @ReactMethod
-  public void validate(String facialImageValidationId, String base64, final Promise promise) {
+  public void validate(String facialImageValidationId, String path, final Promise promise) {
     ValidateRequest validateRequest = new ValidateRequest();
     validateRequest.setFacialImageId(facialImageValidationId);
+    String base64 = encodeImage(path);
     validateRequest.setFacialImage(base64);
     //  JsonObject jsonObject = new JsonObject();
     //jsonObject.addProperty("facial_image_validation_id", facialImageId);
@@ -125,14 +152,10 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
         .enqueue(new Callback<BasePayload<ValidationResponse>>() {
           @Override public void onResponse(Call<BasePayload<ValidationResponse>> call,
               Response<BasePayload<ValidationResponse>> response) {
-            Toast.makeText(getReactApplicationContext(),"received", Toast.LENGTH_SHORT)
-                .show();
+
 
             if (response.body() != null) {
 
-              Toast.makeText(getReactApplicationContext(),
-                  "paylaod: " + response.body().payload.getMessage(), Toast.LENGTH_SHORT)
-                  .show();
 
               try {
                 WritableMap writableMap = ModelConverterUtils.convertJsonToMap(
@@ -141,26 +164,18 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 promise.resolve(writableMap);
               } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getReactApplicationContext(),
-                    "jsonException: " + e.getMessage(), Toast.LENGTH_SHORT)
-                    .show();
+
                 promise.reject(e);
               }
             } else {
-              try {
-                Toast.makeText(getReactApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT)
-                    .show();
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
+
               promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
 
           @Override public void onFailure(Call<BasePayload<ValidationResponse>> call, Throwable t) {
             promise.reject(t);
-            Toast.makeText(getReactApplicationContext(),"onFailure+ " + t.getMessage(), Toast.LENGTH_SHORT)
-                .show();
+
           }
         });
   }

@@ -1,22 +1,32 @@
 package endpointApiTests;
 
+import android.content.res.Resources;
 import android.util.Log;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.R;
+import com.humaniq.apilib.network.models.request.ValidateRequest;
 import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.models.response.FacialImage;
+import com.humaniq.apilib.network.models.response.FacialImageValidation;
+import com.humaniq.apilib.network.models.response.ValidationResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
+import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,8 +143,51 @@ public class ProfileApiTest {
     }
   }
 
-  @Test public void getGetAccountProfiles() {
+  String facialImageId;
+  @Test public void testValidationSteps() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
+    try {
+      Resources res = RuntimeEnvironment.application.getResources();
+      InputStream in_s = res.openRawResource(R.raw.ava);
+
+      byte[] b = new byte[in_s.available()];
+      in_s.read(b);
+      base64 = new String(b);
+    } catch (Exception e) {
+      // e.printStackTrace();
+    }
+
+    try {
+
+    ValidationService validationService = ServiceBuilder.getValidationService();
+
+
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("facial_image", base64);
+    Call<BasePayload<FacialImage>> call = validationService.isRegistered(jsonObject);
+      Response<BasePayload<FacialImage>> payloadResponse = call.execute();
+      facialImageId = payloadResponse.body().payload.getFacialImageId();
+      JsonObject jsonObject1 = new JsonObject();
+      jsonObject1.addProperty("facial_image_id", facialImageId);
+      Call<BasePayload<FacialImageValidation>> call1 = validationService.createValidation(jsonObject1);
+      Response<BasePayload<FacialImageValidation>> payloadResponse1 = call1.execute();
+
+      ValidateRequest validateRequest = new ValidateRequest();
+      validateRequest.setFacialImageId(payloadResponse1.body().payload.getFacialImageValidationId());
+      validateRequest.setFacialImage(base64);
+      Call<BasePayload<ValidationResponse>> call2 = validationService.validate(validateRequest);
+      Response<BasePayload<ValidationResponse>> payloadResponse2 = call2.execute();
+
+      System.out.println(payloadResponse2.body().payload.getMessage());
+      assertTrue(payloadResponse2.isSuccessful());
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
+  private String base64;
+
 
 }
