@@ -11,6 +11,7 @@ public class Prefs {
   private static final String IS_DOWNLOADING = "IS_DOWNLOADING";
   private static final String DOWNLOAD_ID = "DOWNLOAD_ID";
   private static final String JWT_TOKEN = "JWT_TOKEN";
+  private static final String FCM_TOKEN = "FCM_TOKEN";
   private static SharedPreferences sharedPreferences;
 
   public Prefs(Context context) {
@@ -67,5 +68,13 @@ public class Prefs {
 
   public static void clearJwtToken() {
     sharedPreferences.edit().putString(JWT_TOKEN, null).commit();
+  }
+
+  public static void saveFCMToken(String fcm_token) {
+    sharedPreferences.edit().putString(FCM_TOKEN, fcm_token).commit();
+  }
+
+  public static String getFCMToken() {
+    return sharedPreferences.getString(FCM_TOKEN, null);
   }
 }

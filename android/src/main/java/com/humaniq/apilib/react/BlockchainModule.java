@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.blockchain.TransferRequest;
@@ -16,6 +17,7 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.blockchain.TransferResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import java.util.List;
 import org.json.JSONException;
@@ -33,6 +35,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
 
   public BlockchainModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    new Prefs(reactContext);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, reactContext);
   }
 
@@ -73,6 +76,12 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
             promise.reject(t);
           }
         });
+  }
+
+  @ReactMethod public void  getFCMToken(Promise promise) {
+    WritableMap writableMap = new WritableNativeMap();
+    writableMap.putString("token", Prefs.getFCMToken());
+    promise.resolve(writableMap);
   }
 
   @ReactMethod public void getUserAddressState(String userId, final Promise promise) {
