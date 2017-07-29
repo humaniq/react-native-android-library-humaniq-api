@@ -23,8 +23,10 @@ public class TokenModule extends ReactContextBaseJavaModule {
     return "HumaniqTokenApiLib";
   }
 
-  @ReactMethod public void saveJwtToken(String jwtToken, Promise promise) {
+  @ReactMethod public void saveCredentials(
+      String jwtToken, String accountId, Promise promise) {
     Prefs.saveJwtToken(jwtToken);
+    Prefs.saveAccountId(accountId);
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("status", "saved: " + Prefs.getJwtToken());
     promise.resolve(writableMap);
@@ -36,9 +38,14 @@ public class TokenModule extends ReactContextBaseJavaModule {
     promise.resolve(writableMap);
   }
 
-  @ReactMethod public void getToken(Promise promise) {
+  @ReactMethod public void getJwtToken(Promise promise) {
     WritableMap jwtMap = new WritableNativeMap();
     jwtMap.putString("token", Prefs.getJwtToken());
+    promise.resolve(jwtMap);
+  }
+  @ReactMethod public void getAccountId(Promise promise) {
+    WritableMap jwtMap = new WritableNativeMap();
+    jwtMap.putString("token", Prefs.getAccountId());
     promise.resolve(jwtMap);
   }
 }

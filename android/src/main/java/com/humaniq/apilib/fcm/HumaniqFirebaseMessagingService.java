@@ -13,7 +13,7 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
   private static final String TAG = "HumaniqFirebaseMessagingService";
 
   @Override public void onMessageReceived(RemoteMessage remoteMessage) {
-
+       sendNotification("humaniq msg: " + remoteMessage.toString());
   }
 
 
