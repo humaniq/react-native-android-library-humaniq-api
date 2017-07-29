@@ -1,33 +1,38 @@
 package com.humaniq.apilib.network.models.response.blockchain;
 
+import com.facebook.common.internal.DoNotStrip;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by gritsay on 7/28/17.
  */
 
 public class GetUserAddressStateModel {
 
-  private String userId;
-  private String status;
-  private String currency;
-  private String backupCurrency;
-  private String address;
-  private String balance;
-  private String availableBalance;
-  private String pending;
-  private String received;
-  private String sent;
-  private String serviceCharge;
-  private String signupTimestampIso;
-  private String sentTransactions;
-  private String receivedTransactions;
-  private String pendingReceivedTransactions;
-  private String invalidTransactions;
-  private String totalTransactions;
-  private String receivedBonusTransactions;
-  private String availableBonus;
-  private String usedBonus;
-  private String rating;
-  private String percentage;
+  @SerializedName("223344556677") private String userId;
+  @SerializedName("status") private String status;
+  @SerializedName("currency") private String currency;
+  @SerializedName("backup_currency") private String backupCurrency;
+  @SerializedName("address") private String address;
+  @SerializedName("balance") private String balance;
+  @SerializedName("available_balance") private String availableBalance;
+  @SerializedName("pending") private String pending;
+  @SerializedName("gwei") private String gwei;
+  @SerializedName("received") private String received;
+  @SerializedName("sent") private String sent;
+  @SerializedName("service_charge") private String serviceCharge;
+  @SerializedName("signup_timestamp") private String signupTimestamp;
+  @SerializedName("sent_tx") private String sentTransactions;
+  @SerializedName("received_tx") private String receivedTransactions;
+  @SerializedName("pending_sent_tx") private String pendingSentTransactions;
+  @SerializedName("pending_received_tx") private String pendingReceivedTransactions;
+  @SerializedName("invalid_tx") private String invalidTransactions;
+  @SerializedName("total_tx") private String totalTransactions;
+  @SerializedName("received_bonus_tx") private String receivedBonusTransactions;
+  @SerializedName("available_bonus") private String availableBonus;
+  @SerializedName("used_bonus") private String usedBonus;
+  @SerializedName("rating") private String rating;
+  @SerializedName("percentage") private String percentage;
 
   public String getUserId() {
     return userId;
@@ -93,6 +98,14 @@ public class GetUserAddressStateModel {
     this.pending = pending;
   }
 
+  public String getGwei() {
+    return gwei;
+  }
+
+  public void setGwei(String gwei) {
+    this.gwei = gwei;
+  }
+
   public String getReceived() {
     return received;
   }
@@ -117,12 +130,12 @@ public class GetUserAddressStateModel {
     this.serviceCharge = serviceCharge;
   }
 
-  public String getSignupTimestampIso() {
-    return signupTimestampIso;
+  public String getSignupTimestamp() {
+    return signupTimestamp;
   }
 
-  public void setSignupTimestampIso(String signupTimestampIso) {
-    this.signupTimestampIso = signupTimestampIso;
+  public void setSignupTimestamp(String signupTimestamp) {
+    this.signupTimestamp = signupTimestamp;
   }
 
   public String getSentTransactions() {
@@ -139,6 +152,14 @@ public class GetUserAddressStateModel {
 
   public void setReceivedTransactions(String receivedTransactions) {
     this.receivedTransactions = receivedTransactions;
+  }
+
+  public String getPendingSentTransactions() {
+    return pendingSentTransactions;
+  }
+
+  public void setPendingSentTransactions(String pendingSentTransactions) {
+    this.pendingSentTransactions = pendingSentTransactions;
   }
 
   public String getPendingReceivedTransactions() {
