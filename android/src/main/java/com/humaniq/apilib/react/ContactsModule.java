@@ -78,13 +78,9 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     if (getAllContacts() != null) {
       ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
         @Override public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
-          if (!response.isSuccessful()) {
-            Log.d(LOG_TAG, "OnResponse - Error request");
-            Log.d(LOG_TAG, response.errorBody().toString());
-          } else {
+          if (response.body() != null && !"".equals(response.body()))  {
             Log.d(LOG_TAG, "OnResponse - Success request");
             ContactsResponse res = response.body();
-
             Gson gson = new Gson();
             String jsonString = gson.toJson(res);
             try {
@@ -94,7 +90,11 @@ public class ContactsModule extends ReactContextBaseJavaModule {
               e.printStackTrace();
               promise.reject(e);
             }
+          } else {
+            Log.d(LOG_TAG, "OnResponse - Error request");
+            Log.d(LOG_TAG, response.errorBody().toString());
           }
+
         }
 
         @Override public void onFailure(Call<ContactsResponse> call, Throwable t) {

@@ -82,7 +82,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
               Response<BaseResponse> response) {
             WritableMap responseArray = null;
             if (response.body() != null && !"".equals(response.body())) {
-              Log.d(LOG_TAG, "OnResponse - Right request");
+              Log.d(LOG_TAG, "OnResponse - Right response");
               try {
                 responseArray = ModelConverterUtils.convertJsonToMap(
                     new JSONObject(new Gson().toJson(response)));
