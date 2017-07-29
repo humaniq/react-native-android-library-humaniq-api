@@ -9,6 +9,7 @@ import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -20,6 +21,7 @@ import retrofit2.http.Query;
 
 public interface BlockchainService {
   //https://gold-star-1172.postman.co/docs/collection/view/2266679-6d383c78-e0d2-0f08-c21d-a61e0cf1b1ef#000166c6-4090-9b92-565d-64c1209925d1
+  @FormUrlEncoded
   @POST("/blockchain-api/transfer")
   Call<TransferResponse> transferHmq (@Body TransferRequest transferRequest);
 
