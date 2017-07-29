@@ -5,9 +5,11 @@ package com.humaniq.apilib.network.service.providerApi;
  */
 
 import android.content.Context;
+import com.humaniq.apilib.network.models.response.FacialImage;
 import com.humaniq.apilib.network.service.AuthorizationService;
 import com.humaniq.apilib.network.service.BlockchainService;
 import com.humaniq.apilib.network.service.FcmService;
+import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.utils.SelfSigningClientBuilder;
 import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
@@ -65,5 +67,9 @@ public class ServiceBuilder {
 
   public static FcmService getFcmService() {
     return retrofit.create(FcmService.class);
+  }
+
+  public static ValidationService getValidationService() {
+    return retrofit.create(ValidationService.class);
   }
 }

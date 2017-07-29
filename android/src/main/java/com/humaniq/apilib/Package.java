@@ -8,6 +8,7 @@ import com.facebook.react.uimanager.ViewManager;
 import com.humaniq.apilib.react.BlockchainModule;
 import com.humaniq.apilib.react.ContactsModule;
 import com.humaniq.apilib.react.DownloadModule;
+import com.humaniq.apilib.react.PhotoValidationModule;
 import com.humaniq.apilib.react.ToastModule;
 import com.humaniq.apilib.react.ProfileModule;
 import com.humaniq.apilib.react.TokenModule;
@@ -34,6 +35,7 @@ public class Package implements ReactPackage {
       modules.add(new ContactsModule(reactContext));
       modules.add(new BlockchainModule(reactContext));
       modules.add(new TokenModule(reactContext));
+      modules.add(new PhotoValidationModule(reactContext));
 
       return modules;
     }
