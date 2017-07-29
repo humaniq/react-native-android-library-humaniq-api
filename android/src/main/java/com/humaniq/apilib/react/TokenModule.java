@@ -20,7 +20,7 @@ public class TokenModule extends ReactContextBaseJavaModule {
   }
 
   @Override public String getName() {
-    return "TokenModule";
+    return "HumaniqTokenApiLib";
   }
 
   @ReactMethod public void saveJwtToken(String jwtToken, Promise promise) {
