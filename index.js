@@ -9,6 +9,7 @@ const HumaniqDownloadFileLib = NativeModules.HumaniqDownloadFileLib
 const HumaniqContactsApiLib = NativeModules.HumaniqContactsApiLib
 const HumaniqBlockchainApiLib = NativeModules.HumaniqBlockchainApiLib
 const HumaniqTokenApiLib = NativeModules.HumaniqTokenApiLib
+const HumaniqPhotoValidation = NativeModules.HumaniqPhotoValidation
 
 export {
 HumaniqToastApiLib,
@@ -16,5 +17,6 @@ HumaniqProfileApiLib,
 HumaniqDownloadFileLib,
 HumaniqContactsApiLib, 
 HumaniqBlockchainApiLib,
-HumaniqTokenApiLib
+HumaniqTokenApiLib,
+HumaniqPhotoValidation
 }
