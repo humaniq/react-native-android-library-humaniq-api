@@ -5,7 +5,9 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.blockchain.TransferRequest;
@@ -77,15 +79,18 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
     Log.d(LOG_TAG, "User id = " + userId);
     ServiceBuilder.getBlockchainService()
         .getUserAddressState(userId)
-        .enqueue(new Callback<BaseResponse>() {
-          @Override public void onResponse(Call<BaseResponse> call,
-              Response<BaseResponse> response) {
+        .enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
             WritableMap responseArray = null;
             if (response.body() != null && !"".equals(response.body())) {
+              WritableArray writableArray = new WritableNativeArray();
+
+              //for(BaseResponse baseResponse: )
               Log.d(LOG_TAG, "OnResponse - Right request");
               try {
                 responseArray = ModelConverterUtils.convertJsonToMap(
-                    new JSONObject(new Gson().toJson(response)));
+                    new JSONObject(new Gson().toJson(response.body().data)));
                 promise.resolve(responseArray);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -94,7 +99,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
             }
           }
 
-          @Override public void onFailure(Call<BaseResponse> call, Throwable t) {
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
             promise.reject(t);
           }
         });
