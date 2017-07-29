@@ -16,6 +16,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Codes;
 import com.humaniq.apilib.Constants;
@@ -110,8 +111,14 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
+        String data = "";
+        RemoteMessage remoteMessage = intent.getParcelableExtra("data");
+        for(String key : remoteMessage.getData().keySet()) {
+          data += key + ": " + remoteMessage.getData().get(key) + ", ";
+        }
+
         WritableMap writableMap = new WritableNativeMap();
-        writableMap.putString("transaction", "ахахахахахао");
+        writableMap.putString("transaction", data);
         sendEvent(writableMap);
 
       }
