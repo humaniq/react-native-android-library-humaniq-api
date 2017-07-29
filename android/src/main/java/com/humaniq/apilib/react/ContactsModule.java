@@ -95,8 +95,8 @@ public class ContactsModule extends ReactContextBaseJavaModule {
                 WritableMap phonesWithId =  ModelConverterUtils.
                       convertJsonToMap(new JSONObject(new Gson().toJson(contact, Contact.class)));
                 array.pushMap(phonesWithId);
-                promise.resolve(array);
               }
+              promise.resolve(array);
 
             } catch (JSONException e) {
               e.printStackTrace();

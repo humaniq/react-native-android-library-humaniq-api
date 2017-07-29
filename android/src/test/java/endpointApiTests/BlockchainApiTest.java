@@ -3,9 +3,11 @@ package endpointApiTests;
 import com.facebook.stetho.inspector.protocol.module.Network;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.wallet.AddressState;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.BlockchainService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.storage.Prefs;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -25,11 +27,12 @@ public class BlockchainApiTest {
 
   @Test public void testGetUserAddressState() {
     try {
+      new Prefs(RuntimeEnvironment.application);
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       BlockchainService blockchainService = ServiceBuilder.getBlockchainService();
       Call<BaseResponse<Object>> responseCall = blockchainService.getUserAddressState("223344556677");
       Response<BaseResponse<Object>> response = responseCall.execute();
-      BaseResponse<Object> baseResponse = response.body();
+      BaseResponse<AddressState> baseResponse = response.body();
       assertTrue(response.isSuccessful());
     } catch (Exception e) {
       e.printStackTrace();
