@@ -1,5 +1,6 @@
 package com.humaniq.apilib.react;
 
+import android.widget.Toast;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -20,6 +21,7 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.utils.ResponseWrapperUtils;
+import java.io.IOException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,115 +46,109 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
   @ReactMethod public void isRegistered(String base64, final Promise promise) {
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("facial_image", base64);
-        ServiceBuilder
-            .getValidationService()
-            .isRegistered(jsonObject)
-            .enqueue(new Callback<BasePayload<FacialImage>>() {
-              @Override public void onResponse(Call<BasePayload<FacialImage>> call,
-                  Response<BasePayload<FacialImage>> response) {
-                if(response.body() != null) {
-                  try {
-                    WritableMap writableMap =
-                        ModelConverterUtils
-                            .convertJsonToMap(
-                                new JSONObject(
-                                    new Gson().toJson(response.body().payload)));
+    ServiceBuilder.getValidationService()
+        .isRegistered(jsonObject)
+        .enqueue(new Callback<BasePayload<FacialImage>>() {
+          @Override public void onResponse(Call<BasePayload<FacialImage>> call,
+              Response<BasePayload<FacialImage>> response) {
+            if (response.body() != null) {
+              try {
+                WritableMap writableMap = ModelConverterUtils.convertJsonToMap(
+                    new JSONObject(new Gson().toJson(response.body().payload)));
 
-                    promise.resolve(writableMap);
-                  } catch (Exception e) {
-                    e.printStackTrace();
-                    promise.reject(e);
-                  }
-                } else {
-                  promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
-                }
+                promise.resolve(writableMap);
+              } catch (Exception e) {
+                e.printStackTrace();
+                promise.reject(e);
               }
+            } else {
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+            }
+          }
 
-              @Override public void onFailure(Call<BasePayload<FacialImage>> call,
-                  Throwable t) {
-                promise.reject(t);
-              }
-            });
+          @Override public void onFailure(Call<BasePayload<FacialImage>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
   }
 
-    @ReactMethod public void createValidation(String facialImageId, final Promise promise) {
+  @ReactMethod public void createValidation(String facialImageId, final Promise promise) {
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("facial_image_id", facialImageId);
-        ServiceBuilder
-            .getValidationService()
-            .createValidation(jsonObject)
-            .enqueue(new Callback<BasePayload<FacialImageValidation>>() {
-              @Override public void onResponse(Call<BasePayload<FacialImageValidation>> call,
-                  Response<BasePayload<FacialImageValidation>> response) {
-                if(response.body() != null) {
-                  try {
-                    WritableMap writableMap = new WritableNativeMap();
-                    writableMap.putString("facial_image_validation_id",
-                        response.body().payload.getFacialImageValidationId());
+    ServiceBuilder.getValidationService()
+        .createValidation(jsonObject)
+        .enqueue(new Callback<BasePayload<FacialImageValidation>>() {
+          @Override public void onResponse(Call<BasePayload<FacialImageValidation>> call,
+              Response<BasePayload<FacialImageValidation>> response) {
+            if (response.body() != null) {
+              try {
+                WritableMap writableMap = new WritableNativeMap();
+                writableMap.putString("facial_image_validation_id",
+                    response.body().payload.getFacialImageValidationId());
 
-                    WritableArray emotionArray = new WritableNativeArray();
-                    for(String emotion: response.body().payload.getRequiredEmotions()) {
-                      WritableMap emotionMap = new WritableNativeMap();
-                      emotionMap.putString("emotion", emotion);
-                      emotionArray.pushMap(emotionMap);
-                    }
-
-                    writableMap.putArray("required_emotions",emotionArray);
-
-                    promise.resolve(writableMap);
-                  } catch (Exception e) {
-                    e.printStackTrace();
-                    promise.reject(e);
-                  }
-                } else {
-                  promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+                WritableArray emotionArray = new WritableNativeArray();
+                for (String emotion : response.body().payload.getRequiredEmotions()) {
+                  WritableMap emotionMap = new WritableNativeMap();
+                  emotionMap.putString("emotion", emotion);
+                  emotionArray.pushMap(emotionMap);
                 }
-              }
 
-              @Override public void onFailure(Call<BasePayload<FacialImageValidation>> call,
-                  Throwable t) {
-                promise.reject(t);
+                writableMap.putArray("required_emotions", emotionArray);
+
+                promise.resolve(writableMap);
+              } catch (Exception e) {
+                e.printStackTrace();
+                promise.reject(e);
               }
-            });
+            } else {
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+            }
+          }
+
+          @Override
+          public void onFailure(Call<BasePayload<FacialImageValidation>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
   }
 
-    @ReactMethod public void validate(String facialImageId, String base64, final Promise promise) {
-      ValidateRequest validateRequest = new ValidateRequest();
-      validateRequest.setFacialImageId(facialImageId);
-      validateRequest.setFacialImage(base64);
+  @ReactMethod
+  public void validate(String facialImageValidationId, String base64, final Promise promise) {
+    ValidateRequest validateRequest = new ValidateRequest();
+    validateRequest.setFacialImageId(facialImageValidationId);
+    validateRequest.setFacialImage(base64);
     //  JsonObject jsonObject = new JsonObject();
     //jsonObject.addProperty("facial_image_validation_id", facialImageId);
     //  jsonObject.addProperty("facial_image", base64);
-        ServiceBuilder
-            .getValidationService()
-            .validate(validateRequest)
-            .enqueue(new Callback<BasePayload<ValidationResponse>>() {
-              @Override public void onResponse(Call<BasePayload<ValidationResponse>> call,
-                  Response<BasePayload<ValidationResponse>> response) {
-                if(response.body() != null) {
-                  try {
-                    WritableMap writableMap =
-                        ModelConverterUtils
-                            .convertJsonToMap(
-                                new JSONObject(
-                                    new Gson().toJson(response.body().payload)));
+    ServiceBuilder.getValidationService()
+        .validate(validateRequest)
+        .enqueue(new Callback<BasePayload<ValidationResponse>>() {
+          @Override public void onResponse(Call<BasePayload<ValidationResponse>> call,
+              Response<BasePayload<ValidationResponse>> response) {
+            if (response.body() != null) {
+              try {
+                WritableMap writableMap = ModelConverterUtils.convertJsonToMap(
+                    new JSONObject(new Gson().toJson(response.body().payload)));
 
-                    promise.resolve(writableMap);
-                  } catch (Exception e) {
-                    e.printStackTrace();
-                    promise.reject(e);
-                  }
-                } else {
-                  promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
-                }
+                promise.resolve(writableMap);
+              } catch (Exception e) {
+                e.printStackTrace();
+                promise.reject(e);
               }
+            } else {
+              try {
+                Toast.makeText(getReactApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT)
+                    .show();
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+            }
+          }
 
-              @Override public void onFailure(Call<BasePayload<ValidationResponse>> call,
-                  Throwable t) {
-                promise.reject(t);
-              }
-            });
+          @Override public void onFailure(Call<BasePayload<ValidationResponse>> call, Throwable t) {
+            promise.reject(t);
+          }
+        });
   }
-
-
 }
