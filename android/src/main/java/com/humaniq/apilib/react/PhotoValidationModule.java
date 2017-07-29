@@ -62,6 +62,8 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                     e.printStackTrace();
                     promise.reject(e);
                   }
+                } else {
+                  promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
                 }
               }
 
@@ -137,6 +139,8 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                     e.printStackTrace();
                     promise.reject(e);
                   }
+                } else {
+                  promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
                 }
               }
 
