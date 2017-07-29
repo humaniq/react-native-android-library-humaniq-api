@@ -29,7 +29,7 @@ public interface ValidationService {
    }
    */
 
-  @POST("/tapatybe/api/v1/facial_recognition/createValidation")
+  @POST("/tapatybe/api/v1/facial_recognition/validations")
   Call<BasePayload<FacialImageValidation>> createValidation(@Body JsonObject facialImageId);
 
 
