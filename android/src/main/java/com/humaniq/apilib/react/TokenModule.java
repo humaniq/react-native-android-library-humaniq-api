@@ -26,7 +26,13 @@ public class TokenModule extends ReactContextBaseJavaModule {
   @ReactMethod public void saveJwtToken(String jwtToken, Promise promise) {
     Prefs.saveJwtToken(jwtToken);
     WritableMap writableMap = new WritableNativeMap();
-    writableMap.putString("status", "saved");
+    writableMap.putString("status", "saved: " + Prefs.getJwtToken());
     promise.resolve(writableMap);
+  }
+
+  @ReactMethod public void getToken(Promise promise) {
+    WritableMap jwtMap = new WritableNativeMap();
+    jwtMap.putString("token", Prefs.getJwtToken());
+    promise.resolve(jwtMap);
   }
 }
