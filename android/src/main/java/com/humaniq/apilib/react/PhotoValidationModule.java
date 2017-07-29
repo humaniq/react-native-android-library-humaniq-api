@@ -117,7 +117,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
 
     @ReactMethod public void validate(String facialImageId, String base64, final Promise promise) {
     JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("facial_image_validation_id", facialImageId);
+    jsonObject.addProperty("facial_image_id", facialImageId);
       jsonObject.addProperty("facial_image", base64);
 
         ServiceBuilder
