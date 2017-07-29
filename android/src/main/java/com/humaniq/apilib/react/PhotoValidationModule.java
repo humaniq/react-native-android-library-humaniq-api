@@ -51,9 +51,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
     return "HumaniqPhotoValidation";
   }
 
-  @ReactMethod public void isRegistered(String path, final Promise promise) {
+  @ReactMethod public void isRegistered(String base64, final Promise promise) {
     JsonObject jsonObject = new JsonObject();
-    String base64 = encodeImage(path);
+    //String base64 = encodeImage(path);
     jsonObject.addProperty("facial_image", base64);
     ServiceBuilder.getValidationService()
         .isRegistered(jsonObject)
@@ -141,10 +141,10 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-    public void validate(String facialImageValidationId, String path, final Promise promise) {
+    public void validate(String facialImageValidationId, String base64, final Promise promise) {
     ValidateRequest validateRequest = new ValidateRequest();
     validateRequest.setFacialImageId(facialImageValidationId);
-    String base64 = encodeImage(path);
+    //String base64 = encodeImage(path);
     validateRequest.setFacialImage(base64);
     //  JsonObject jsonObject = new JsonObject();
     //jsonObject.addProperty("facial_image_validation_id", facialImageId);
