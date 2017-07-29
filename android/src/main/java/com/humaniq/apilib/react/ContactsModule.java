@@ -10,8 +10,13 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
+import com.humaniq.apilib.network.models.response.contacts.Contact;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
@@ -22,6 +27,8 @@ import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static java.lang.System.in;
 
 /**
  * Created by gritsay on 7/17/17.
@@ -74,18 +81,23 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     return result;
   }
 
+
   @ReactMethod public void extractAllPhoneNumbers(final Promise promise) {
     if (getAllContacts() != null) {
       ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
         @Override public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
           if (response.body() != null && !"".equals(response.body()))  {
             Log.d(LOG_TAG, "OnResponse - Success request");
-            ContactsResponse res = response.body();
-            Gson gson = new Gson();
-            String jsonString = gson.toJson(res.getData());
             try {
-              JSONObject jsonObject = new JSONObject(jsonString);
-              promise.resolve(ModelConverterUtils.convertJsonToMap(jsonObject));
+              ContactsResponse res = response.body();
+              WritableArray array = new WritableNativeArray();
+              for (Contact contact : res.getData()) {
+                WritableMap phonesWithId =  ModelConverterUtils.
+                      convertJsonToMap(new JSONObject(new Gson().toJson(contact, Contact.class)));
+                array.pushMap(phonesWithId);
+                promise.resolve(array);
+              }
+
             } catch (JSONException e) {
               e.printStackTrace();
               promise.reject(e);
@@ -93,6 +105,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
           } else {
             Log.d(LOG_TAG, "OnResponse - Error request");
             Log.d(LOG_TAG, response.errorBody().toString());
+            promise.reject(response.errorBody().toString());
           }
 
         }
