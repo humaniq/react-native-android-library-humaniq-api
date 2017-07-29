@@ -21,7 +21,6 @@ import retrofit2.http.Query;
 
 public interface BlockchainService {
   //https://gold-star-1172.postman.co/docs/collection/view/2266679-6d383c78-e0d2-0f08-c21d-a61e0cf1b1ef#000166c6-4090-9b92-565d-64c1209925d1
-  @FormUrlEncoded
   @POST("/blockchain-api/transfer")
   Call<TransferResponse> transferHmq (@Body TransferRequest transferRequest);
 

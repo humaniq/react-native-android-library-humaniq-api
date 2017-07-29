@@ -1,6 +1,7 @@
 package com.humaniq.apilib.react;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -28,6 +29,7 @@ import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.utils.ResponseWrapperUtils;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -63,7 +65,10 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     return new HashMap<>();
   }
 
-  @ReactMethod public void getBalance(String id, final Promise promise) {
+  @ReactMethod public void getBalance(
+      String id,
+      final Promise promise) {
+
     Log.d(LOG_TAG, "Balance Request: " + "id: " + id);
     ServiceBuilder.getWalletService().
         getUserBalance(id).enqueue(new retrofit2.Callback<BaseResponse<Balance>>() {
@@ -72,14 +77,15 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         Log.d(LOG_TAG, "Balance Response: " + response.isSuccessful());
         if(response.body() != null && !response.body().equals("")) {
           try {
-            WritableMap addressState = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            WritableMap addressState = ModelConverterUtils.
+                convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
             promise.resolve(addressState);
           } catch (JSONException e) {
             e.printStackTrace();
             promise.reject(e);
           }
         } else {
-          promise.reject(new Throwable("fail"));
+          promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
         }
       }
 
@@ -90,8 +96,15 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     });
   }
 
-  @ReactMethod public void getTransactions(String id, int offset, int limit, final Promise promise) {
-    Log.d(LOG_TAG,  "Transaction Request: id: " + id + ",  offset: " + offset + ", limit: " + limit);
+  @ReactMethod public void getTransactions(
+      String id,
+      int offset,
+      int limit,
+      final Promise promise) {
+
+    Log.d(LOG_TAG,  "Transaction Request: id: " + id +
+        ",  offset: " + offset + ", limit: " + limit);
+
     ServiceBuilder.getWalletService()
         .getUserTransactions(id, offset, limit)
         .enqueue(new retrofit2.Callback<BaseResponse<List<UserTransaction>>>() {
@@ -99,7 +112,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
               Response<BaseResponse<List<UserTransaction>>> response) {
               Log.d(LOG_TAG, "Transaction Response: " + response.isSuccessful()
                   + ",body: " + response.body());
-            if (response.body() != null && !response.body().equals("")) {
+            if (response.body() != null) {
               try {
 
                 WritableArray array = new WritableNativeArray();
@@ -111,18 +124,17 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 }
                 promise.resolve(array);
               } catch (JSONException e) {
-                promise.reject("", e);
+                promise.reject(e);
               }
             } else {
-              promise.reject(new Throwable("fail"));
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
 
-            emulateTransactionEventChanged(); // todo remove after successful testing
           }
 
           @Override
           public void onFailure(Call<BaseResponse<List<UserTransaction>>> call, Throwable t) {
-            promise.reject("", t);
+            promise.reject(t);
           }
         });
   }
@@ -135,9 +147,13 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         .enqueue(new Callback<BaseResponse<Object>>() {
           @Override public void onResponse(Call<BaseResponse<Object>> call,
               Response<BaseResponse<Object>> response) {
-            WritableMap writableMap = new WritableNativeMap();
-            writableMap.putString("status", "OK");
-            promise.resolve(writableMap);
+            if(response.body() != null) {
+              WritableMap writableMap = new WritableNativeMap();
+              writableMap.putString("status", "OK");
+              promise.resolve(writableMap);
+            } else {
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+            }
           }
 
           @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
@@ -182,7 +198,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else {
-              promise.reject(new Throwable("unknown error"));
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
 
@@ -214,13 +230,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
               }
             } else if(response.errorBody() != null) {
-              try {
-                promise.reject(String.valueOf(response.code()),
-                    response.errorBody().string());
-              } catch (IOException e) {
-                e.printStackTrace();
-                promise.reject(e);
-              }
+                promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
 
@@ -257,12 +267,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else if(response != null && response.errorBody() != null) {
-              try {
-                promise.reject(new Throwable(response.errorBody().string()));
-              } catch (IOException e) {
-                e.printStackTrace();
-                promise.reject(e);
-              }
+                promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             } else {
               promise.reject(new Throwable("unknown error"));
             }
@@ -290,12 +295,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else if(response.errorBody() != null) {
-              try {
-                promise.reject(new Throwable(response.errorBody().string()));
-              } catch (IOException e) {
-                e.printStackTrace();
-                promise.reject(e);
-              }
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             } else {
               promise.reject(new Throwable("unknown error"));
             }
@@ -315,61 +315,61 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             RCTDeviceEventEmitter.class).
         emit(Constants.EVENT_TRANSACTION_CHANGED, params);
   }
-  private void emulateTransactionEventChanged() {
-    eventRunnable = new Runnable() {
-      @Override
-      public void run() {
-        try {
-          WritableMap changedTransaction = ModelConverterUtils.
-              convertJsonToMap(new JSONObject("{"
-                  + "    \"type\": 1,"
-                  + "    \"status\": 2,"
-                  + "    \"timestamp\": 1500594517,"
-                  + "    \"amount\": -40,"
-                  + "    \"from_address\": \"0xd4bb4bca1545508fc2ea9cb866a89cfa50ffaf6b\","
-                  + "    \"to_address\": \"0x3d02c55481e58c6ddccab14f667f0625c4da6507\","
-                  + "    \"from_user\": {"
-                  + "      \"account_id\": \"\","
-                  + "      \"name\": {"
-                  + "        \"first_name\": \"John\","
-                  + "        \"last_name\": \"Doe\""
-                  + "      },"
-                  + "      \"profile_photo\": {"
-                  + "        \"url\": \"\","
-                  + "        \"expiry\": \"0\""
-                  + "      },"
-                  + "      \"phone_number\": {"
-                  + "        \"country_code\": \"0\","
-                  + "        \"phone_number\": \"000000\""
-                  + "      }"
-                  + "    },"
-                  + "    \"to_user\": {"
-                  + "      \"account_id\": \"\","
-                  + "      \"name\": {"
-                  + "        \"first_name\": \"John\","
-                  + "        \"last_name\": \"Doe\""
-                  + "      },"
-                  + "      \"profile_photo\": {"
-                  + "        \"url\": \"\","
-                  + "        \"expiry\": \"0\""
-                  + "      },"
-                  + "      \"phone_number\": {"
-                  + "        \"country_code\": \"0\","
-                  + "        \"phone_number\": \"000000\""
-                  + "      }"
-                  + "    }"
-                  + "  }"));
-          sendEvent(changedTransaction);
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-
-      }
-    };
-
-    this.executor.scheduleWithFixedDelay(eventRunnable, 10, 10, TimeUnit.SECONDS);
-
-  }
+  //private void emulateTransactionEventChanged() {
+  //  eventRunnable = new Runnable() {
+  //    @Override
+  //    public void run() {
+  //      try {
+  //        WritableMap changedTransaction = ModelConverterUtils.
+  //            convertJsonToMap(new JSONObject("{"
+  //                + "    \"type\": 1,"
+  //                + "    \"status\": 2,"
+  //                + "    \"timestamp\": 1500594517,"
+  //                + "    \"amount\": -40,"
+  //                + "    \"from_address\": \"0xd4bb4bca1545508fc2ea9cb866a89cfa50ffaf6b\","
+  //                + "    \"to_address\": \"0x3d02c55481e58c6ddccab14f667f0625c4da6507\","
+  //                + "    \"from_user\": {"
+  //                + "      \"account_id\": \"\","
+  //                + "      \"name\": {"
+  //                + "        \"first_name\": \"John\","
+  //                + "        \"last_name\": \"Doe\""
+  //                + "      },"
+  //                + "      \"profile_photo\": {"
+  //                + "        \"url\": \"\","
+  //                + "        \"expiry\": \"0\""
+  //                + "      },"
+  //                + "      \"phone_number\": {"
+  //                + "        \"country_code\": \"0\","
+  //                + "        \"phone_number\": \"000000\""
+  //                + "      }"
+  //                + "    },"
+  //                + "    \"to_user\": {"
+  //                + "      \"account_id\": \"\","
+  //                + "      \"name\": {"
+  //                + "        \"first_name\": \"John\","
+  //                + "        \"last_name\": \"Doe\""
+  //                + "      },"
+  //                + "      \"profile_photo\": {"
+  //                + "        \"url\": \"\","
+  //                + "        \"expiry\": \"0\""
+  //                + "      },"
+  //                + "      \"phone_number\": {"
+  //                + "        \"country_code\": \"0\","
+  //                + "        \"phone_number\": \"000000\""
+  //                + "      }"
+  //                + "    }"
+  //                + "  }"));
+  //        sendEvent(changedTransaction);
+  //      } catch (JSONException e) {
+  //        e.printStackTrace();
+  //      }
+  //
+  //    }
+  //  };
+  //
+  //  this.executor.scheduleWithFixedDelay(eventRunnable, 10, 10, TimeUnit.SECONDS);
+  //
+  //}
 
   @ReactMethod public void deauthenticateUser(String accountId, final Promise promise) {
     ServiceBuilder.getProfileService()
