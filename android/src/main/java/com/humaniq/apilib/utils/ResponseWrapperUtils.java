@@ -1,8 +1,5 @@
 package com.humaniq.apilib.utils;
 
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.stetho.common.ThreadBound;
-import java.io.IOException;
 import okhttp3.ResponseBody;
 
 /**
