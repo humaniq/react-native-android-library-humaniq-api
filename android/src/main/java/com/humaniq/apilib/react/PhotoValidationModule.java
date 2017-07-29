@@ -154,16 +154,13 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
           @Override public void onResponse(Call<BasePayload<ValidationResponse>> call,
               Response<BasePayload<ValidationResponse>> response) {
 
-
             if (response.body() != null) {
-
               try {
                 WritableMap writableMap = new WritableNativeMap();
-                writableMap.putString("message", response.body().message);
+                writableMap.putString("message", "GREAT DONE");
                 promise.resolve(writableMap);
               } catch (Exception e) {
                 e.printStackTrace();
-                promise.reject(e);
               }
             } else {
               promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
