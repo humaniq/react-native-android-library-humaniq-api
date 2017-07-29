@@ -51,8 +51,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
     return "HumaniqPhotoValidation";
   }
 
-  @ReactMethod public void isRegistered(String base64, final Promise promise) {
+  @ReactMethod public void isRegistered(String path, final Promise promise) {
     JsonObject jsonObject = new JsonObject();
+    String base64 = encodeImage(path);
     jsonObject.addProperty("facial_image", base64);
     ServiceBuilder.getValidationService()
         .isRegistered(jsonObject)
@@ -135,7 +136,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
     byte[] b = baos.toByteArray();
     String encImage = Base64.encodeToString(b, Base64.DEFAULT);
     //Base64.de
-    return encImage;
+    return encImage.replace("data:image/png;base64,", "");
 
   }
 
@@ -163,7 +164,14 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
               }
             } else {
-              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+              WritableMap writableMap = new WritableNativeMap();
+              try {
+                writableMap.putString("message", "NOT_OK! " + response.code() + " " + response.errorBody().string());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+              promise.resolve(writableMap);
+              //promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
 
