@@ -1,6 +1,7 @@
 package com.humaniq.apilib.network.service;
 
 import com.google.gson.JsonObject;
+import com.humaniq.apilib.network.models.request.ValidateRequest;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.FacialImage;
@@ -40,5 +41,5 @@ public interface ValidationService {
    */
 
   @POST("/tapatybe/api/v1/facial_recognition/validate")
-  Call<BasePayload<ValidationResponse>> validate(@Body JsonObject facialImageValidation);
+  Call<BasePayload<ValidationResponse>> validate(@Body ValidateRequest facialImageValidation);
 }

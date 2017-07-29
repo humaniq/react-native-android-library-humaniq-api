@@ -11,6 +11,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.ValidateRequest;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.FacialImage;
 import com.humaniq.apilib.network.models.response.FacialImageValidation;
@@ -116,13 +117,15 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
   }
 
     @ReactMethod public void validate(String facialImageId, String base64, final Promise promise) {
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("facial_image_id", facialImageId);
-      jsonObject.addProperty("facial_image", base64);
-
+      ValidateRequest validateRequest = new ValidateRequest();
+      validateRequest.setFacialImageId(facialImageId);
+      validateRequest.setFacialImage(base64);
+    //  JsonObject jsonObject = new JsonObject();
+    //jsonObject.addProperty("facial_image_validation_id", facialImageId);
+    //  jsonObject.addProperty("facial_image", base64);
         ServiceBuilder
             .getValidationService()
-            .validate(jsonObject)
+            .validate(validateRequest)
             .enqueue(new Callback<BasePayload<ValidationResponse>>() {
               @Override public void onResponse(Call<BasePayload<ValidationResponse>> call,
                   Response<BasePayload<ValidationResponse>> response) {
