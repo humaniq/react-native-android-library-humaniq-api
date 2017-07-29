@@ -5,6 +5,7 @@ import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.humaniq.apilib.react.BlockchainModule;
 import com.humaniq.apilib.react.ContactsModule;
 import com.humaniq.apilib.react.DownloadModule;
 import com.humaniq.apilib.react.ToastModule;
@@ -23,14 +24,15 @@ public class Package implements ReactPackage {
     return Collections.emptyList();
   }
 
-  @Override public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-    List<NativeModule> modules = new ArrayList<>();
+    @Override public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
+      List<NativeModule> modules = new ArrayList<>();
 
-    modules.add(new ToastModule(reactContext));
-    modules.add(new ProfileModule(reactContext));
-    modules.add(new DownloadModule(reactContext));
-    modules.add(new ContactsModule(reactContext));
+      modules.add(new ToastModule(reactContext));
+      modules.add(new ProfileModule(reactContext));
+      modules.add(new DownloadModule(reactContext));
+      modules.add(new ContactsModule(reactContext));
+      modules.add(new BlockchainModule(reactContext));
 
-    return modules;
-  }
+      return modules;
+    }
 }

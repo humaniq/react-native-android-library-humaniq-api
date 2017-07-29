@@ -24,7 +24,7 @@ public interface BlockchainService {
   Call<TransferResponse> transferHmq (@Body TransferRequest transferRequest);
 
   @GET("/blockchain-api/v1/get/user/address/state/{user_id}")
-  Call <BaseResponse>getUserAddressState(
+  Call <BaseResponse<Object>>getUserAddressState(
       @Path("user_id") String id
   );
 }
