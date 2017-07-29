@@ -4,7 +4,10 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.Constants;
@@ -15,6 +18,7 @@ import com.humaniq.apilib.network.models.response.ValidationResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
+import com.humaniq.apilib.utils.ResponseWrapperUtils;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,17 +83,26 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   Response<BasePayload<FacialImageValidation>> response) {
                 if(response.body() != null) {
                   try {
-                    WritableMap writableMap =
-                        ModelConverterUtils
-                            .convertJsonToMap(
-                                new JSONObject(
-                                    new Gson().toJson(response.body().payload)));
+                    WritableMap writableMap = new WritableNativeMap();
+                    writableMap.putString("facial_image_validation_id",
+                        response.body().payload.getFacialImageValidationId());
+
+                    WritableArray emotionArray = new WritableNativeArray();
+                    for(String emotion: response.body().payload.getRequiredEmotions()) {
+                      WritableMap emotionMap = new WritableNativeMap();
+                      emotionMap.putString("emotion", emotion);
+                      emotionArray.pushMap(emotionMap);
+                    }
+
+                    writableMap.putArray("required_emotions",emotionArray);
 
                     promise.resolve(writableMap);
                   } catch (Exception e) {
                     e.printStackTrace();
                     promise.reject(e);
                   }
+                } else {
+                  promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
                 }
               }
 
