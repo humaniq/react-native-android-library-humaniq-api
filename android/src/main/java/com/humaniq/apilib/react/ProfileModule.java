@@ -1,5 +1,9 @@
 package com.humaniq.apilib.react;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -55,6 +59,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
   public ProfileModule(ReactApplicationContext reactContext) {
     super(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
+    registerMessageHandler();
   }
 
   @Override public String getName() {
@@ -94,6 +99,20 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         promise.reject(t);
       }
     });
+  }
+
+  private void registerMessageHandler() {
+    IntentFilter intentFilter = new IntentFilter("com.humaniq.apilib.fcm.ReceiveNotification");
+
+    getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+        WritableMap writableMap = new WritableNativeMap();
+        writableMap.putString("transaction", "ахахахахахао");
+        sendEvent(writableMap);
+
+      }
+    }, intentFilter);
   }
 
   @ReactMethod public void getTransactions(
