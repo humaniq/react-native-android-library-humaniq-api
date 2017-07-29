@@ -80,11 +80,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
         });
   }
 
-  @ReactMethod public void  getFCMToken(Promise promise) {
-    WritableMap writableMap = new WritableNativeMap();
-    writableMap.putString("token", Prefs.getFCMToken());
-    promise.resolve(writableMap);
-  }
+
 
   @ReactMethod public void getUserAddressState(String userId, final Promise promise) {
     Log.d(LOG_TAG, "User id = " + userId);
