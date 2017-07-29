@@ -11,6 +11,7 @@ import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.network.service.WalletService;
+import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
 import java.util.List;
 import org.junit.Test;
@@ -54,12 +55,13 @@ public class WalletApiTest {
 
 
   @Test public void testCreateTransaction() throws Exception {
+    new Prefs(RuntimeEnvironment.application);
     try {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
       Call<BaseResponse<Object>> call = apiEndpoints.
-          createTransaction("223344556677", "223344556677", 20f);
+          createTransaction("223344556677", "223344556677", null, 20f);
 
       //Magic is here at .execute() instead of .enqueue()
       Response<BaseResponse<Object>> response = call.execute();

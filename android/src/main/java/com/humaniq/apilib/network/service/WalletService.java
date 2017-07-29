@@ -33,6 +33,7 @@ public interface WalletService {
   //Call<BaseResponse<Long>> getLastBlockNumber();
   @FormUrlEncoded
   @POST(value = "/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<Object>> createTransaction(
-      @Path("user_id") String userId, @Field("to_user_id") String toUserId, @Field("amount") float amount);
+      @Path("user_id") String userId, @Field("to_user_id") String toUserId,
+      @Field("to_address") String toAddress, @Field("amount") float amount);
 
 }

@@ -128,9 +128,10 @@ public class ProfileModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod public void createTransaction(String fromUserId, String toUserId,
+      String toAddress,
       float amount, final Promise promise) {
     ServiceBuilder.getWalletService()
-        .createTransaction(fromUserId, toUserId, amount)
+        .createTransaction(fromUserId, toUserId, null, amount)
         .enqueue(new Callback<BaseResponse<Object>>() {
           @Override public void onResponse(Call<BaseResponse<Object>> call,
               Response<BaseResponse<Object>> response) {
