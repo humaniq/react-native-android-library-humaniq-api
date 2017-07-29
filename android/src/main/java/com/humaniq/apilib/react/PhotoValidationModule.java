@@ -125,7 +125,15 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
         .enqueue(new Callback<BasePayload<ValidationResponse>>() {
           @Override public void onResponse(Call<BasePayload<ValidationResponse>> call,
               Response<BasePayload<ValidationResponse>> response) {
+            Toast.makeText(getReactApplicationContext(),"received", Toast.LENGTH_SHORT)
+                .show();
+
             if (response.body() != null) {
+
+              Toast.makeText(getReactApplicationContext(),
+                  "paylaod: " + response.body().payload.getMessage(), Toast.LENGTH_SHORT)
+                  .show();
+
               try {
                 WritableMap writableMap = ModelConverterUtils.convertJsonToMap(
                     new JSONObject(new Gson().toJson(response.body().payload)));
@@ -133,6 +141,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 promise.resolve(writableMap);
               } catch (Exception e) {
                 e.printStackTrace();
+                Toast.makeText(getReactApplicationContext(),
+                    "jsonException: " + e.getMessage(), Toast.LENGTH_SHORT)
+                    .show();
                 promise.reject(e);
               }
             } else {
@@ -148,6 +159,8 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
 
           @Override public void onFailure(Call<BasePayload<ValidationResponse>> call, Throwable t) {
             promise.reject(t);
+            Toast.makeText(getReactApplicationContext(),"onFailure+ " + t.getMessage(), Toast.LENGTH_SHORT)
+                .show();
           }
         });
   }
