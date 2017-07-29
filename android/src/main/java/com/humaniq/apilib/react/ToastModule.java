@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactMethod;
 
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.storage.Prefs;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,7 @@ public class ToastModule extends ReactContextBaseJavaModule {
 
   public ToastModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
   }
 

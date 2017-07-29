@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.contacts.Contact;
+import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
@@ -40,6 +41,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
 
   public ContactsModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    new Prefs(reactContext);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, reactContext);
   }
 

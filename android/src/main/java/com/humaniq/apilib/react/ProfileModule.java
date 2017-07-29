@@ -28,6 +28,7 @@ import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
+import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
@@ -59,6 +60,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
   public ProfileModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
     registerMessageHandler();
   }

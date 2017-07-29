@@ -9,6 +9,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.storage.Prefs;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -31,6 +32,7 @@ public class MqttModule extends ReactContextBaseJavaModule {
 
   public MqttModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    new Prefs(reactContext);
   }
 
 

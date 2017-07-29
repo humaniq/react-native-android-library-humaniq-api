@@ -16,6 +16,7 @@ import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.storage.Prefs;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +63,7 @@ public class ProfileApiTest {
   }
 
   @Test public void testUpdateUserPerson() {
+    new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
     try {
