@@ -2,6 +2,7 @@ package com.humaniq.apilib.react;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Base64;
 import android.widget.Toast;
 import com.facebook.react.bridge.Promise;
@@ -121,7 +122,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
 
   private String encodeImage(String path)
   {
-    File imagefile = new File(path);
+    File imagefile = new File(Uri.parse(path).getPath());
     FileInputStream fis = null;
     try{
       fis = new FileInputStream(imagefile);
@@ -139,7 +140,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void validate(String facialImageValidationId, String path, final Promise promise) {
+    public void validate(String facialImageValidationId, String path, final Promise promise) {
     ValidateRequest validateRequest = new ValidateRequest();
     validateRequest.setFacialImageId(facialImageValidationId);
     String base64 = encodeImage(path);
