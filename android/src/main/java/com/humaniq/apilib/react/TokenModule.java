@@ -6,7 +6,15 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
+import com.google.gson.JsonObject;
+import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
+import java.io.IOException;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by ognev on 7/29/17.
@@ -29,9 +37,37 @@ public class TokenModule extends ReactContextBaseJavaModule {
     Prefs.saveAccountId(accountId);
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("status", "saved: " + Prefs.getJwtToken());
+    try {
+      sendRegistrationToServer();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     promise.resolve(writableMap);
   }
 
+
+  private void sendRegistrationToServer() throws IOException {
+    ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
+
+    JsonObject jsonObject = new JsonObject();
+    jsonObject.addProperty("account_id", Prefs.getAccountId());
+    jsonObject.addProperty("token", Prefs.getFCMToken());
+
+    ServiceBuilder
+        .getFcmService()
+        .saveFcmToken(jsonObject)
+        .enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
+
+          }
+
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+
+          }
+        });
+  }
   @ReactMethod public void getFCMToken(Promise promise) {
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("token", Prefs.getFCMToken());

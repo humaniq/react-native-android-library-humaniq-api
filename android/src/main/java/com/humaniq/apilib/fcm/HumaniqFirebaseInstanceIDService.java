@@ -20,17 +20,19 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
 
     String refreshedToken = FirebaseInstanceId.getInstance().getToken();
     Log.d(TAG, "Refreshed token: " + refreshedToken);
+    Prefs.saveFCMToken(refreshedToken);
 
-    try {
-      sendRegistrationToServer(refreshedToken);
-    } catch (Exception e) {
-      e.printStackTrace();
+    if(Prefs.hasToken()) {
+      try {
+        sendRegistrationToServer(refreshedToken);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
 
   }
 
   private void sendRegistrationToServer(String token) throws IOException {
-    Prefs.saveFCMToken(token);
     ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
 
     JsonObject jsonObject = new JsonObject();

@@ -27,13 +27,7 @@ public class Prefs {
     sharedPreferences.edit().putString(LOCAL, uri).commit();
   }
 
-  public static void saveJwtToken(String token) {
-    sharedPreferences.edit().putString(JWT_TOKEN, token).commit();
-  }
 
-  public static String getJwtToken() {
-    return sharedPreferences.getString(JWT_TOKEN, null);
-  }
 
   public static String getDownloadedUri() {
     return sharedPreferences.getString(URI, null);
@@ -63,21 +57,31 @@ public class Prefs {
     sharedPreferences.edit().putLong(DOWNLOAD_ID, enqueue).commit();
   }
 
+  public static void saveJwtToken(String token) {
+    sharedPreferences.edit().putString(JWT_TOKEN, token).commit();
+  }
+
+
   public static void saveAccountId(String accountId) {
     sharedPreferences.edit().putString(ACCOUNT_ID, accountId).commit();
-  }
-
-  public static boolean hasToken() {
-    return !TextUtils.isEmpty(sharedPreferences.getString(JWT_TOKEN, null));
-  }
-
-  public static void clearJwtToken() {
-    sharedPreferences.edit().putString(JWT_TOKEN, null).commit();
   }
 
   public static void saveFCMToken(String fcm_token) {
     sharedPreferences.edit().putString(FCM_TOKEN, fcm_token).commit();
   }
+  public static boolean hasToken() {
+    return !TextUtils.isEmpty(sharedPreferences.getString(JWT_TOKEN, null));
+  }
+
+  public static String getJwtToken() {
+    return sharedPreferences.getString(JWT_TOKEN, null);
+  }
+
+
+  public static void clearJwtToken() {
+    sharedPreferences.edit().putString(JWT_TOKEN, null).commit();
+  }
+
 
   public static String getFCMToken() {
     return sharedPreferences.getString(FCM_TOKEN, null);
