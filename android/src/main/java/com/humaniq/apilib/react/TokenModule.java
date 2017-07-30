@@ -8,6 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.FcmCredentials;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
@@ -50,13 +51,13 @@ public class TokenModule extends ReactContextBaseJavaModule {
   private void sendRegistrationToServer() throws IOException {
     ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
 
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("account_id", Prefs.getAccountId());
-    jsonObject.addProperty("token", Prefs.getFCMToken());
+    FcmCredentials fcmCredentials = new FcmCredentials();
+    fcmCredentials.setAccountId(Long.valueOf(Prefs.getAccountId()));
+    fcmCredentials.setToken(Prefs.getFCMToken());
 
     ServiceBuilder
         .getFcmService()
-        .saveFcmToken(jsonObject)
+        .saveFcmToken(fcmCredentials)
         .enqueue(new Callback<BaseResponse<Object>>() {
           @Override public void onResponse(Call<BaseResponse<Object>> call,
               Response<BaseResponse<Object>> response) {
