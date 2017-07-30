@@ -70,6 +70,7 @@ public class TokenModule extends ReactContextBaseJavaModule {
         });
   }
   @ReactMethod public void getFCMToken(Promise promise) {
+    new Prefs(getReactApplicationContext());
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("token", Prefs.getFCMToken());
     promise.resolve(writableMap);
