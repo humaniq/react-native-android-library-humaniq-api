@@ -22,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Builder for retrofit
  */
 
-public class ServiceBuilder {
+public class  ServiceBuilder {
 
   private static Retrofit retrofit;
 

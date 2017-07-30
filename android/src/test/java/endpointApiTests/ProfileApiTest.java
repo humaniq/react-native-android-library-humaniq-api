@@ -2,11 +2,11 @@ package endpointApiTests;
 
 import android.content.res.Resources;
 import android.util.Log;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.R;
+import com.humaniq.apilib.network.models.request.FcmCredentials;
 import com.humaniq.apilib.network.models.request.ValidateRequest;
 import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
@@ -16,18 +16,14 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.FacialImage;
 import com.humaniq.apilib.network.models.response.FacialImageValidation;
 import com.humaniq.apilib.network.models.response.ValidationResponse;
-import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
-import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
-import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +32,6 @@ import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import static org.junit.Assert.assertTrue;
@@ -45,17 +40,14 @@ import static org.junit.Assert.assertTrue;
  * Created by gritsay on 7/20/17.
  */
 
-
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class)
+@RunWith(RobolectricTestRunner.class) @Config(constants = BuildConfig.class)
 public class ProfileApiTest {
 
-  @Before
-  public void init() {
+  @Before public void init() {
     ShadowLog.stream = System.out;
   }
 
-  @Test public void deauthenticateUserRightResponse(){
+  @Test public void deauthenticateUserRightResponse() {
     try {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       ProfileService apiEndpoints = ServiceBuilder.getProfileService();
@@ -66,8 +58,7 @@ public class ProfileApiTest {
       System.out.println(response.errorBody().string());
       //ShadowLog.v("tag", response.errorBody().string());
       assertTrue(response.isSuccessful());
-
-  } catch (Exception e) {
+    } catch (Exception e) {
       System.out.println(e);
     }
   }
@@ -137,13 +128,13 @@ public class ProfileApiTest {
       Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1567498755333161994");
       Response<BasePayload<AccountProfile>> payload = call.execute();
       Log.d("profile", payload.body().payload.getPerson().getFirstName());
-
-    }catch (Exception e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
 
   String facialImageId;
+
   @Test public void testValidationSteps() {
     new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
@@ -161,33 +152,50 @@ public class ProfileApiTest {
 
     try {
 
-    ValidationService validationService = ServiceBuilder.getValidationService();
+      ValidationService validationService = ServiceBuilder.getValidationService();
 
-
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("facial_image", base64);
-    Call<BasePayload<FacialImage>> call = validationService.isRegistered(jsonObject);
+      JsonObject jsonObject = new JsonObject();
+      jsonObject.addProperty("facial_image", base64);
+      Call<BasePayload<FacialImage>> call = validationService.isRegistered(jsonObject);
       Response<BasePayload<FacialImage>> payloadResponse = call.execute();
       facialImageId = payloadResponse.body().payload.getFacialImageId();
       JsonObject jsonObject1 = new JsonObject();
       jsonObject1.addProperty("facial_image_id", facialImageId);
-      Call<BasePayload<FacialImageValidation>> call1 = validationService.createValidation(jsonObject1);
+      Call<BasePayload<FacialImageValidation>> call1 =
+          validationService.createValidation(jsonObject1);
       Response<BasePayload<FacialImageValidation>> payloadResponse1 = call1.execute();
 
       ValidateRequest validateRequest = new ValidateRequest();
-      validateRequest.setFacialImageId(payloadResponse1.body().payload.getFacialImageValidationId());
+      validateRequest.setFacialImageId(
+          payloadResponse1.body().payload.getFacialImageValidationId());
       validateRequest.setFacialImage(base64);
       Call<BasePayload<ValidationResponse>> call2 = validationService.validate(validateRequest);
       Response<BasePayload<ValidationResponse>> payloadResponse2 = call2.execute();
 
       System.out.println(payloadResponse2.body().payload.getMessage());
       assertTrue(payloadResponse2.isSuccessful());
-
     } catch (IOException e) {
       e.printStackTrace();
     }
   }
+
   private String base64;
 
+  @Test public void testSaveFcmCredentials() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
+    try {
+      FcmCredentials fcmCredentials = new FcmCredentials();
+      fcmCredentials.setAccountId(Long.valueOf("1570123796151534997"));
+      fcmCredentials.setToken("");
+
+      Response<BaseResponse<Object>> response =
+          ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
 }

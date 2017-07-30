@@ -5,6 +5,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.network.models.request.FcmCredentials;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
@@ -33,15 +34,15 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
   }
 
   private void sendRegistrationToServer(String token) throws IOException {
-    ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
 
-    JsonObject jsonObject = new JsonObject();
-    jsonObject.addProperty("account_id", Prefs.getAccountId());
-    jsonObject.addProperty("token", token);
-    Response<BaseResponse<Object>> response = ServiceBuilder
-        .getFcmService()
-        .saveFcmToken(jsonObject)
-        .execute();
+    ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
+    FcmCredentials fcmCredentials = new FcmCredentials();
+    fcmCredentials.setAccountId(Long.valueOf("1570123796151534997"));
+    fcmCredentials.setToken("");
+
+    Response<BaseResponse<Object>> response =
+        ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
+
   }
   //
   //private void sendNotification(String messageBody) {
