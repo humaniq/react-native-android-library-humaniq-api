@@ -254,6 +254,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             if(response.body() != null) {
               try {
                 avatarRespone = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response)));
+                avatarRespone.putInt("code", 5004);
                 promise.resolve(avatarRespone);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -264,6 +265,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
               try {
                 writableMap.putString("message", "NOT_UPLOADED! " +
                     response.code() + ", MESSAGE: " + response.errorBody().string());
+                writableMap.putInt("code", 3013);
               } catch (IOException e) {
                 e.printStackTrace();
               }

@@ -159,6 +159,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
               try {
                 WritableMap writableMap = new WritableNativeMap();
                 writableMap.putString("message", "GREAT DONE");
+                writableMap.putInt("code", 3008 );
                 promise.resolve(writableMap);
               } catch (Exception e) {
                 e.printStackTrace();
@@ -167,6 +168,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
               WritableMap writableMap = new WritableNativeMap();
               try {
                 writableMap.putString("message", "NOT_OK! " + response.code() + " " + response.errorBody().string());
+                writableMap.putInt("code", 3011 );
               } catch (IOException e) {
                 e.printStackTrace();
               }
