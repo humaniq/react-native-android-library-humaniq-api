@@ -120,7 +120,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           }
 
         WritableMap writableMap = new WritableNativeMap();
-        writableMap.putString("transaction", "data: " + data);
+        writableMap.putString("transaction", "push_data: " + data);
 
         sendEvent(writableMap);
         } else {
@@ -267,7 +267,8 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             WritableMap avatarRespone = null;
             if(response.body() != null) {
               try {
-                avatarRespone = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response)));
+                avatarRespone = ModelConverterUtils.convertJsonToMap(
+                    new JSONObject(new Gson().toJson(response.body().payload, AccountAvatarResponse.class)));
                 avatarRespone.putInt("code", 5004);
                 promise.resolve(avatarRespone);
               } catch (JSONException e) {
