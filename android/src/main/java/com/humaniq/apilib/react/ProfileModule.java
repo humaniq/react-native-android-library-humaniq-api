@@ -251,7 +251,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           @Override public void onResponse(Call<BasePayload<AccountAvatarResponse>> call,
               Response<BasePayload<AccountAvatarResponse>> response) {
             WritableMap avatarRespone = null;
-            if(response.body() != null && !"".equals(response.body())) {
+            if(response.body() != null) {
               try {
                 avatarRespone = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response)));
                 promise.resolve(avatarRespone);
@@ -259,7 +259,15 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
               }
             } else if(response.errorBody() != null) {
-                promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+
+              WritableMap writableMap = new WritableNativeMap();
+              try {
+                writableMap.putString("message", "NOT_UPLOADED! " +
+                    response.code() + ", MESSAGE: " + response.errorBody().string());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+              promise.resolve(writableMap);
             }
           }
 
