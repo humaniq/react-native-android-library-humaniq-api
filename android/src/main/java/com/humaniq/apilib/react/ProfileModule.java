@@ -25,6 +25,7 @@ import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
+import com.humaniq.apilib.network.models.response.TransactionResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
@@ -186,20 +187,29 @@ public class ProfileModule extends ReactContextBaseJavaModule {
       String toAddress,
       float amount, final Promise promise) {
     ServiceBuilder.getWalletService()
-        .createTransaction(fromUserId, toUserId, null, amount)
-        .enqueue(new Callback<BaseResponse<Object>>() {
-          @Override public void onResponse(Call<BaseResponse<Object>> call,
-              Response<BaseResponse<Object>> response) {
+        .createTransaction(fromUserId, toUserId, toAddress, amount)
+        .enqueue(new Callback<BaseResponse<TransactionResponse>>() {
+          @Override public void onResponse(Call<BaseResponse<TransactionResponse>> call,
+              Response<BaseResponse<TransactionResponse>> response) {
             if(response.body() != null) {
-              WritableMap writableMap = new WritableNativeMap();
-              writableMap.putString("status", "OK");
-              promise.resolve(writableMap);
+              try {
+                WritableMap createdTransaction = ModelConverterUtils.
+                    convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, TransactionResponse.class)));
+                promise.resolve(createdTransaction);
+              } catch (JSONException e) {
+                e.printStackTrace();
+              }
             } else {
-              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+              try {
+                promise.reject(new Throwable(response.errorBody().string()));
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
             }
           }
 
-          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+          @Override public void onFailure(Call<BaseResponse<TransactionResponse>> call,
+              Throwable t) {
             promise.reject(t);
           }
         });

@@ -11,10 +11,12 @@ import com.humaniq.apilib.network.models.request.ValidateRequest;
 import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
+import com.humaniq.apilib.network.models.request.wallet.Transaction;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.FacialImage;
 import com.humaniq.apilib.network.models.response.FacialImageValidation;
+import com.humaniq.apilib.network.models.response.TransactionResponse;
 import com.humaniq.apilib.network.models.response.ValidationResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
@@ -180,6 +182,22 @@ public class ProfileApiTest {
   }
 
   private String base64;
+
+
+  @Test public void testCreateTransaction() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      Call<BaseResponse<TransactionResponse>> call =
+          ServiceBuilder.getWalletService().createTransaction("1570123796151534997", "1570123796151534997",null, 10);
+      Response<BaseResponse<TransactionResponse>> response = call.execute();
+
+      assertTrue(response.isSuccessful());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   @Test public void testSaveFcmCredentials() {
     new Prefs(RuntimeEnvironment.application);
