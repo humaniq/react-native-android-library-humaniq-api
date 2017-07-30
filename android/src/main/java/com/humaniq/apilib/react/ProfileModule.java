@@ -120,7 +120,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           }
 
         WritableMap writableMap = new WritableNativeMap();
-        writableMap.putString("transaction", data);
+        writableMap.putString("transaction", "data: " + data);
 
         sendEvent(writableMap);
         } else {
