@@ -188,7 +188,7 @@ public class ProfileApiTest {
     try {
       FcmCredentials fcmCredentials = new FcmCredentials();
       fcmCredentials.setAccountId(Long.valueOf("1570123796151534997"));
-      fcmCredentials.setToken("");
+      fcmCredentials.setToken("e1sAmGApuFg:APA91bFhncSCrYlxuk10Zkcfy4M672gGQN2212MAj2AXTiu2favquLfyRrJkqppSNoc-Cz_tU7orSmeBE5Rmp5xCSEWWzkzn3R3hGyVOEZ2E0_BnbOhSug-fmgHCF-grAVSs3okUegGE");
 
       Response<BaseResponse<Object>> response =
           ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();

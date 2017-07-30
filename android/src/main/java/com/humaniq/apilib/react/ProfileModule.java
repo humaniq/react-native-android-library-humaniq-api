@@ -124,11 +124,14 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
         sendEvent(writableMap);
         } else {
-          new Prefs(context);
-          WritableMap writableMap = new WritableNativeMap();
-          writableMap.putString("transaction", "token!!:  " + Prefs.getFCMToken());
+          getReactApplicationContext().runOnUiQueueThread(new Runnable() {
+            @Override public void run() {
+              WritableMap writableMap = new WritableNativeMap();
+              writableMap.putString("transaction", "token!!:  " + Prefs.getFCMToken());
+              sendEvent(writableMap);
+            }
+          });
 
-          sendEvent(writableMap);
         }
 
 
