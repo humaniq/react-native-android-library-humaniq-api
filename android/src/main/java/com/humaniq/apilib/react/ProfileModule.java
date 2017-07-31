@@ -579,7 +579,12 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         } else {
           Log.d(LOG_TAG, "OnResponse - Error request");
           Log.d(LOG_TAG, response.errorBody().toString());
-          promise.reject(response.errorBody().toString());
+          try {
+            promise.reject(String.valueOf(response.code()),
+                new Throwable(response.errorBody().string()));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
         }
       }
 
