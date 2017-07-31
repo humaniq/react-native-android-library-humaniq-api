@@ -120,17 +120,16 @@ public class ProfileModule extends ReactContextBaseJavaModule {
       @Override
       public void onReceive(Context context, final Intent intent) {
         final String data = "";
-
         RemoteMessage remoteMessage = intent.getParcelableExtra("data");
         if(remoteMessage != null) {
         //  for (String key : remoteMessage.getData().keySet()) {
         //    data += key + ": " + remoteMessage.getData().get(key) + ", ";
         //  }
         //
-        WritableMap writableMap = new WritableNativeMap();
-        writableMap.putString("transaction", "push_data: " + data);
-        writableMap.putString("transaction", remoteMessage.getData().get("fcm_registered"));
-          sendEvent(writableMap);
+        //WritableMap writableMap = new WritableNativeMap();
+        //writableMap.putString("transaction", "push_data: " + data);
+        //writableMap.putString("transaction", remoteMessage.getData().get("fcm_registered"));
+        //  sendEvent(writableMap);
 
           ServiceBuilder
               .getWalletService()

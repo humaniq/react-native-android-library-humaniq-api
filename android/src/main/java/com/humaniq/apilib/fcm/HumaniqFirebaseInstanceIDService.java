@@ -26,9 +26,9 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     Log.d(TAG, "Refreshed token: " + refreshedToken);
     Prefs.saveFCMToken(refreshedToken);
 
-    Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
-      i.putExtra("registration", "fcm_registered: " + refreshedToken);
-    sendOrderedBroadcast(i, null);
+    //Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+    //  i.putExtra("registration", "fcm_registered: " + refreshedToken);
+    //sendOrderedBroadcast(i, null);
 
     if(Prefs.hasToken()) {
       try {
@@ -48,22 +48,21 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
 
     ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
     FcmCredentials fcmCredentials = new FcmCredentials();
-    fcmCredentials.setAccountId(Long.valueOf("1570909452079465500"));
+    fcmCredentials.setAccountId(Long.valueOf(Prefs.getAccountId()));
     fcmCredentials.setToken(token);
-
 
         ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
           @Override public void onResponse(Call<BaseResponse<Object>> call,
               Response<BaseResponse<Object>> response) {
-            Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
-            i.putExtra("registration", response.code() + "");
-            sendOrderedBroadcast(i, null);
+            //Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+            //i.putExtra("registration", response.code() + "");
+            //sendOrderedBroadcast(i, null);
           }
 
           @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
-            Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
-            i.putExtra("registration", "400");
-            sendOrderedBroadcast(i, null);
+            //Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+            //i.putExtra("registration", "400");
+            //sendOrderedBroadcast(i, null);
           }
         });
 
