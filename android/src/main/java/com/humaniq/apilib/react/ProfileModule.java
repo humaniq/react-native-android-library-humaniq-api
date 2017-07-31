@@ -332,10 +332,14 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 promise.resolve(writableMap);
               } catch (JSONException e) {
                 e.printStackTrace();
-                promise.reject(e);
+                promise.reject("", e);
               }
             } else if(response != null && response.errorBody() != null) {
-                promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+              try {
+                promise.reject("" , response.errorBody().string());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
             } else {
               promise.reject(new Throwable("unknown error"));
             }
