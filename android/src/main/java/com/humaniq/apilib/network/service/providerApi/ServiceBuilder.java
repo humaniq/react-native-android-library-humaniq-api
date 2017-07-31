@@ -5,8 +5,11 @@ package com.humaniq.apilib.network.service.providerApi;
  */
 
 import android.content.Context;
+import com.humaniq.apilib.network.models.response.FacialImage;
 import com.humaniq.apilib.network.service.AuthorizationService;
 import com.humaniq.apilib.network.service.BlockchainService;
+import com.humaniq.apilib.network.service.FcmService;
+import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.utils.SelfSigningClientBuilder;
 import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.ProfileService;
@@ -19,7 +22,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Builder for retrofit
  */
 
-public class ServiceBuilder {
+public class  ServiceBuilder {
 
   private static Retrofit retrofit;
 
@@ -60,5 +63,13 @@ public class ServiceBuilder {
 
   public static AuthorizationService getAuthorizationService() {
     return retrofit.create(AuthorizationService.class);
+  }
+
+  public static FcmService getFcmService() {
+    return retrofit.create(FcmService.class);
+  }
+
+  public static ValidationService getValidationService() {
+    return retrofit.create(ValidationService.class);
   }
 }

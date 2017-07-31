@@ -7,6 +7,7 @@ import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.models.response.TransactionResponse;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
@@ -60,11 +61,11 @@ public class WalletApiTest {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
-      Call<BaseResponse<Object>> call = apiEndpoints.
+      Call<BaseResponse<TransactionResponse>> call = apiEndpoints.
           createTransaction("223344556677", "223344556677", null, 20f);
 
       //Magic is here at .execute() instead of .enqueue()
-      Response<BaseResponse<Object>> response = call.execute();
+      Response<BaseResponse<TransactionResponse>> response = call.execute();
       BaseResponse data = response.body();
 
       assertTrue(response.isSuccessful());

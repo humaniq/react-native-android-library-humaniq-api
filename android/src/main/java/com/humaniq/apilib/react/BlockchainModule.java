@@ -8,6 +8,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.blockchain.TransferRequest;
@@ -16,7 +17,9 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.blockchain.TransferResponse;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
+import com.humaniq.apilib.utils.ResponseWrapperUtils;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +36,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
 
   public BlockchainModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    new Prefs(reactContext);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, reactContext);
   }
 
@@ -65,7 +69,8 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
             } else {
               Log.d(LOG_TAG, "OnResponse - Error request");
               Log.d(LOG_TAG, response.errorBody().toString());
-              promise.reject(response.errorBody().toString());
+
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
 
@@ -74,6 +79,8 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
           }
         });
   }
+
+
 
   @ReactMethod public void getUserAddressState(String userId, final Promise promise) {
     Log.d(LOG_TAG, "User id = " + userId);
@@ -96,6 +103,8 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
                 promise.reject(e);
               }
+            } else {
+              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
 

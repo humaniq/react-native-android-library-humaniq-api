@@ -1,5 +1,9 @@
 package endpointApiTests;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.ContactsContract;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
@@ -29,12 +33,41 @@ import static org.junit.Assert.assertTrue;
 public class ContactApiTest {
 
 
+  private List<String> getAllContacts() {
+    ArrayList<String> result = null;
+
+    ContentResolver cr = RuntimeEnvironment.application.getContentResolver();
+    Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
+    if (cur.getCount() > 0) {
+      result = new ArrayList<String>();
+      while (cur.moveToNext()) {
+        String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+        //                String name = cur.getString(cur.getColumnIndex(
+        //                        ContactsContract.Contacts.DISPLAY_NAME));
+        if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+          Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+              ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[] { id }, null);
+          while (pCur.moveToNext()) {
+            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+            result.add(phoneNo);
+          }
+          pCur.close();
+        }
+      }
+    } else {
+      //Log.d(LOG_TAG, "No contacts");
+    }
+
+    return result;
+  }
+
   @Test public void extractContactsSuccess() throws Exception {
     try {
       ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
       ContactService apiEndpoints = ServiceBuilder.getContactsService();
       ArrayList<String> phones = new ArrayList<String>();
-      phones.add("");
+      phones.addAll(getAllContacts());
       Call<ContactsResponse> call = apiEndpoints.extractPhoneNumbers(phones);
       Response<ContactsResponse> response = call.execute();
       ContactsResponse extractContactResponse = response.body();

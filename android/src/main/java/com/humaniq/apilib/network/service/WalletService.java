@@ -7,6 +7,7 @@ package com.humaniq.apilib.network.service;
 import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
+import com.humaniq.apilib.network.models.response.TransactionResponse;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -29,10 +30,14 @@ public interface WalletService {
   Call<BaseResponse<List<UserTransaction>>> getUserTransactions(
       @Path("user_id") String id, @Query("offset") int offset, @Query("limit") int limit);
 
+  @GET("/wallet/api/v1/users/{user_id}/transactions/{hash}")
+  Call<BaseResponse<UserTransaction>> getUserTransaction(
+      @Path("user_id") String id, @Path("hash") String hash);
+
   //@GET("get/last/block/number")
   //Call<BaseResponse<Long>> getLastBlockNumber();
   @FormUrlEncoded
-  @POST(value = "/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<Object>> createTransaction(
+  @POST(value = "/wallet/api/v1/users/{user_id}/transactions") Call<BaseResponse<TransactionResponse>> createTransaction(
       @Path("user_id") String userId, @Field("to_user_id") String toUserId,
       @Field("to_address") String toAddress, @Field("amount") float amount);
 

@@ -17,19 +17,21 @@ public class JwtTokenInterceptor implements Interceptor {
 
       if(Prefs.hasToken()) {
       request = request.newBuilder()
-          .addHeader("JWT", Prefs.getJwtToken())
+          .addHeader("Authorization", "Bearer " + Prefs.getJwtToken())
           .build();
       }
 
       Response response = chain.proceed(request);
 
-      if(response.code() == 401) {
+      if(response.code() == 401) { // server currently do not have method to refresh TOKEN
+        // TOKEN life have no expire time
+        // TODO implement if backend will be ready
           Prefs.clearJwtToken();
-        String newJwtToken =  ServiceBuilder.getAuthorizationService()
-            .refreshJwtToken(Prefs.getJwtToken()).execute().message();
-        Prefs.saveJwtToken(newJwtToken);
+        //String newJwtToken =  ServiceBuilder.getAuthorizationService()
+        //    .refreshJwtToken(Prefs.getJwtToken()).execute().message();
+        //Prefs.saveJwtToken(newJwtToken);
         request = request.newBuilder()
-            .addHeader("JWT", newJwtToken)
+            .addHeader("Authorization", "Bearer" + Prefs.getJwtToken())
             .build();
 
         return chain.proceed(request);

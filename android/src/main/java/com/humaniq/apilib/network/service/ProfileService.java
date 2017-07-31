@@ -9,6 +9,7 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
+import java.util.List;
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,7 +32,7 @@ public interface ProfileService {
     Call<BasePayload<AccountProfile>> getAccountProfile(@Query("account_id") String accountId);
 
   @GET("/tapatybe/api/v1/account/profiles")
-  Call<BaseResponse<Object>> getAccountProfiles(@QueryMap Map<String, String> accountId);
+  Call<BasePayload<AccountProfile.List>> getAccountProfiles(@Query("account_id") List<String> accountIds);
 
 
   @POST("/tapatybe/api/v1/account/person")
