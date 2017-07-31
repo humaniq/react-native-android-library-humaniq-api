@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -17,6 +16,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Codes;
@@ -27,13 +27,12 @@ import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.TransactionResponse;
-import com.humaniq.apilib.network.models.response.contacts.Contact;
-import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
-import com.humaniq.apilib.network.models.response.profile.ExchangeModel;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModelHmq;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModelUsd;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.request.wallet.Balance;
@@ -50,7 +49,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import okhttp3.ResponseBody;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +56,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Converter;
 import retrofit2.Response;
-import retrofit2.http.QueryMap;
 
 public class ProfileModule extends ReactContextBaseJavaModule {
 
@@ -581,20 +578,17 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     return set;
   }
 
-  @ReactMethod public void getExchange(String amount, final Promise promise) {
-    ServiceBuilder.getWalletService().getExchange(amount).enqueue(new Callback<BaseResponse<Object>>() {
-      @Override public void onResponse(Call<BaseResponse<Object>> call,
-          Response<BaseResponse<Object>> response) {
+  @ReactMethod public void getExchangeHmq(String amount, final Promise promise) {
+    ServiceBuilder.getWalletService().getExchangeHmq(amount).enqueue(new Callback<BaseResponse<ExchangeModelHmq>>() {
+      @Override public void onResponse(Call<BaseResponse<ExchangeModelHmq>> call,
+          Response<BaseResponse<ExchangeModelHmq>> response) {
         if (response.body() != null && !"".equals(response.body())) {
           Log.d(LOG_TAG, "OnResponse - Success request");
           try {
-            BaseResponse res = response.body();
-            WritableArray array = new WritableNativeArray();
-            Object obj = res.data;
-            WritableMap phonesWithId =  ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(obj, ExchangeModel.class)));
-            array.pushMap(phonesWithId);
-            promise.resolve(array);
+            ExchangeModelHmq resp = response.body().data;
 
+            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(resp)));
+            promise.resolve(writableMap);
           } catch (JSONException e) {
             e.printStackTrace();
             promise.reject(e);
@@ -613,11 +607,44 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         }
       }
 
-      @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+      @Override public void onFailure(Call<BaseResponse<ExchangeModelHmq>> call, Throwable t) {
         promise.reject(t);
       }
     });
   }
 
+  @ReactMethod public void getExchangeUsd(String amount, final Promise promise) {
+    ServiceBuilder.getWalletService().getExchangeUsd(amount).enqueue(new Callback<BaseResponse<ExchangeModelUsd>>() {
+      @Override public void onResponse(Call<BaseResponse<ExchangeModelUsd>> call,
+          Response<BaseResponse<ExchangeModelUsd>> response) {
+        if (response.body() != null && !"".equals(response.body())) {
+          Log.d(LOG_TAG, "OnResponse - Success request");
+          try {
+            ExchangeModelUsd resp = response.body().data;
 
+            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(resp)));
+            promise.resolve(writableMap);
+          } catch (JSONException e) {
+            e.printStackTrace();
+            promise.reject(e);
+          }
+
+
+        } else {
+          Log.d(LOG_TAG, "OnResponse - Error request");
+          Log.d(LOG_TAG, response.errorBody().toString());
+          try {
+            promise.reject(String.valueOf(response.code()),
+                new Throwable(response.errorBody().string()));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      @Override public void onFailure(Call<BaseResponse<ExchangeModelUsd>>call, Throwable t) {
+        promise.reject(t);
+      }
+    });
+  }
 }

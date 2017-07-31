@@ -2,7 +2,7 @@ package endpointApiTests;
 
 import android.content.res.Resources;
 import android.util.Log;
-import com.facebook.react.bridge.ReadableArray;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
@@ -12,7 +12,6 @@ import com.humaniq.apilib.network.models.request.ValidateRequest;
 import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
-import com.humaniq.apilib.network.models.request.wallet.Transaction;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
@@ -22,6 +21,8 @@ import com.humaniq.apilib.network.models.response.TransactionResponse;
 import com.humaniq.apilib.network.models.response.ValidationResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModelHmq;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModelUsd;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.network.service.WalletService;
@@ -29,8 +30,6 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -134,7 +133,8 @@ public class ProfileApiTest {
 
     try {
       WalletService service = ServiceBuilder.getWalletService();
-      Call<BaseResponse<UserTransaction>> call = service.getUserTransaction("223344556677", "0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
+      Call<BaseResponse<UserTransaction>> call = service.getUserTransaction("223344556677",
+          "0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
       Response<BaseResponse<UserTransaction>> payload = call.execute();
       Log.d("profile", payload.body().toString());
     } catch (Exception e) {
@@ -204,14 +204,13 @@ public class ProfileApiTest {
 
   private String base64;
 
-
   @Test public void testCreateTransaction() {
     new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
-      Call<BaseResponse<TransactionResponse>> call =
-          ServiceBuilder.getWalletService().createTransaction("1570123796151534997", "1570123796151534997",null, 10);
+      Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()
+          .createTransaction("1570123796151534997", "1570123796151534997", null, 10);
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());
@@ -233,8 +232,6 @@ public class ProfileApiTest {
     //  query += accountIds.get(i) + "&account_id=";
     //}
 
-
-
     //try {
     //  ProfileService service = ServiceBuilder.getProfileService();
     //  Call<BasePayload<AccountProfile.List>> call = service.getAccountProfiles(accountIds);
@@ -252,10 +249,50 @@ public class ProfileApiTest {
     try {
       FcmCredentials fcmCredentials = new FcmCredentials();
       fcmCredentials.setAccountId(Long.valueOf("1570123796151534997"));
-      fcmCredentials.setToken("e1sAmGApuFg:APA91bFhncSCrYlxuk10Zkcfy4M672gGQN2212MAj2AXTiu2favquLfyRrJkqppSNoc-Cz_tU7orSmeBE5Rmp5xCSEWWzkzn3R3hGyVOEZ2E0_BnbOhSug-fmgHCF-grAVSs3okUegGE");
+      fcmCredentials.setToken(
+          "e1sAmGApuFg:APA91bFhncSCrYlxuk10Zkcfy4M672gGQN2212MAj2AXTiu2favquLfyRrJkqppSNoc-Cz_tU7orSmeBE5Rmp5xCSEWWzkzn3R3hGyVOEZ2E0_BnbOhSug-fmgHCF-grAVSs3okUegGE");
 
       Response<BaseResponse<Object>> response =
           ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Test public void testGetExchangeHmq() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      WalletService service = ServiceBuilder.getWalletService();
+      Call<BaseResponse<ExchangeModelHmq>> call = service.getExchangeHmq("20");
+      Response<BaseResponse<ExchangeModelHmq>> response = call.execute();
+
+      System.out.println(new Gson().toJson(response.body()));
+      ExchangeModelHmq exchangeModel = response.body().data;
+      System.out.println(exchangeModel.getHMQ());
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  @Test public void testGetExchangeUsd() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      WalletService service = ServiceBuilder.getWalletService();
+      Call<BaseResponse<ExchangeModelUsd>> call = service.getExchangeUsd("20");
+      Response<BaseResponse<ExchangeModelUsd>> response = call.execute();
+
+      System.out.println(new Gson().toJson(response.body()));
+      ExchangeModelUsd exchangeModel = response.body().data;
+      System.out.println(exchangeModel.getUSD());
 
       assertTrue(response.isSuccessful());
     } catch (Exception e) {

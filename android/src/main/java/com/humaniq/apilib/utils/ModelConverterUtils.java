@@ -34,9 +34,11 @@ public class ModelConverterUtils {
       } else if (value instanceof Integer) {
         map.putInt(key, (Integer) value);
       } else if (value instanceof Double) {
+        System.out.println("double");
         map.putDouble(key, (Double) value);
       } else if (value instanceof String) {
         map.putString(key, (String) value);
+        System.out.println("string");
       } else {
         map.putString(key, value.toString());
       }
