@@ -120,24 +120,45 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
     getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
       @Override
-      public void onReceive(Context context, Intent intent) {
-        String data = "";
+      public void onReceive(Context context, final Intent intent) {
+        final String data = "";
 
         RemoteMessage remoteMessage = intent.getParcelableExtra("data");
         if(remoteMessage != null) {
-          for (String key : remoteMessage.getData().keySet()) {
-            data += key + ": " + remoteMessage.getData().get(key) + ", ";
-          }
-
+        //  for (String key : remoteMessage.getData().keySet()) {
+        //    data += key + ": " + remoteMessage.getData().get(key) + ", ";
+        //  }
+        //
         WritableMap writableMap = new WritableNativeMap();
         writableMap.putString("transaction", "push_data: " + data);
+        writableMap.putString("transaction", remoteMessage.getData().get("fcm_registered"));
+          sendEvent(writableMap);
 
-        sendEvent(writableMap);
+          ServiceBuilder
+              .getWalletService()
+              .getUserTransaction(Prefs.getAccountId(), remoteMessage.getData().get("hash"))
+          .enqueue(new Callback<BaseResponse<UserTransaction>>() {
+            @Override public void onResponse(Call<BaseResponse<UserTransaction>> call,
+                Response<BaseResponse<UserTransaction>> response) {
+              try {
+                WritableMap transactionMap = ModelConverterUtils
+                    .convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, UserTransaction.class)));
+                sendEvent(transactionMap);
+              } catch (JSONException e) {
+                e.printStackTrace();
+              }
+
+            }
+
+            @Override public void onFailure(Call<BaseResponse<UserTransaction>> call, Throwable t) {
+
+            }
+          });
         } else {
           getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override public void run() {
               WritableMap writableMap = new WritableNativeMap();
-              writableMap.putString("transaction", "token!!:  " + Prefs.getFCMToken());
+              writableMap.putString("transaction", intent.getStringExtra("registration"));
               sendEvent(writableMap);
             }
           });

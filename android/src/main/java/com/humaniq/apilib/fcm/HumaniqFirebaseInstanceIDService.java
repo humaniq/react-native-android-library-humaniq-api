@@ -1,5 +1,6 @@
 package com.humaniq.apilib.fcm;
 
+import android.content.Intent;
 import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -10,6 +11,8 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService {
@@ -23,6 +26,10 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     Log.d(TAG, "Refreshed token: " + refreshedToken);
     Prefs.saveFCMToken(refreshedToken);
 
+    Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+      i.putExtra("registration", "fcm_registered: " + refreshedToken);
+    sendOrderedBroadcast(i, null);
+
     if(Prefs.hasToken()) {
       try {
         sendRegistrationToServer(refreshedToken);
@@ -30,18 +37,36 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
         e.printStackTrace();
       }
     }
-
+    try {
+      sendRegistrationToServer(refreshedToken);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void sendRegistrationToServer(String token) throws IOException {
 
     ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
     FcmCredentials fcmCredentials = new FcmCredentials();
-    fcmCredentials.setAccountId(Long.valueOf("1570123796151534997"));
-    fcmCredentials.setToken("");
+    fcmCredentials.setAccountId(Long.valueOf("1570909452079465500"));
+    fcmCredentials.setToken(token);
 
-    Response<BaseResponse<Object>> response =
-        ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
+
+        ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
+            Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+            i.putExtra("registration", response.code() + "");
+            sendOrderedBroadcast(i, null);
+          }
+
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+            Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+            i.putExtra("registration", "400");
+            sendOrderedBroadcast(i, null);
+          }
+        });
+
 
   }
   //
