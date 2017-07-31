@@ -49,7 +49,7 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
     FcmCredentials fcmCredentials = new FcmCredentials();
     fcmCredentials.setAccountId(Long.valueOf("1570909452079465500"));
-    fcmCredentials.setToken("0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
+    fcmCredentials.setToken(token);
 
 
         ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
