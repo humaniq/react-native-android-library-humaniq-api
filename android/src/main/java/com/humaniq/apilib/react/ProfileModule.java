@@ -40,9 +40,12 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.utils.ResponseWrapperUtils;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import okhttp3.ResponseBody;
@@ -372,20 +375,17 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         });
   }
 
-  @ReactMethod public void getAccountProfiles(ReadableArray accountIds, final Promise promise) {
-    String query = "";
-    for(int i = 0; i < accountIds.size(); i++) {
-        query += accountIds.getString(i) + "&account_id=";
-    }
 
-    ServiceBuilder.getProfileService().getAccountProfiles(query)
-        .enqueue(new Callback<BasePayload<List<AccountProfile>>>() {
-          @Override public void onResponse(Call<BasePayload<List<AccountProfile>>> call,
-              Response<BasePayload<List<AccountProfile>>> response) {
-            if(response.body() != null && response.body().code == Codes.ACCOUNT_PROFILE_RETRIEVED) {
+
+  @ReactMethod public void getAccountProfiles(ReadableArray accountIds, final Promise promise) {
+    ServiceBuilder.getProfileService().getAccountProfiles(new ArrayList<String>(convertReadableArrayToList(accountIds)))
+        .enqueue(new Callback<BasePayload<AccountProfile.List>>() {
+          @Override public void onResponse(Call<BasePayload<AccountProfile.List>> call,
+              Response<BasePayload<AccountProfile.List>> response) {
+            if(response.body() != null) {
               try {
                 WritableArray writableArray = new WritableNativeArray();
-                for(AccountProfile accountProfile : response.body().payload) {
+                for(AccountProfile accountProfile : response.body().payload.getAccountProfiles()) {
                   WritableMap profile = ModelConverterUtils.convertJsonToMap(
                       new JSONObject(new Gson().toJson(accountProfile, AccountProfile.class)));
                   writableArray.pushMap(profile);
@@ -402,7 +402,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             }
           }
 
-          @Override public void onFailure(Call<BasePayload<List<AccountProfile>>> call, Throwable t) {
+          @Override public void onFailure(Call<BasePayload<AccountProfile.List>> call, Throwable t) {
             promise.reject(t);
           }
         });
@@ -501,5 +501,16 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         });
 
   }
+
+  private Set<String> convertReadableArrayToList(ReadableArray array) {
+    Set<String> set = new HashSet<String>();
+
+    for (int i = 0; i < array.size(); i++) {
+      set.add(array.getString(i));
+    }
+
+    return set;
+  }
+
 
 }

@@ -2,6 +2,7 @@ package com.humaniq.apilib.network.models.response.profile;
 
 import com.google.gson.annotations.SerializedName;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
+import java.util.List;
 
 /**
  * Created by ognev on 7/26/17.
@@ -55,5 +56,13 @@ public class AccountProfile {
     }
   }
 
+  public class List {
 
+    @SerializedName("account_profiles")
+    private java.util.List<AccountProfile> accountProfiles;
+
+    public java.util.List<AccountProfile> getAccountProfiles() {
+      return accountProfiles;
+    }
+  }
 }

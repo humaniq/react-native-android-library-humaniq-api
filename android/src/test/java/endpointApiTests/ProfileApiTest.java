@@ -2,6 +2,7 @@ package endpointApiTests;
 
 import android.content.res.Resources;
 import android.util.Log;
+import com.facebook.react.bridge.ReadableArray;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
@@ -26,6 +27,8 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -197,6 +200,31 @@ public class ProfileApiTest {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  }
+
+  @Test public void testGetProfiles() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    //ReadableArray<String> accountIds= new ArrayList<>();
+    //accountIds.add("1570909452079465500");
+    //accountIds.add("1570909452079465501");
+    //accountIds.add("1570909452079465502");
+    //String query = "";
+    //for(int i = 0; i < accountIds.size(); i++) {
+    //  query += accountIds.get(i) + "&account_id=";
+    //}
+
+
+
+    //try {
+    //  ProfileService service = ServiceBuilder.getProfileService();
+    //  Call<BasePayload<AccountProfile.List>> call = service.getAccountProfiles(accountIds);
+    //  Response<BasePayload<AccountProfile.List>> payload = call.execute();
+    //  Log.d("profile", payload.body().payload.toString());
+    //} catch (Exception e) {
+    //  e.printStackTrace();
+    //}
   }
 
   @Test public void testSaveFcmCredentials() {

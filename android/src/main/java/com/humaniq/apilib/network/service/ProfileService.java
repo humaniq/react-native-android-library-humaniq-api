@@ -32,7 +32,7 @@ public interface ProfileService {
     Call<BasePayload<AccountProfile>> getAccountProfile(@Query("account_id") String accountId);
 
   @GET("/tapatybe/api/v1/account/profiles")
-  Call<BasePayload<List<AccountProfile>>> getAccountProfiles(@Query("account_id") String accountIds);
+  Call<BasePayload<AccountProfile.List>> getAccountProfiles(@Query("account_id") List<String> accountIds);
 
 
   @POST("/tapatybe/api/v1/account/person")
