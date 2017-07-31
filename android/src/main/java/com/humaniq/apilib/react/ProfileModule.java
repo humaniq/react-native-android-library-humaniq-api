@@ -27,10 +27,13 @@ import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.TransactionResponse;
+import com.humaniq.apilib.network.models.response.contacts.Contact;
+import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthErrorModel;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModel;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.request.wallet.Balance;
@@ -550,6 +553,39 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     }
 
     return set;
+  }
+
+  @ReactMethod public void getExchange(String amount, final Promise promise) {
+    ServiceBuilder.getWalletService().getExchange(amount).enqueue(new Callback<BaseResponse<Object>>() {
+      @Override public void onResponse(Call<BaseResponse<Object>> call,
+          Response<BaseResponse<Object>> response) {
+        if (response.body() != null && !"".equals(response.body())) {
+          Log.d(LOG_TAG, "OnResponse - Success request");
+          try {
+            BaseResponse res = response.body();
+            WritableArray array = new WritableNativeArray();
+            Object obj = res.data;
+            WritableMap phonesWithId =  ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(obj, ExchangeModel.class)));
+            array.pushMap(phonesWithId);
+            promise.resolve(array);
+
+          } catch (JSONException e) {
+            e.printStackTrace();
+            promise.reject(e);
+          }
+
+
+        } else {
+          Log.d(LOG_TAG, "OnResponse - Error request");
+          Log.d(LOG_TAG, response.errorBody().toString());
+          promise.reject(response.errorBody().toString());
+        }
+      }
+
+      @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+        promise.reject(t);
+      }
+    });
   }
 
 

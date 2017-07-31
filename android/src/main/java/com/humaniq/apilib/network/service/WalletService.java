@@ -41,4 +41,10 @@ public interface WalletService {
       @Path("user_id") String userId, @Field("to_user_id") String toUserId,
       @Field("to_address") String toAddress, @Field("amount") float amount);
 
+
+  //curl --request GET \
+  //    --url 'https://beta-api.humaniq.co/currency/api/v1/usd_exchange?amount=10'
+  @GET("/currency/api/v1/usd_exchange?amount={amount}")
+  Call<BaseResponse<Object>> getExchange(
+      @Path("amount") String amount);
 }
