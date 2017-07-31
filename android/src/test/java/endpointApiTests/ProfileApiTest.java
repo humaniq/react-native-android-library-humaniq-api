@@ -97,13 +97,14 @@ public class ProfileApiTest {
   }
 
   @Test public void testUpdateAccountPassword() {
+    new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
 
       AccountPassword accountPassword = new AccountPassword();
-      accountPassword.setAccountId("1568161709003113564");
+      accountPassword.setAccountId("1570909452079465500");
       accountPassword.setOldPassword("1234567");
       accountPassword.setNewPassword("1234567");
       //AccountPerson.Person person = new AccountPerson.Person();
