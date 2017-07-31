@@ -44,7 +44,7 @@ public interface WalletService {
 
   //curl --request GET \
   //    --url 'https://beta-api.humaniq.co/currency/api/v1/usd_exchange?amount=10'
-  @GET("/currency/api/v1/usd_exchange?amount={amount}")
+  @GET("/currency/api/v1/usd_exchange")
   Call<BaseResponse<Object>> getExchange(
-      @Path("amount") String amount);
+      @Query("amount") String amount);
 }
