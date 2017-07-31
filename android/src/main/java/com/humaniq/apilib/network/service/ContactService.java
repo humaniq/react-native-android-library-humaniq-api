@@ -15,4 +15,7 @@ public interface ContactService {
 
   @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
   Call<ContactsResponse> extractPhoneNumbers(@Body List<String> data);
+
+  @POST("/contact-checker/api/v1/extract_registered_phone_numbers")
+  Call<ContactsResponse> extractPhoneNumber(@Body List<String> data);
 }

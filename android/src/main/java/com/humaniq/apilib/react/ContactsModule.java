@@ -82,6 +82,46 @@ public class ContactsModule extends ReactContextBaseJavaModule {
   }
 
 
+  @ReactMethod public void extractSinglePhoneNumber(String phonenumber, final Promise promise) {
+    if (phonenumber!= null && !phonenumber.isEmpty()) {
+
+      ArrayList<String> phone = new ArrayList<String>();
+      phone.add(phonenumber);
+      ServiceBuilder.getContactsService().extractPhoneNumbers(phone).enqueue(new Callback<ContactsResponse>() {
+        @Override public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
+          if (response.body() != null && !"".equals(response.body()))  {
+            Log.d(LOG_TAG, "OnResponse - Success request");
+            try {
+              ContactsResponse res = response.body();
+              WritableArray array = new WritableNativeArray();
+              for (Contact contact : res.getData()) {
+                WritableMap phonesWithId =  ModelConverterUtils.
+                    convertJsonToMap(new JSONObject(new Gson().toJson(contact, Contact.class)));
+                array.pushMap(phonesWithId);
+              }
+              promise.resolve(array);
+
+            } catch (JSONException e) {
+              e.printStackTrace();
+              promise.reject(e);
+            }
+          } else {
+            Log.d(LOG_TAG, "OnResponse - Error request");
+            Log.d(LOG_TAG, response.errorBody().toString());
+            promise.reject(response.errorBody().toString());
+          }
+
+        }
+
+        @Override public void onFailure(Call<ContactsResponse> call, Throwable t) {
+          Log.d(LOG_TAG, "onFailure = " + t);
+        }
+      });
+    } else {
+      promise.reject("-1", "Haven't any contacts on mobile device");
+    }
+  }
+
   @ReactMethod public void extractAllPhoneNumbers(final Promise promise) {
     if (getAllContacts() != null) {
       ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
