@@ -573,7 +573,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     return set;
   }
 
-  @ReactMethod public void getExchangeUsd(String amount, final Promise promise) {
+  @ReactMethod public void getExchangeHmq(String amount, final Promise promise) {
     ServiceBuilder.getWalletService().getExchangeHmq(amount).enqueue(new Callback<BaseResponse<ExchangeModelHmq>>() {
       @Override public void onResponse(Call<BaseResponse<ExchangeModelHmq>> call,
           Response<BaseResponse<ExchangeModelHmq>> response) {
@@ -606,7 +606,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     });
   }
 
-  @ReactMethod public void getExchangeHmq(String amount, final Promise promise) {
+  @ReactMethod public void getExchangeUsd(String amount, final Promise promise) {
     ServiceBuilder.getWalletService().getExchangeUsd(amount).enqueue(new Callback<BaseResponse<ExchangeModelUsd>>() {
       @Override public void onResponse(Call<BaseResponse<ExchangeModelUsd>> call,
           Response<BaseResponse<ExchangeModelUsd>> response) {
