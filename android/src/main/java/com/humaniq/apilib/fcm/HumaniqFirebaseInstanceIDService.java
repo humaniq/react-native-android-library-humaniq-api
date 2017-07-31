@@ -27,7 +27,7 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     Prefs.saveFCMToken(refreshedToken);
 
     Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
-      i.putExtra("fcm_registered", "fcm_registered: " + refreshedToken);
+      i.putExtra("registration", "fcm_registered: " + refreshedToken);
     sendOrderedBroadcast(i, null);
 
     if(Prefs.hasToken()) {
