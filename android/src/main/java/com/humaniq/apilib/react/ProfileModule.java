@@ -11,6 +11,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
@@ -371,7 +372,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         });
   }
 
-  @ReactMethod public void getAccountProfiles(WritableArray accountIds, final Promise promise) {
+  @ReactMethod public void getAccountProfiles(ReadableArray accountIds, final Promise promise) {
     String query = "";
     for(int i = 0; i < accountIds.size(); i++) {
         query += accountIds.getString(i) + "&account_id=";
