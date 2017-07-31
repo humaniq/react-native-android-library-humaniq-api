@@ -113,49 +113,53 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     });
   }
 
+
+  //@ReactMethod public void getUserTransaction(String account_id, String hash, final Promise promise) {
+  //  ServiceBuilder
+  //      .getWalletService()
+  //      .getUserTransaction(account_id, hash)
+  //      .enqueue(new Callback<BaseResponse<UserTransaction>>() {
+  //        @Override public void onResponse(Call<BaseResponse<UserTransaction>> call,
+  //            Response<BaseResponse<UserTransaction>> response) {
+  //          try {
+  //            WritableMap transactionMap = ModelConverterUtils
+  //                .convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, UserTransaction.class)));
+  //            promise.resolve(transactionMap);
+  //          } catch (JSONException e) {
+  //            e.printStackTrace();
+  //          }
+  //
+  //        }
+  //
+  //        @Override public void onFailure(Call<BaseResponse<UserTransaction>> call, Throwable t) {
+  //
+  //        }
+  //      });
+  //}
+
   private void registerMessageHandler() {
     IntentFilter intentFilter = new IntentFilter("com.humaniq.apilib.fcm.ReceiveNotification");
 
     getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, final Intent intent) {
-        final String data = "";
+        String data = "";
         RemoteMessage remoteMessage = intent.getParcelableExtra("data");
         if(remoteMessage != null) {
-        //  for (String key : remoteMessage.getData().keySet()) {
-        //    data += key + ": " + remoteMessage.getData().get(key) + ", ";
-        //  }
+          for (String key : remoteMessage.getData().keySet()) {
+            data += key + ": " + remoteMessage.getData().get(key) + ", ";
+          }
         //
-        //WritableMap writableMap = new WritableNativeMap();
+        WritableMap writableMap = new WritableNativeMap();
         //writableMap.putString("transaction", "push_data: " + data);
-        //writableMap.putString("transaction", remoteMessage.getData().get("fcm_registered"));
-        //  sendEvent(writableMap);
+        writableMap.putString("transaction", data);
+          sendEvent(writableMap);
 
-          ServiceBuilder
-              .getWalletService()
-              .getUserTransaction(Prefs.getAccountId(), remoteMessage.getData().get("hash"))
-          .enqueue(new Callback<BaseResponse<UserTransaction>>() {
-            @Override public void onResponse(Call<BaseResponse<UserTransaction>> call,
-                Response<BaseResponse<UserTransaction>> response) {
-              try {
-                WritableMap transactionMap = ModelConverterUtils
-                    .convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, UserTransaction.class)));
-                sendEvent(transactionMap);
-              } catch (JSONException e) {
-                e.printStackTrace();
-              }
-
-            }
-
-            @Override public void onFailure(Call<BaseResponse<UserTransaction>> call, Throwable t) {
-
-            }
-          });
         } else {
           getReactApplicationContext().runOnUiQueueThread(new Runnable() {
             @Override public void run() {
               WritableMap writableMap = new WritableNativeMap();
-              writableMap.putString("transaction", intent.getStringExtra("registration"));
+              writableMap.putString("transaction", "push_not_work");
               sendEvent(writableMap);
             }
           });
@@ -167,7 +171,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     }, intentFilter);
   }
 
-  @ReactMethod public void getTransaction(
+  @ReactMethod public void getUserTransaction(
       String accountId,
       String transactionHash,
       final Promise promise) {
@@ -188,7 +192,8 @@ public class ProfileModule extends ReactContextBaseJavaModule {
               }
             } else {
               try {
-                promise.reject("" , response.errorBody().string());
+                promise.reject(String.valueOf(response.code()),
+                    new Throwable(response.errorBody().string()));
               } catch (IOException e) {
                 e.printStackTrace();
               }
