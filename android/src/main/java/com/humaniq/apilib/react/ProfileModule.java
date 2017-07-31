@@ -19,6 +19,7 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.humaniq.apilib.Codes;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.profile.AccountAvatar;
@@ -49,6 +50,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import okhttp3.ResponseBody;
@@ -557,19 +559,14 @@ public class ProfileModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod public void getExchange(String amount, final Promise promise) {
-    ServiceBuilder.getWalletService().getExchange(amount).enqueue(new Callback<BaseResponse<Object>>() {
-      @Override public void onResponse(Call<BaseResponse<Object>> call,
-          Response<BaseResponse<Object>> response) {
+    ServiceBuilder.getWalletService().getExchange(amount).enqueue(new Callback<BaseResponse<ExchangeModel>>() {
+      @Override public void onResponse(Call<BaseResponse<ExchangeModel>> call,
+          Response<BaseResponse<ExchangeModel>> response) {
         if (response.body() != null && !"".equals(response.body())) {
           Log.d(LOG_TAG, "OnResponse - Success request");
           try {
-            BaseResponse res = response.body();
-            WritableArray array = new WritableNativeArray();
-            Object obj = res.data;
-            WritableMap phonesWithId =  ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(obj, ExchangeModel.class)));
-            array.pushMap(phonesWithId);
-            promise.resolve(array);
-
+            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            promise.resolve(writableMap);
           } catch (JSONException e) {
             e.printStackTrace();
             promise.reject(e);
@@ -588,7 +585,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         }
       }
 
-      @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+      @Override public void onFailure(Call<BaseResponse<ExchangeModel>> call, Throwable t) {
         promise.reject(t);
       }
     });

@@ -3,6 +3,8 @@ package endpointApiTests;
 import android.content.res.Resources;
 import android.util.Log;
 import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableMap;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
@@ -22,15 +24,21 @@ import com.humaniq.apilib.network.models.response.TransactionResponse;
 import com.humaniq.apilib.network.models.response.ValidationResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModel;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.network.service.WalletService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
+import com.humaniq.apilib.utils.ModelConverterUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -256,6 +264,26 @@ public class ProfileApiTest {
 
       Response<BaseResponse<Object>> response =
           ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+
+  @Test public void testGetExchange() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      WalletService service = ServiceBuilder.getWalletService();
+      Call<BaseResponse<ExchangeModel>>call = service.getExchange("20");
+      Response<BaseResponse<ExchangeModel>> response = call.execute();
+
+      System.out.println(new Gson().toJson(response.body()));
+      ExchangeModel exchangeModel = response.body().data;
+      System.out.println(exchangeModel.getHMQ());
 
       assertTrue(response.isSuccessful());
     } catch (Exception e) {
