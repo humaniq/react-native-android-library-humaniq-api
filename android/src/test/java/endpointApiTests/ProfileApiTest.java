@@ -13,6 +13,7 @@ import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.request.wallet.Transaction;
+import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BasePayload;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.FacialImage;
@@ -23,6 +24,7 @@ import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.ValidationService;
+import com.humaniq.apilib.network.service.WalletService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
@@ -125,7 +127,22 @@ public class ProfileApiTest {
 
   }
 
+  @Test public void testGetTransaction() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+
+    try {
+      WalletService service = ServiceBuilder.getWalletService();
+      Call<BaseResponse<UserTransaction>> call = service.getUserTransaction("223344556677", "0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
+      Response<BaseResponse<UserTransaction>> payload = call.execute();
+      Log.d("profile", payload.body().toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   @Test public void testGetAccountProfile() {
+    new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
 
     try {

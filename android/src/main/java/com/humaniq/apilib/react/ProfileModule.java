@@ -158,7 +158,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
               try {
                 WritableMap responseMap = ModelConverterUtils
                     .convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, UserTransaction.class)));
-                promise.resolve(response);
+                promise.resolve(responseMap);
               } catch (JSONException e) {
                 e.printStackTrace();
                 promise.reject("", e);
