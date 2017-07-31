@@ -579,7 +579,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     return set;
   }
 
-  @ReactMethod public void getExchange(String amount, final Promise promise) {
+  @ReactMethod public void getExchangeUsd(String amount, final Promise promise) {
     ServiceBuilder.getWalletService().getExchange(amount).enqueue(new Callback<BaseResponse<ExchangeModel>>() {
       @Override public void onResponse(Call<BaseResponse<ExchangeModel>> call,
           Response<BaseResponse<ExchangeModel>> response) {
@@ -612,5 +612,36 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     });
   }
 
+  @ReactMethod public void getExchangeHmq(String amount, final Promise promise) {
+    ServiceBuilder.getWalletService().getExchange(amount).enqueue(new Callback<BaseResponse<ExchangeModel>>() {
+      @Override public void onResponse(Call<BaseResponse<ExchangeModel>> call,
+          Response<BaseResponse<ExchangeModel>> response) {
+        if (response.body() != null && !"".equals(response.body())) {
+          Log.d(LOG_TAG, "OnResponse - Success request");
+          try {
+            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            promise.resolve(writableMap);
+          } catch (JSONException e) {
+            e.printStackTrace();
+            promise.reject(e);
+          }
 
+
+        } else {
+          Log.d(LOG_TAG, "OnResponse - Error request");
+          Log.d(LOG_TAG, response.errorBody().toString());
+          try {
+            promise.reject(String.valueOf(response.code()),
+                new Throwable(response.errorBody().string()));
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      }
+
+      @Override public void onFailure(Call<BaseResponse<ExchangeModel>> call, Throwable t) {
+        promise.reject(t);
+      }
+    });
+  }
 }

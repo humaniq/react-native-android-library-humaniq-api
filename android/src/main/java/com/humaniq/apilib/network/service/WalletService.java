@@ -48,4 +48,11 @@ public interface WalletService {
   @GET("/currency/api/v1/usd_exchange")
   Call<BaseResponse<ExchangeModel>> getExchange(
       @Query("amount") String amount);
+
+  @GET("/currency/api/v1/hmq_exchange")
+  Call<BaseResponse<ExchangeModel>> getExchangeHmq(
+      @Query("amount") String amount);
+
+
+
 }
