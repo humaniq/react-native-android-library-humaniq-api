@@ -1,5 +1,6 @@
 package com.humaniq.apilib.fcm;
 
+import android.content.Intent;
 import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
@@ -43,6 +44,9 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     Response<BaseResponse<Object>> response =
         ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
 
+    Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+    i.putExtra("registration", response.code() + "");
+    sendOrderedBroadcast(i, null);
   }
   //
   //private void sendNotification(String messageBody) {
