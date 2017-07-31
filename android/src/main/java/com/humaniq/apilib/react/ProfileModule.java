@@ -127,8 +127,10 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         //    data += key + ": " + remoteMessage.getData().get(key) + ", ";
         //  }
         //
-        //WritableMap writableMap = new WritableNativeMap();
-        //writableMap.putString("transaction", "push_data: " + data);
+        WritableMap writableMap = new WritableNativeMap();
+        writableMap.putString("transaction", "push_data: " + data);
+        writableMap.putString("transaction", remoteMessage.getData().get("fcm_registered"));
+          sendEvent(writableMap);
 
           ServiceBuilder
               .getWalletService()

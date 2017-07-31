@@ -24,6 +24,10 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     Log.d(TAG, "Refreshed token: " + refreshedToken);
     Prefs.saveFCMToken(refreshedToken);
 
+    Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+      i.putExtra("fcm_registered", "fcm_registered: " + refreshedToken);
+    sendOrderedBroadcast(i, null);
+
     if(Prefs.hasToken()) {
       try {
         sendRegistrationToServer(refreshedToken);
@@ -42,7 +46,7 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
 
     ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
     FcmCredentials fcmCredentials = new FcmCredentials();
-    fcmCredentials.setAccountId(Long.valueOf("1570123796151534997"));
+    fcmCredentials.setAccountId(Long.valueOf("1570909452079465500"));
     fcmCredentials.setToken("0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
 
     Response<BaseResponse<Object>> response =
