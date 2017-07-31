@@ -30,6 +30,10 @@ public interface WalletService {
   Call<BaseResponse<List<UserTransaction>>> getUserTransactions(
       @Path("user_id") String id, @Query("offset") int offset, @Query("limit") int limit);
 
+  @GET("/wallet/api/v1/users/{user_id}/transactions/{hash}")
+  Call<BaseResponse<UserTransaction>> getUserTransaction(
+      @Path("user_id") String id, @Path("hash") String hash);
+
   //@GET("get/last/block/number")
   //Call<BaseResponse<Long>> getLastBlockNumber();
   @FormUrlEncoded

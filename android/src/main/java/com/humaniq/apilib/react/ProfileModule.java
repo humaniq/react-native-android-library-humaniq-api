@@ -144,6 +144,42 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     }, intentFilter);
   }
 
+  @ReactMethod public void getTransaction(
+      String accountId,
+      String transactionHash,
+      final Promise promise) {
+    ServiceBuilder.getWalletService()
+        .getUserTransaction(accountId, transactionHash)
+        .enqueue(new Callback<BaseResponse<UserTransaction>>() {
+          @Override public void onResponse(Call<BaseResponse<UserTransaction>> call,
+              Response<BaseResponse<UserTransaction>> response) {
+            if(response.body() != null) {
+
+              try {
+                WritableMap responseMap = ModelConverterUtils
+                    .convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, UserTransaction.class)));
+                promise.resolve(response);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject("", e);
+              }
+            } else {
+              try {
+                promise.reject("" , response.errorBody().string());
+              } catch (IOException e) {
+                e.printStackTrace();
+              }
+            }
+
+          }
+
+          @Override
+          public void onFailure(Call<BaseResponse<UserTransaction>> call, Throwable t) {
+              promise.reject(t);
+          }
+        });
+  }
+
   @ReactMethod public void getTransactions(
       String id,
       int offset,
