@@ -371,10 +371,10 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         });
   }
 
-  @ReactMethod public void getAccountProfiles(List<String> accountIds, final Promise promise) {
+  @ReactMethod public void getAccountProfiles(WritableArray accountIds, final Promise promise) {
     String query = "";
     for(int i = 0; i < accountIds.size(); i++) {
-        query += accountIds.get(i) + "&account_id=";
+        query += accountIds.getString(i) + "&account_id=";
     }
 
     ServiceBuilder.getProfileService().getAccountProfiles(query)
