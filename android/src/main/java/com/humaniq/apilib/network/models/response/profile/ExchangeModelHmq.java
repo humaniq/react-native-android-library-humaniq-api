@@ -4,7 +4,7 @@ package com.humaniq.apilib.network.models.response.profile;
  * Created by gritsay on 7/31/17.
  */
 
-public class ExchangeModel {
+public class ExchangeModelHmq {
   private double HMQ;
 
   public double getHMQ() {

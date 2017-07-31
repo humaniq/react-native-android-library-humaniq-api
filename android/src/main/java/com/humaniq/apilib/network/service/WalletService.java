@@ -8,7 +8,8 @@ import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.TransactionResponse;
-import com.humaniq.apilib.network.models.response.profile.ExchangeModel;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModelHmq;
+import com.humaniq.apilib.network.models.response.profile.ExchangeModelUsd;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -46,11 +47,11 @@ public interface WalletService {
   //curl --request GET \
   //    --url 'https://beta-api.humaniq.co/currency/api/v1/usd_exchange?amount=10'
   @GET("/currency/api/v1/usd_exchange")
-  Call<BaseResponse<ExchangeModel>> getExchange(
+  Call<BaseResponse<ExchangeModelHmq>> getExchangeHmq(
       @Query("amount") String amount);
 
   @GET("/currency/api/v1/hmq_exchange")
-  Call<BaseResponse<ExchangeModel>> getExchangeHmq(
+  Call<BaseResponse<ExchangeModelUsd>> getExchangeUsd(
       @Query("amount") String amount);
 
 
