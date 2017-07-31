@@ -5,22 +5,13 @@ package com.humaniq.apilib.network.models.response.profile;
  */
 
 public class ExchangeModel {
-  private String HMQ;
-  private double ballance;
+  private double HMQ;
 
-  public String getHMQ() {
+  public double getHMQ() {
     return HMQ;
   }
 
-  public void setHMQ(String HMQ) {
+  public void setHMQ(double HMQ) {
     this.HMQ = HMQ;
-  }
-
-  public double getBallance() {
-    return ballance;
-  }
-
-  public void setBallance(double ballance) {
-    this.ballance = ballance;
   }
 }
