@@ -16,6 +16,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.fasterxml.jackson.databind.deser.Deserializers;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Codes;
@@ -580,7 +581,9 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         if (response.body() != null && !"".equals(response.body())) {
           Log.d(LOG_TAG, "OnResponse - Success request");
           try {
-            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            ExchangeModelHmq resp = response.body().data;
+
+            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(resp)));
             promise.resolve(writableMap);
           } catch (JSONException e) {
             e.printStackTrace();
@@ -613,7 +616,9 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         if (response.body() != null && !"".equals(response.body())) {
           Log.d(LOG_TAG, "OnResponse - Success request");
           try {
-            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            ExchangeModelUsd resp = response.body().data;
+
+            WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(resp)));
             promise.resolve(writableMap);
           } catch (JSONException e) {
             e.printStackTrace();
