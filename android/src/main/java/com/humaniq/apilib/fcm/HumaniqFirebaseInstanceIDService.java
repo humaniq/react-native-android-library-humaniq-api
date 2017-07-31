@@ -11,6 +11,8 @@ import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService {
@@ -49,12 +51,23 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
     fcmCredentials.setAccountId(Long.valueOf("1570909452079465500"));
     fcmCredentials.setToken("0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
 
-    Response<BaseResponse<Object>> response =
-        ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).execute();
 
-    Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
-    i.putExtra("registration", response.code() + "");
-    sendOrderedBroadcast(i, null);
+        ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
+          @Override public void onResponse(Call<BaseResponse<Object>> call,
+              Response<BaseResponse<Object>> response) {
+            Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+            i.putExtra("registration", response.code() + "");
+            sendOrderedBroadcast(i, null);
+          }
+
+          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+            Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
+            i.putExtra("registration", "400");
+            sendOrderedBroadcast(i, null);
+          }
+        });
+
+
   }
   //
   //private void sendNotification(String messageBody) {
