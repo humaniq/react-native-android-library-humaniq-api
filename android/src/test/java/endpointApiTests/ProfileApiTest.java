@@ -208,9 +208,9 @@ public class ProfileApiTest {
     new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);//1571772003105376001
 
-    try {//
+    try {//1571923392783714240
       Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()//
-          .createTransaction("1571923392783714240", "1571814570970842930", null, 999999999);
+          .createTransaction("1572028879579645944", "1571814570970842930", null, 1000);
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());

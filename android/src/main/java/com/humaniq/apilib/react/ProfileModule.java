@@ -147,15 +147,18 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           //  data += key + ": " + remoteMessage.getData().get(key) + ", ";
           //}
 
+          /*
+          * "push_data: type: receipt, transaction_id:
+          * {"status": "failed", "error": "not enough hmq", "error_code": 13,
+          * "message": "transaction_receipt", "transaction_id": "fe618eee-4bf0-4982-8031-8a3bf9b4042a",
+           * "from_user": 1571923392783714240}, "__proto__: Object
+Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status…c1d1b6a5b31", "from_user": 1571923392783714240}, "}
+*/
           if("receipt".equals(remoteMessage.getData().get("type"))) {
-            try {
-              WritableMap errorTransactionMap = ModelConverterUtils
-                  .convertJsonToMap(new JSONObject(new Gson().toJson(remoteMessage.getData().get("transaction_id"))));
+              WritableMap errorTransactionMap = new WritableNativeMap();
+              errorTransactionMap.putString("error",remoteMessage.getData().get("transaction_id"));
 
               sendErrorEvent(errorTransactionMap);
-            } catch (JSONException e) {
-              e.printStackTrace();
-            }
           }
 
           if("log".equals(remoteMessage.getData().get("type"))) {
