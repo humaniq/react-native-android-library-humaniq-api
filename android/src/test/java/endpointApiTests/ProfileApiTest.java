@@ -210,7 +210,7 @@ public class ProfileApiTest {
 
     try {//
       Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()//
-          .createTransaction("1571923392783714240", "1571814570970842930", null, 100);
+          .createTransaction("1571923392783714240", "1571814570970842930", null, 999999999);
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());

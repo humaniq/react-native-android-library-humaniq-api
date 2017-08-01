@@ -140,17 +140,32 @@ public class ProfileModule extends ReactContextBaseJavaModule {
     getReactApplicationContext().registerReceiver(new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, final Intent intent) {
-        String data = "";
+        //String data = "";
         RemoteMessage remoteMessage = intent.getParcelableExtra("data");
         if(remoteMessage != null) {
-          for (String key : remoteMessage.getData().keySet()) {
-            data += key + ": " + remoteMessage.getData().get(key) + ", ";
+          //for (String key : remoteMessage.getData().keySet()) {
+          //  data += key + ": " + remoteMessage.getData().get(key) + ", ";
+          //}
+
+          if("receipt".equals(remoteMessage.getData().get("type"))) {
+            try {
+              WritableMap errorTransactionMap = ModelConverterUtils
+                  .convertJsonToMap(new JSONObject(new Gson().toJson(remoteMessage.getData().get("transaction_id"))));
+
+              sendErrorEvent(errorTransactionMap);
+            } catch (JSONException e) {
+              e.printStackTrace();
+            }
+          }
+
+          if("log".equals(remoteMessage.getData().get("type"))) {
+            WritableMap writableMap = new WritableNativeMap();
+            writableMap.putString("hash", remoteMessage.getData().get("hash"));
+            sendEvent(writableMap);
+
           }
         //
-          WritableMap writableMap = new WritableNativeMap();
-          writableMap.putString("push", "push_data: " + data);
-          //writableMap.putString("hash", remoteMessage.getData().get("hash"));
-            sendEvent(writableMap);
+        //  writableMap.putString("push", "push_data: " + data);
 
         } else {
           getReactApplicationContext().runOnUiQueueThread(new Runnable() {
@@ -350,7 +365,6 @@ public class ProfileModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
               }
             } else if(response.errorBody() != null) {
-
               WritableMap writableMap = new WritableNativeMap();
               try {
                 writableMap.putString("message", "NOT_UPLOADED! " +
@@ -481,6 +495,13 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         getJSModule(DeviceEventManagerModule.
             RCTDeviceEventEmitter.class).
         emit(Constants.EVENT_TRANSACTION_CHANGED, params);
+  }
+
+  private void sendErrorEvent(@Nullable WritableMap params) {
+    this.getReactApplicationContext().
+        getJSModule(DeviceEventManagerModule.
+            RCTDeviceEventEmitter.class).
+        emit(Constants.EVENT_TRANSACTION_ERROR, params);
   }
   //private void emulateTransactionEventChanged() {
   //  eventRunnable = new Runnable() {
