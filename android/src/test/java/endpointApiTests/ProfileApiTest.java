@@ -210,7 +210,7 @@ public class ProfileApiTest {
 
     try {
       Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()
-          .createTransaction("1570123796151534997", "1570123796151534997", null, 10);
+          .createTransaction("1570909452079465500", null, "0xbfd007b7c148e9b99fd092b1c83dbdaaf78f5b3b", 2500);
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());
@@ -244,6 +244,7 @@ public class ProfileApiTest {
 
   @Test public void testSaveFcmCredentials() {
     new Prefs(RuntimeEnvironment.application);
+    Prefs.saveJwtToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiI0U0lDWk05MmQ3Rnd4VG9lMGlwZUN3ZGRISXNWN1hNMEhmM1ppdUs4Y2hkWEwya3RxdVdJVndNRGlhc3ZRWGtWQ3pDVlV6Y21KSUplTUtEbWkxaXBNT2RlVnJEN1lLaWhrQVJBcmt3SGI1cWU2bTJPUFF4c0JVdTk0Rm1veEtacSJ9.W4AQ4XSV_19IJmELXuyBrbTxNZF28b2wLGVi-tfJjps");
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {

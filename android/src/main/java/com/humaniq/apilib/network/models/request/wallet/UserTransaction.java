@@ -35,6 +35,44 @@ public class UserTransaction {
   @SerializedName("to_user")
   private User toUser;
 
+  @SerializedName("transaction")
+  private String transaction;
+
+  public int getType() {
+    return type;
+  }
+
+  public int getStatus() {
+    return status;
+  }
+
+  public long getTimestamp() {
+    return timestamp;
+  }
+
+  public long getAmount() {
+    return amount;
+  }
+
+  public String getFromAddress() {
+    return fromAddress;
+  }
+
+  public String getToAddress() {
+    return toAddress;
+  }
+
+  public User getFromUser() {
+    return fromUser;
+  }
+
+  public User getToUser() {
+    return toUser;
+  }
+
+  public String getTransaction() {
+    return transaction;
+  }
 
   //public String toJsonString() {
   //  return new StringBuilder("{").append("\"transaction\":")
