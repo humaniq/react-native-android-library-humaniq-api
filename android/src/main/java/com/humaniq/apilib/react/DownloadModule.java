@@ -41,14 +41,9 @@ public class DownloadModule extends ReactContextBaseJavaModule {
   private Promise downloadPromise;
   private String downloadUri;
   private final ScheduledThreadPoolExecutor executor =
-      new ScheduledThreadPoolExecutor(1);
+      new ScheduledThreadPoolExecutor(5);
+  private Runnable progressRunnable;
 
-  private Runnable progressRunnable  = new Runnable() {
-    @Override
-    public void run() {
-      checkProgress();
-    }
-  };
 
   BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
@@ -62,7 +57,12 @@ public class DownloadModule extends ReactContextBaseJavaModule {
   public DownloadModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
-
+    progressRunnable  = new Runnable() {
+      @Override
+      public void run() {
+        checkProgress();
+      }
+    };
 
     this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 2, TimeUnit.SECONDS);
 
