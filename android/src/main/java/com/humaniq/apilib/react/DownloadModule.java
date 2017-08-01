@@ -214,8 +214,8 @@ Sends an event OF PROGRESS CHANGED to the JS module.
         if (!Prefs.isUriAlreadyDownloaded(uri)) {
           Prefs.setDownloading(true);
           DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uri));
-          //request.setVisibleInDownloadsUi(false);
-          //request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
+          request.setVisibleInDownloadsUi(false);
+          request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
 
           request.setDestinationInExternalFilesDir(getReactApplicationContext(),
               DIRECTORY_DOWNLOADS, "instruction.mp4");
