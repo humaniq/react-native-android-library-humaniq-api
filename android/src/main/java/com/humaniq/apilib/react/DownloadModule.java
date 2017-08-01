@@ -63,7 +63,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
       }
     };
 
-    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
+    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 2, TimeUnit.SECONDS);
 
   }
 
