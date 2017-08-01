@@ -37,11 +37,7 @@ public class HumaniqFirebaseInstanceIDService extends FirebaseInstanceIdService 
         e.printStackTrace();
       }
     }
-    try {
-      sendRegistrationToServer(refreshedToken);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+
   }
 
   private void sendRegistrationToServer(String token) throws IOException {
