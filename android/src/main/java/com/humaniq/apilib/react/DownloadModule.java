@@ -34,7 +34,8 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
  */
 
 public class DownloadModule extends ReactContextBaseJavaModule {
-  private Runnable progressRunnable;
+
+
   private long enqueue;
   private DownloadManager dm;
   private Promise downloadPromise;
@@ -42,6 +43,12 @@ public class DownloadModule extends ReactContextBaseJavaModule {
   private final ScheduledThreadPoolExecutor executor =
       new ScheduledThreadPoolExecutor(1);
 
+  private Runnable progressRunnable  = new Runnable() {
+    @Override
+    public void run() {
+      checkProgress();
+    }
+  };
 
   BroadcastReceiver receiver = new BroadcastReceiver() {
     @Override public void onReceive(Context context, Intent intent) {
@@ -56,12 +63,6 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     super(reactContext);
     new Prefs(reactContext);
 
-    progressRunnable = new Runnable() {
-      @Override
-      public void run() {
-        checkProgress();
-      }
-    };
 
     this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 2, TimeUnit.SECONDS);
 
