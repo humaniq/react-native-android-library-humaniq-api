@@ -133,8 +133,8 @@ public class ProfileApiTest {
 
     try {
       WalletService service = ServiceBuilder.getWalletService();
-      Call<BaseResponse<UserTransaction>> call = service.getUserTransaction("223344556677",
-          "0x10fb68cbc45038476b93d921f46eaf59c82e9a210b8eebb9a9137ad12c2e826d");
+      Call<BaseResponse<UserTransaction>> call = service.getUserTransaction("1570909452079465500",
+          "0xb90c79d12f093c1962bf213397d7ca6a1fd295f7b957328ee23593e0d8047b55");
       Response<BaseResponse<UserTransaction>> payload = call.execute();
       Log.d("profile", payload.body().toString());
     } catch (Exception e) {
@@ -206,11 +206,11 @@ public class ProfileApiTest {
 
   @Test public void testCreateTransaction() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);//1571772003105376001
 
-    try {
-      Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()
-          .createTransaction("1570909452079465500", null, "0xbfd007b7c148e9b99fd092b1c83dbdaaf78f5b3b", 2500);
+    try {//
+      Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()//
+          .createTransaction("1571923392783714240", "1571814570970842930", null, 100);
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());

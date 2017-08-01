@@ -159,6 +159,11 @@ Sends an event OF PROGRESS CHANGED to the JS module.
         WritableMap writableMap = new WritableNativeMap();
         writableMap.putInt("progress", progress);
         sendEvent(writableMap);
+
+    if(progress == 100) {
+      executor.remove(progressRunnable);
+    }
+
   }
 
 

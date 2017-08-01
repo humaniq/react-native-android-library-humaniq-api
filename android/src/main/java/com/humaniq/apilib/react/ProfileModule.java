@@ -147,10 +147,10 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           //  data += key + ": " + remoteMessage.getData().get(key) + ", ";
           //}
         //
-        WritableMap writableMap = new WritableNativeMap();
-        //writableMap.putString("transaction", "push_data: " + data);
-        writableMap.putString("hash", remoteMessage.getData().get("hash"));
-          sendEvent(writableMap);
+          WritableMap writableMap = new WritableNativeMap();
+          //writableMap.putString("transaction", "push_data: " + data);
+          writableMap.putString("hash", remoteMessage.getData().get("hash"));
+            sendEvent(writableMap);
 
         } else {
           getReactApplicationContext().runOnUiQueueThread(new Runnable() {
