@@ -34,15 +34,13 @@ import static android.os.Environment.DIRECTORY_DOWNLOADS;
  */
 
 public class DownloadModule extends ReactContextBaseJavaModule {
-
-
+  private Runnable progressRunnable;
   private long enqueue;
   private DownloadManager dm;
   private Promise downloadPromise;
   private String downloadUri;
   private final ScheduledThreadPoolExecutor executor =
-      new ScheduledThreadPoolExecutor(5);
-  private Runnable progressRunnable;
+      new ScheduledThreadPoolExecutor(1);
 
 
   BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -57,14 +55,15 @@ public class DownloadModule extends ReactContextBaseJavaModule {
   public DownloadModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
-    progressRunnable  = new Runnable() {
+
+    progressRunnable = new Runnable() {
       @Override
       public void run() {
         checkProgress();
       }
     };
 
-    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 2, TimeUnit.SECONDS);
+    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
 
   }
 
@@ -160,11 +159,6 @@ Sends an event OF PROGRESS CHANGED to the JS module.
         WritableMap writableMap = new WritableNativeMap();
         writableMap.putInt("progress", progress);
         sendEvent(writableMap);
-
-    if(progress == 100) {
-      executor.remove(progressRunnable);
-    }
-
   }
 
 
