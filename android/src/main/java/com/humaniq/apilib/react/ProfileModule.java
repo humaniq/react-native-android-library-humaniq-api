@@ -143,13 +143,13 @@ public class ProfileModule extends ReactContextBaseJavaModule {
         String data = "";
         RemoteMessage remoteMessage = intent.getParcelableExtra("data");
         if(remoteMessage != null) {
-          //for (String key : remoteMessage.getData().keySet()) {
-          //  data += key + ": " + remoteMessage.getData().get(key) + ", ";
-          //}
+          for (String key : remoteMessage.getData().keySet()) {
+            data += key + ": " + remoteMessage.getData().get(key) + ", ";
+          }
         //
           WritableMap writableMap = new WritableNativeMap();
-          //writableMap.putString("transaction", "push_data: " + data);
-          writableMap.putString("hash", remoteMessage.getData().get("hash"));
+          writableMap.putString("push", "push_data: " + data);
+          //writableMap.putString("hash", remoteMessage.getData().get("hash"));
             sendEvent(writableMap);
 
         } else {
