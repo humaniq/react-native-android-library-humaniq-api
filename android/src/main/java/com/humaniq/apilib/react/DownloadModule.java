@@ -56,14 +56,6 @@ public class DownloadModule extends ReactContextBaseJavaModule {
     super(reactContext);
     new Prefs(reactContext);
 
-    progressRunnable = new Runnable() {
-      @Override
-      public void run() {
-        checkProgress();
-      }
-    };
-
-    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
 
   }
 
@@ -220,5 +212,15 @@ Sends an event OF PROGRESS CHANGED to the JS module.
         }
       }
     }
+
+    progressRunnable = new Runnable() {
+      @Override
+      public void run() {
+        checkProgress();
+      }
+    };
+
+    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
+
   }
 }
