@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +42,7 @@ public class DownloadModule extends ReactContextBaseJavaModule {
   private String downloadUri;
   private final ScheduledThreadPoolExecutor executor =
       new ScheduledThreadPoolExecutor(1);
+  private Future future;
 
 
   BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -108,12 +110,12 @@ public class DownloadModule extends ReactContextBaseJavaModule {
         Prefs.saveLocalUri(outFile.getAbsolutePath());
         downloadPromise.resolve(writableMap);
 
-        executor.remove(progressRunnable);
+        future.cancel(true);
 
         Prefs.setDownloading(false);
       } else if (DownloadManager.STATUS_FAILED == c.getInt(columnIndex)) {
         downloadPromise.reject(new Throwable("error"));
-        executor.remove(progressRunnable);
+        future.cancel(true);
       }
     }
   }
@@ -151,6 +153,10 @@ Sends an event OF PROGRESS CHANGED to the JS module.
         WritableMap writableMap = new WritableNativeMap();
         writableMap.putInt("progress", progress);
         sendEvent(writableMap);
+
+    if(progress >= 100) {
+      future.cancel(true);
+    }
   }
 
 
@@ -220,7 +226,8 @@ Sends an event OF PROGRESS CHANGED to the JS module.
       }
     };
 
-    this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
+    future = this.executor.scheduleWithFixedDelay(progressRunnable, 1L, 1, TimeUnit.SECONDS);
+
 
   }
 }
