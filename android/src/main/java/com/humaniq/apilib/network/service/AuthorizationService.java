@@ -1,7 +1,11 @@
 package com.humaniq.apilib.network.service;
 
 import android.content.Context;
+import com.google.gson.JsonObject;
+import com.humaniq.apilib.network.models.response.BasePayload;
+import com.humaniq.apilib.network.models.response.Token;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 
 /**
@@ -10,5 +14,6 @@ import retrofit2.http.GET;
 
 public interface AuthorizationService {
 
-  @GET("/") Call<Object> refreshJwtToken(String token);
+  @GET("/tapatybe/api/v1/authenticate/user") Call<BasePayload<Token>> refreshJwtToken(@Body
+      JsonObject jsonObject);
 }

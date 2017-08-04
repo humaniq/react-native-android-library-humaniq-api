@@ -13,6 +13,9 @@ public class Prefs {
   private static final String JWT_TOKEN = "JWT_TOKEN";
   private static final String FCM_TOKEN = "FCM_TOKEN";
   private static final String ACCOUNT_ID = "ACCOUNT_ID";
+  private static final String FACIAL_IMAGE_ID = "FACIAL_IMAGE_ID";
+  private static final String PASSWORD = "PASSWORD";
+  private static final String DEVICE_IMEI = "DEVICE_IMEI";
   private static SharedPreferences sharedPreferences;
 
   public Prefs(Context context) {
@@ -90,4 +93,29 @@ public class Prefs {
   public static String getAccountId() {
     return sharedPreferences.getString(ACCOUNT_ID, null);
   }
+
+  public static void facialImageId(String facialImageId) {
+    sharedPreferences.edit().putString(FACIAL_IMAGE_ID, facialImageId).commit();
+  }
+
+  public static void password(String password) {
+    sharedPreferences.edit().putString(PASSWORD, password).commit();
+  }
+
+  public static void deviceImei(String deviceImei) {
+    sharedPreferences.edit().putString(DEVICE_IMEI, deviceImei).commit();
+  }
+
+  public static String getFacialImageId() {
+    return sharedPreferences.getString(FACIAL_IMAGE_ID, null);
+  }
+
+  public static String getPassword() {
+    return sharedPreferences.getString(PASSWORD, null);
+  }
+
+  public static String getDeviceImei() {
+    return sharedPreferences.getString(DEVICE_IMEI, null);
+  }
+
 }

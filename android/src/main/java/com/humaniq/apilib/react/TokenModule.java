@@ -1,5 +1,6 @@
 package com.humaniq.apilib.react;
 
+import android.text.TextUtils;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -34,17 +35,23 @@ public class TokenModule extends ReactContextBaseJavaModule {
   }
 
   /**
-   * {
-   "facial_image_id": "1550599486848369668",
-   "password": "foo",
-   "metadata": {
-   "react_native_imei": {"device_imei": "1"}
-   }
-   }
+   token
+
+   account_id
+
+   facial_image_id
+
+   password
+
+   device_imei
    */
+
   @ReactMethod public void saveCredentials(ReadableMap credentials, Promise promise) {
     Prefs.saveJwtToken(credentials.getString("token"));
     Prefs.saveAccountId(credentials.getString("account_id"));
+    Prefs.facialImageId(credentials.getString("facial_image_id"));
+    Prefs.password(credentials.getString("password"));
+    Prefs.deviceImei(credentials.getString("device_imei"));
 
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("status", "saved: " + Prefs.getJwtToken());
@@ -59,25 +66,23 @@ public class TokenModule extends ReactContextBaseJavaModule {
 
 
   private void sendRegistrationToServer() throws IOException {
-    ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
+    if(!TextUtils.isEmpty(Prefs.getFCMToken())) {
+      ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
 
-    FcmCredentials fcmCredentials = new FcmCredentials();
-    fcmCredentials.setAccountId(Long.valueOf(Prefs.getAccountId()));
-    fcmCredentials.setToken(Prefs.getFCMToken());
+      FcmCredentials fcmCredentials = new FcmCredentials();
+      fcmCredentials.setAccountId(Long.valueOf(Prefs.getAccountId()));
+      fcmCredentials.setToken(Prefs.getFCMToken());
 
-    ServiceBuilder
-        .getFcmService()
-        .saveFcmToken(fcmCredentials)
-        .enqueue(new Callback<BaseResponse<Object>>() {
-          @Override public void onResponse(Call<BaseResponse<Object>> call,
-              Response<BaseResponse<Object>> response) {
+      ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
+        @Override public void onResponse(Call<BaseResponse<Object>> call, Response<BaseResponse<Object>> response) {
 
-          }
+        }
 
-          @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
+        @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
 
-          }
-        });
+        }
+      });
+    }
   }
   @ReactMethod public void getFCMToken(Promise promise) {
     new Prefs(getReactApplicationContext());
@@ -95,5 +100,11 @@ public class TokenModule extends ReactContextBaseJavaModule {
     WritableMap jwtMap = new WritableNativeMap();
     jwtMap.putString("token", Prefs.getAccountId());
     promise.resolve(jwtMap);
+  }
+
+  @ReactMethod public void getPassword(Promise promise) {
+    WritableMap passwordMap = new WritableNativeMap();
+    passwordMap.putString("password", Prefs.getPassword());
+    promise.resolve(passwordMap);
   }
 }
