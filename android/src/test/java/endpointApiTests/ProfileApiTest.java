@@ -148,7 +148,7 @@ public class ProfileApiTest {
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
-      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1567498755333161994");
+      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1572531576435115074");
       Response<BasePayload<AccountProfile>> payload = call.execute();
       Log.d("profile", payload.body().payload.getPerson().getFirstName());
     } catch (Exception e) {
@@ -207,10 +207,10 @@ public class ProfileApiTest {
   @Test public void testCreateTransaction() {
     new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);//1571772003105376001
-
-    try {//1571923392783714240
+//1571923392783714240
+    try {//
       Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()//
-          .createTransaction("1572028879579645944", "1571814570970842930", null, 1000);
+          .createTransaction("1573759152352658789", "1572531576435115074", null, 1000);
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());
