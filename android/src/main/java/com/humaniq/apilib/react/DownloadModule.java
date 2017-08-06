@@ -119,6 +119,9 @@ public class DownloadModule extends ReactContextBaseJavaModule {
         future.cancel(true);
       }
     }
+
+    Prefs.saveDownloadId(-1);
+
   }
 
 
@@ -182,7 +185,7 @@ Sends an event OF PROGRESS CHANGED to the JS module.
       WritableMap localUri = new WritableNativeMap();
       localUri.putString("uri", Prefs.getLocalUri());
       downloadPromise.resolve(localUri);
-    } else {
+    } else if(Prefs.getDownloadId() != -1){
       // if file downloaded in background, save it to internal storage
       Cursor c = dm.query(new DownloadManager.Query().setFilterById(Prefs.getDownloadId()));
       if (c.moveToFirst()) {
