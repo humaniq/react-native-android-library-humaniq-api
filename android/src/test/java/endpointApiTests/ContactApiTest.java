@@ -3,14 +3,12 @@ package endpointApiTests;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.util.Log;
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.ContactService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 ;
@@ -64,7 +62,7 @@ public class ContactApiTest {
 
   @Test public void extractContactsSuccess() throws Exception {
     try {
-      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       ContactService apiEndpoints = ServiceBuilder.getContactsService();
       ArrayList<String> phones = new ArrayList<String>();
       phones.addAll(getAllContacts());

@@ -55,7 +55,7 @@ public class ProfileApiTest {
 
   @Test public void deauthenticateUserRightResponse() {
     try {
-      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       ProfileService apiEndpoints = ServiceBuilder.getProfileService();
 
       Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId(""));
@@ -71,7 +71,7 @@ public class ProfileApiTest {
 
   @Test public void testUpdateUserPerson() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
@@ -97,7 +97,7 @@ public class ProfileApiTest {
 
   @Test public void testUpdateAccountPassword() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
@@ -129,7 +129,7 @@ public class ProfileApiTest {
 
   @Test public void testGetTransaction() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       WalletService service = ServiceBuilder.getWalletService();
@@ -144,7 +144,7 @@ public class ProfileApiTest {
 
   @Test public void testGetAccountProfile() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
@@ -160,7 +160,7 @@ public class ProfileApiTest {
 
   @Test public void testValidationSteps() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       Resources res = RuntimeEnvironment.application.getResources();
@@ -221,7 +221,7 @@ public class ProfileApiTest {
 
   @Test public void testGetProfiles() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     //ReadableArray<String> accountIds= new ArrayList<>();
     //accountIds.add("1570909452079465500");
@@ -264,7 +264,7 @@ public class ProfileApiTest {
 
   @Test public void testGetExchangeHmq() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       WalletService service = ServiceBuilder.getWalletService();
@@ -284,7 +284,7 @@ public class ProfileApiTest {
 
   @Test public void testGetExchangeUsd() {
     new Prefs(RuntimeEnvironment.application);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
       WalletService service = ServiceBuilder.getWalletService();

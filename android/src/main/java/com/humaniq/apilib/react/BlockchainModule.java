@@ -12,16 +12,12 @@ import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.blockchain.TransferRequest;
-import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.blockchain.TransferResponse;
-import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
-import com.humaniq.apilib.utils.ResponseWrapperUtils;
 import java.io.IOException;
-import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -38,7 +34,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
   public BlockchainModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, reactContext);
+    ServiceBuilder.init(Constants.BASE_URL, reactContext);
   }
 
   @Override public String getName() {

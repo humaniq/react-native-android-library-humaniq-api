@@ -16,7 +16,6 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
-import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.contacts.Contact;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
@@ -31,8 +30,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static java.lang.System.in;
-
 /**
  * Created by gritsay on 7/17/17.
  */
@@ -44,7 +41,7 @@ public class ContactsModule extends ReactContextBaseJavaModule {
   public ContactsModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
-    ServiceBuilder.init(Constants.CONTACTS_BASE_URL, reactContext);
+    ServiceBuilder.init(Constants.BASE_URL, reactContext);
   }
 
   

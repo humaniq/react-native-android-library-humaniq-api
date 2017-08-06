@@ -3,13 +3,10 @@ package endpointApiTests;
 import com.google.gson.Gson;
 import com.humaniq.apilib.BuildConfig;
 import com.humaniq.apilib.Constants;
-import com.humaniq.apilib.network.models.request.profile.UserId;
 import com.humaniq.apilib.network.models.request.wallet.Balance;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.models.response.TransactionResponse;
-import com.humaniq.apilib.network.models.response.profile.DeauthModel;
-import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.network.service.WalletService;
 import com.humaniq.apilib.storage.Prefs;
@@ -37,7 +34,7 @@ public class WalletApiTest {
 
   @Test public void testGetBalance() throws Exception {
     try {
-      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
       Call<BaseResponse<Balance>> call = apiEndpoints.getUserBalance("223344556677");
@@ -58,7 +55,7 @@ public class WalletApiTest {
   @Test public void testCreateTransaction() throws Exception {
     new Prefs(RuntimeEnvironment.application);
     try {
-      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
       Call<BaseResponse<TransactionResponse>> call = apiEndpoints.
@@ -78,7 +75,7 @@ public class WalletApiTest {
   @Test public void testGetTransactions() throws Exception {
 
     try {
-      ServiceBuilder.init(Constants.CONTACTS_BASE_URL, RuntimeEnvironment.application);
+      ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
       Call<BaseResponse<List<UserTransaction>>> call = apiEndpoints.getUserTransactions(
