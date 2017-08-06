@@ -156,7 +156,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
 */
           if("receipt".equals(remoteMessage.getData().get("type"))) {
               WritableMap errorTransactionMap = new WritableNativeMap();
-              errorTransactionMap.putString("error",remoteMessage.getData().get("transaction_id"));
+              errorTransactionMap.putString("error",remoteMessage.getData().get("info"));
 
               sendErrorEvent(errorTransactionMap);
           }
