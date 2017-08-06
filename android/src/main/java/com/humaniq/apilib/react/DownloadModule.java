@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.webkit.URLUtil;
 import com.facebook.common.internal.Files;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -211,7 +212,7 @@ Sends an event OF PROGRESS CHANGED to the JS module.
           request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
 
           request.setDestinationInExternalFilesDir(getReactApplicationContext(),
-              DIRECTORY_DOWNLOADS, "instruction.mp4");
+              DIRECTORY_DOWNLOADS, URLUtil.guessFileName(uri, null, null) + ".mp4");
 
           enqueue = dm.enqueue(request);
           Prefs.saveDownloadId(enqueue);
