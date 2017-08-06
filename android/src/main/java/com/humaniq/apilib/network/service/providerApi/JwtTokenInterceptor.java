@@ -30,23 +30,23 @@ public class JwtTokenInterceptor implements Interceptor {
 
       if(response.code() == 401) {
 
-          Prefs.clearJwtToken();
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("facial_image_id", Prefs.getFacialImageId());
-        jsonObject.addProperty("password", Prefs.getPassword());
-        JsonObject reactNativeImeiElement = new JsonObject();
-        JsonObject deviceImeiElement = new JsonObject();
-        deviceImeiElement.addProperty("device_imei", Prefs.getDeviceImei());
-        reactNativeImeiElement.add("react_native_imei", deviceImeiElement);
-        jsonObject.add("metadata", reactNativeImeiElement);
-        jsonObject.addProperty("password", Prefs.getPassword());
-        retrofit2.Response<BasePayload<Token>> newJwtTokenResponse =  ServiceBuilder.getAuthorizationService()
-            .refreshJwtToken(jsonObject).execute();
-        if(newJwtTokenResponse.body() != null) {
-          Prefs.saveJwtToken(newJwtTokenResponse.body().payload.getToken());
-        } else {
-          Log.d("JwtTokenInterceptor", "token null!!");
-        }
+          //Prefs.clearJwtToken();
+        //JsonObject jsonObject = new JsonObject();
+        //jsonObject.addProperty("facial_image_id", Prefs.getFacialImageId());
+        //jsonObject.addProperty("password", Prefs.getPassword());
+        //JsonObject reactNativeImeiElement = new JsonObject();
+        //JsonObject deviceImeiElement = new JsonObject();
+        //deviceImeiElement.addProperty("device_imei", Prefs.getDeviceImei());
+        //reactNativeImeiElement.add("react_native_imei", deviceImeiElement);
+        //jsonObject.add("metadata", reactNativeImeiElement);
+        //jsonObject.addProperty("password", Prefs.getPassword());
+        //retrofit2.Response<BasePayload<Token>> newJwtTokenResponse =  ServiceBuilder.getAuthorizationService()
+        //    .refreshJwtToken(jsonObject).execute();
+        //if(newJwtTokenResponse.body() != null) {
+        //  Prefs.saveJwtToken(newJwtTokenResponse.body().payload.getToken());
+        //} else {
+        //  Log.d("JwtTokenInterceptor", "token null!!");
+        //}
 
         request = request.newBuilder()
             .addHeader("Authorization", "Bearer " + Prefs.getJwtToken())

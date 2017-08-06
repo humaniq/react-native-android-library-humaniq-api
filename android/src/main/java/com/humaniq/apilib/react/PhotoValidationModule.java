@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -71,7 +72,26 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else {
-              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+              switch (response.code()) {
+                case 403:
+                case 401: {
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 401);
+                  promise.resolve(writableMap);
+                }
+                break;
+
+                default:
+                  //Log.d(LOG_TAG, "OnResponse - Error request");
+                  //Log.d(LOG_TAG, response.errorBody().toString());
+                  try {
+                    promise.reject(String.valueOf(response.code()),
+                        new Throwable(response.errorBody().string()));
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                  break;
+              }
             }
           }
 
@@ -110,7 +130,26 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else {
-              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+              switch (response.code()) {
+                case 403:
+                case 401: {
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 401);
+                  promise.resolve(writableMap);
+                }
+                break;
+
+                default:
+                  //Log.d(LOG_TAG, "OnResponse - Error request");
+                  //Log.d(LOG_TAG, response.errorBody().toString());
+                  try {
+                    promise.reject(String.valueOf(response.code()),
+                        new Throwable(response.errorBody().string()));
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                  break;
+              }
             }
           }
 
@@ -165,14 +204,27 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 e.printStackTrace();
               }
             } else {
-              WritableMap writableMap = new WritableNativeMap();
-              try {
-                writableMap.putString("message", "NOT_OK! " + response.code() + " " + response.errorBody().string());
-                writableMap.putInt("code", 3011 );
-              } catch (IOException e) {
-                e.printStackTrace();
+              switch (response.code()) {
+                case 403:
+                case 401: {
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 401);
+                  promise.resolve(writableMap);
+                }
+                break;
+
+                default:
+                  WritableMap writableMap = new WritableNativeMap();
+                  try {
+                    writableMap.putString("message", "NOT_OK! " + response.code() + " " + response.errorBody().string());
+                    writableMap.putInt("code", 3011 );
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                  promise.resolve(writableMap);
+                  break;
               }
-              promise.resolve(writableMap);
+
               //promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }

@@ -13,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeArray;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.google.gson.Gson;
 import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
@@ -21,6 +22,7 @@ import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
@@ -108,9 +110,26 @@ public class ContactsModule extends ReactContextBaseJavaModule {
               promise.reject(e);
             }
           } else {
-            Log.d(LOG_TAG, "OnResponse - Error request");
-            Log.d(LOG_TAG, response.errorBody().toString());
-            promise.reject(response.errorBody().toString());
+            switch (response.code()) {
+              case 403:
+              case 401: {
+                WritableMap writableMap = new WritableNativeMap();
+                writableMap.putInt("code", 401);
+                promise.resolve(writableMap);
+              }
+              break;
+
+              default:
+                Log.d(LOG_TAG, "OnResponse - Error request");
+                Log.d(LOG_TAG, response.errorBody().toString());
+                try {
+                  promise.reject(String.valueOf(response.code()),
+                      new Throwable(response.errorBody().string()));
+                } catch (IOException e) {
+                  e.printStackTrace();
+                }
+                break;
+            }
           }
 
         }
@@ -145,9 +164,26 @@ public class ContactsModule extends ReactContextBaseJavaModule {
               promise.reject(e);
             }
           } else {
-            Log.d(LOG_TAG, "OnResponse - Error request");
-            Log.d(LOG_TAG, response.errorBody().toString());
-            promise.reject(response.errorBody().toString());
+            switch (response.code()) {
+              case 403:
+              case 401: {
+                WritableMap writableMap = new WritableNativeMap();
+                writableMap.putInt("code", 401);
+                promise.resolve(writableMap);
+              }
+              break;
+
+              default:
+                Log.d(LOG_TAG, "OnResponse - Error request");
+                Log.d(LOG_TAG, response.errorBody().toString());
+                try {
+                  promise.reject(String.valueOf(response.code()),
+                      new Throwable(response.errorBody().string()));
+                } catch (IOException e) {
+                  e.printStackTrace();
+                }
+                break;
+            }
           }
 
         }

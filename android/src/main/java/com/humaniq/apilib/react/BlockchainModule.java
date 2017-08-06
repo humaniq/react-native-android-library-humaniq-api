@@ -20,6 +20,7 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.utils.ResponseWrapperUtils;
+import java.io.IOException;
 import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,10 +68,26 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else {
-              Log.d(LOG_TAG, "OnResponse - Error request");
-              Log.d(LOG_TAG, response.errorBody().toString());
+              switch (response.code()) {
+                case 403:
+                case 401: {
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 401);
+                  promise.resolve(writableMap);
+                }
+                break;
 
-              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+                default:
+                  Log.d(LOG_TAG, "OnResponse - Error request");
+                  Log.d(LOG_TAG, response.errorBody().toString());
+                  try {
+                    promise.reject(String.valueOf(response.code()),
+                        new Throwable(response.errorBody().string()));
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                  break;
+              }
             }
           }
 
@@ -104,7 +121,26 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
                 promise.reject(e);
               }
             } else {
-              promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
+              switch (response.code()) {
+                case 403:
+                case 401: {
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 401);
+                  promise.resolve(writableMap);
+                }
+                break;
+
+                default:
+                  Log.d(LOG_TAG, "OnResponse - Error request");
+                  Log.d(LOG_TAG, response.errorBody().toString());
+                  try {
+                    promise.reject(String.valueOf(response.code()),
+                        new Throwable(response.errorBody().string()));
+                  } catch (IOException e) {
+                    e.printStackTrace();
+                  }
+                  break;
+              }
             }
           }
 
