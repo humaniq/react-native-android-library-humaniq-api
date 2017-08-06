@@ -58,6 +58,7 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
               try {
                 transferResponeMap = ModelConverterUtils.convertJsonToMap(
                     new JSONObject(new Gson().toJson(response)));
+                transferResponeMap.putInt("code", 200);
                 promise.resolve(transferResponeMap);
               } catch (JSONException e) {
                 e.printStackTrace();

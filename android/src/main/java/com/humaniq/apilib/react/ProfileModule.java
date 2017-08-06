@@ -94,6 +94,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           try {
             WritableMap addressState = ModelConverterUtils.
                 convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data)));
+            addressState.putInt("code", 200);
             promise.resolve(addressState);
           } catch (JSONException e) {
             e.printStackTrace();
@@ -220,6 +221,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               try {
                 WritableMap responseMap = ModelConverterUtils
                     .convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, UserTransaction.class)));
+                responseMap.putInt("code", 200);
                 promise.resolve(responseMap);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -332,6 +334,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               try {
                 WritableMap createdTransaction = ModelConverterUtils.
                     convertJsonToMap(new JSONObject(new Gson().toJson(response.body().data, TransactionResponse.class)));
+                createdTransaction.putInt("code", 200);
                 promise.resolve(createdTransaction);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -390,6 +393,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 && response.body().code == Codes.ACCOUNT_PERSONAL_UPDATE_SUCCESS) {
               try {
                 WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body())));
+                writableMap.putInt("code", 200);
                 promise.resolve(writableMap);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -501,6 +505,8 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 && response.body().code == Codes.ACCOUNT_PASSWORD_UPDATE_SUCCESS) {
               try {
                 WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(response.body())));
+                writableMap.putInt("code", 200);
+
                 promise.resolve(writableMap);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -546,6 +552,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 WritableMap profile = ModelConverterUtils
                     .convertJsonToMap(new JSONObject(new Gson()
                         .toJson(response.body().payload, AccountProfile.class)));
+                profile.putInt("code", 200);
                 promise.resolve(profile);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -596,6 +603,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                       new JSONObject(new Gson().toJson(accountProfile, AccountProfile.class)));
                   writableArray.pushMap(profile);
                 }
+
                 promise.resolve(writableArray);
               } catch (JSONException e) {
                 e.printStackTrace();
@@ -707,7 +715,8 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
         .enqueue(new Callback<DeauthModel>() {
           @Override public void onResponse(Call<DeauthModel> call, Response<DeauthModel> response) {
             if (response.body()!=null && !response.body().equals("")) {
-              //right request, error response
+              //right request, error responsev
+
               promise.resolve(response.body());
             } else {
               Converter<ResponseBody, DeauthErrorModel> errorConverter =
@@ -751,6 +760,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
             ExchangeModelHmq resp = response.body().data;
 
             WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(resp)));
+            writableMap.putInt("code", 200);
             promise.resolve(writableMap);
           } catch (JSONException e) {
             e.printStackTrace();
@@ -798,6 +808,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
             ExchangeModelUsd resp = response.body().data;
 
             WritableMap writableMap = ModelConverterUtils.convertJsonToMap(new JSONObject(new Gson().toJson(resp)));
+            writableMap.putInt("code", 200);
             promise.resolve(writableMap);
           } catch (JSONException e) {
             e.printStackTrace();
