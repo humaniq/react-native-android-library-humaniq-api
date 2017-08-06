@@ -49,7 +49,7 @@ public class Prefs {
   }
 
   public static long getDownloadId() {
-    return sharedPreferences.getLong(DOWNLOAD_ID, 0);
+    return sharedPreferences.getLong(DOWNLOAD_ID, -1);
   }
 
   public static boolean isUriAlreadyDownloaded(String uri) {

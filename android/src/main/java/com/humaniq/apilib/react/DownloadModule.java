@@ -185,7 +185,7 @@ Sends an event OF PROGRESS CHANGED to the JS module.
       WritableMap localUri = new WritableNativeMap();
       localUri.putString("uri", Prefs.getLocalUri());
       downloadPromise.resolve(localUri);
-    } else if(Prefs.getDownloadId() != -1){
+    } else if(Prefs.getDownloadId() != -1) {
       // if file downloaded in background, save it to internal storage
       Cursor c = dm.query(new DownloadManager.Query().setFilterById(Prefs.getDownloadId()));
       if (c.moveToFirst()) {
@@ -207,6 +207,7 @@ Sends an event OF PROGRESS CHANGED to the JS module.
         }
       }
 
+    } else {
       if (!Prefs.isDownloading()) {
         if (!Prefs.isUriAlreadyDownloaded(uri)) {
           Prefs.setDownloading(true);
