@@ -50,7 +50,7 @@ public class TokenModule extends ReactContextBaseJavaModule {
     Prefs.saveJwtToken(credentials.getString("token"));
     Prefs.saveAccountId(credentials.getString("account_id"));
     Prefs.facialImageId(credentials.getString("facial_image_id"));
-    Prefs.password(credentials.getString("password"));
+    Prefs.savePassword(credentials.getString("password"));
     Prefs.deviceImei(credentials.getString("device_imei"));
 
     WritableMap writableMap = new WritableNativeMap();

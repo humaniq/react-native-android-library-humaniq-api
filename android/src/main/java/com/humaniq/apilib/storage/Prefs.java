@@ -98,7 +98,7 @@ public class Prefs {
     sharedPreferences.edit().putString(FACIAL_IMAGE_ID, facialImageId).commit();
   }
 
-  public static void password(String password) {
+  public static void savePassword(String password) {
     sharedPreferences.edit().putString(PASSWORD, password).commit();
   }
 

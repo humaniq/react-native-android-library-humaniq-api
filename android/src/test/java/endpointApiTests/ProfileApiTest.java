@@ -30,6 +30,7 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import java.io.IOException;
 import java.io.InputStream;
+import okhttp3.Request;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -149,7 +150,7 @@ public class ProfileApiTest {
 
     try {
       ProfileService service = ServiceBuilder.getProfileService();
-      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1572531576435115074");
+      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1576037290491249690");
       Response<BasePayload<AccountProfile>> payload = call.execute();
       Log.d("profile", payload.body().payload.getPerson().getFirstName());
     } catch (Exception e) {
@@ -210,8 +211,9 @@ public class ProfileApiTest {
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);//1571772003105376001
 //1571923392783714240
     try {//
-      Call<BaseResponse<TransactionResponse>> call = ServiceBuilder.getWalletService()//
-          .createTransaction("1571814570970842930", "1573759152352658789", null, 100000000);
+      Call call = ServiceBuilder.getWalletService()//
+          .createTransaction("4444444444010", "1576037290491249690", null, 100000000);
+
       Response<BaseResponse<TransactionResponse>> response = call.execute();
 
       assertTrue(response.isSuccessful());
