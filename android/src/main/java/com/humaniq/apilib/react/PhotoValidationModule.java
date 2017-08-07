@@ -31,6 +31,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,6 +81,20 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   writableMap.putInt("code", 401);
                   promise.resolve(writableMap);
                 }
+                break;
+
+                case 400: {
+                  WritableMap writableMap = null;
+                  try {
+                    writableMap = ModelConverterUtils.convertJsonToMap(
+                        new JSONObject(new Gson().toJson(response.body().payload)));
+                    promise.resolve(writableMap);
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+
+                }
+
                 break;
 
                 default:
@@ -213,6 +228,20 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   writableMap.putInt("code", 401);
                   promise.resolve(writableMap);
                 }
+                break;
+
+                case 400: {
+                  WritableMap writableMap = null;
+                  try {
+                    writableMap = ModelConverterUtils.convertJsonToMap(
+                        new JSONObject(new Gson().toJson(response.body().payload)));
+                    promise.resolve(writableMap);
+                  } catch (JSONException e) {
+                    e.printStackTrace();
+                  }
+
+                }
+
                 break;
 
                 default:

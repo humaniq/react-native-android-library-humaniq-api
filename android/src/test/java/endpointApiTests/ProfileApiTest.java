@@ -23,6 +23,7 @@ import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.models.response.profile.ExchangeModelHmq;
 import com.humaniq.apilib.network.models.response.profile.ExchangeModelUsd;
+import com.humaniq.apilib.network.service.AuthorizationService;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.network.service.WalletService;
@@ -303,4 +304,26 @@ public class ProfileApiTest {
       e.printStackTrace();
     }
   }
+
+
+  //@Test public void testIsRegistered() {
+  //  new Prefs(RuntimeEnvironment.application);
+  //  ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
+  //
+  //  try {
+  //    ValidationService service = ServiceBuilder.getValidationService();
+  //    JsonObject jsonObject = new JsonObject();
+  //
+  //    Call<BaseResponse<ExchangeModelUsd>> call = service.isRegistered("20");
+  //    Response<BaseResponse<ExchangeModelUsd>> response = call.execute();
+  //
+  //    System.out.println(new Gson().toJson(response.body()));
+  //    ExchangeModelUsd exchangeModel = response.body().data;
+  //    System.out.println(exchangeModel.getUSD());
+  //
+  //    assertTrue(response.isSuccessful());
+  //  } catch (Exception e) {
+  //    e.printStackTrace();
+  //  }
+  //}
 }
