@@ -55,10 +55,11 @@ public class ProfileApiTest {
 
   @Test public void deauthenticateUserRightResponse() {
     try {
+      new Prefs(RuntimeEnvironment.application);
       ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       ProfileService apiEndpoints = ServiceBuilder.getProfileService();
 
-      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId(""));
+      Call<DeauthModel> call = apiEndpoints.deauthenticateUser(new UserId("1575984550457116577"));
       Response<DeauthModel> response = call.execute();
       DeauthModel extractContactResponse = response.body();
       System.out.println(response.errorBody().string());

@@ -716,8 +716,10 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
           @Override public void onResponse(Call<DeauthModel> call, Response<DeauthModel> response) {
             if (response.body()!=null && !response.body().equals("")) {
               //right request, error responsev
+              WritableMap writableMap = new WritableNativeMap();
+              writableMap.putInt("code", 200);
 
-              promise.resolve(response.body());
+              promise.resolve(writableMap);
             } else {
               Converter<ResponseBody, DeauthErrorModel> errorConverter =
                   ServiceBuilder.getRetrofit().responseBodyConverter(DeauthErrorModel.class, new Annotation[0]);
