@@ -67,7 +67,7 @@ public class TokenModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   public void sendRegistrationToServer(final Promise promise) {
-    if(!TextUtils.isEmpty(Prefs.getFCMToken())  && Prefs.isFcmSent()) {
+    if(!TextUtils.isEmpty(Prefs.getFCMToken())  && !Prefs.isFcmSent()) {
       ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
 
       FcmCredentials fcmCredentials = new FcmCredentials();
@@ -97,6 +97,11 @@ public class TokenModule extends ReactContextBaseJavaModule {
           promise.resolve(writableMap);
         }
       });
+    } else {
+      WritableMap writableMap = new WritableNativeMap();
+      writableMap.putString("fcm", Prefs.getFCMToken());
+      writableMap.putString("status", "already sent!");
+      promise.resolve(writableMap);
     }
   }
 
