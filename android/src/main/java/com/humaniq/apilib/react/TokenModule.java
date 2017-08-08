@@ -79,6 +79,8 @@ public class TokenModule extends ReactContextBaseJavaModule {
           if(response.code() == 200) {
             WritableMap writableMap = new WritableNativeMap();
             writableMap.putInt("code", 200);
+            writableMap.putString("accountId", Prefs.getAccountId());
+            writableMap.putString("fcm", Prefs.getFCMToken());
             Prefs.setFcmSent(true);
             promise.resolve(writableMap);
           }
