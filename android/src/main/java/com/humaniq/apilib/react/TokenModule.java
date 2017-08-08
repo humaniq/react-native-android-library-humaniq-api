@@ -55,18 +55,19 @@ public class TokenModule extends ReactContextBaseJavaModule {
 
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("status", "saved: " + Prefs.getJwtToken());
-    try {
-      sendRegistrationToServer();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    //try {
+    //  sendRegistrationToServer();
+    //} catch (Exception e) {
+    //  e.printStackTrace();
+    //}
 
     promise.resolve(writableMap);
   }
 
 
-  private void sendRegistrationToServer() throws IOException {
-    if(!TextUtils.isEmpty(Prefs.getFCMToken())) {
+  @ReactMethod
+  public void sendRegistrationToServer(final Promise promise) {
+    if(!TextUtils.isEmpty(Prefs.getFCMToken())  && Prefs.isFcmSent()) {
       ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
 
       FcmCredentials fcmCredentials = new FcmCredentials();
@@ -75,15 +76,28 @@ public class TokenModule extends ReactContextBaseJavaModule {
 
       ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
         @Override public void onResponse(Call<BaseResponse<Object>> call, Response<BaseResponse<Object>> response) {
-
+          if(response.code() == 200) {
+            WritableMap writableMap = new WritableNativeMap();
+            writableMap.putInt("code", 200);
+            Prefs.setFcmSent(true);
+            promise.resolve(writableMap);
+          }
+          else {
+            WritableMap writableMap = new WritableNativeMap();
+            writableMap.putInt("code", 400);
+            promise.resolve(writableMap);
+          }
         }
 
         @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
-
+          WritableMap writableMap = new WritableNativeMap();
+          writableMap.putInt("code", 400);
+          promise.resolve(writableMap);
         }
       });
     }
   }
+
   @ReactMethod public void getFCMToken(Promise promise) {
     new Prefs(getReactApplicationContext());
     WritableMap writableMap = new WritableNativeMap();

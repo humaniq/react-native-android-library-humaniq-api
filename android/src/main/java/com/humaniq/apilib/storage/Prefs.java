@@ -16,6 +16,7 @@ public class Prefs {
   private static final String FACIAL_IMAGE_ID = "FACIAL_IMAGE_ID";
   private static final String PASSWORD = "PASSWORD";
   private static final String DEVICE_IMEI = "DEVICE_IMEI";
+  private static final String FCM_SENT = "FCM_SENT";
   private static SharedPreferences sharedPreferences;
 
   public Prefs(Context context) {
@@ -116,6 +117,14 @@ public class Prefs {
 
   public static String getDeviceImei() {
     return sharedPreferences.getString(DEVICE_IMEI, null);
+  }
+
+  public static boolean isFcmSent() {
+    return sharedPreferences.getBoolean(FCM_SENT, false);
+  }
+
+  public static void setFcmSent(boolean hasSent) {
+    sharedPreferences.edit().putBoolean(FCM_SENT, hasSent).commit();
   }
 
 }
