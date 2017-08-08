@@ -87,13 +87,18 @@ public class TokenModule extends ReactContextBaseJavaModule {
           else {
             WritableMap writableMap = new WritableNativeMap();
             writableMap.putInt("code", 400);
+            writableMap.putString("accountId", Prefs.getAccountId());
+            writableMap.putString("fcm", Prefs.getFCMToken());
             promise.resolve(writableMap);
           }
         }
 
         @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
           WritableMap writableMap = new WritableNativeMap();
+          writableMap.putString("status", "onFailure");
           writableMap.putInt("code", 400);
+          writableMap.putString("accountId", Prefs.getAccountId());
+          writableMap.putString("fcm", Prefs.getFCMToken());
           promise.resolve(writableMap);
         }
       });
