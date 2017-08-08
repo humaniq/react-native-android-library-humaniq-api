@@ -55,18 +55,17 @@ public class TokenModule extends ReactContextBaseJavaModule {
 
     WritableMap writableMap = new WritableNativeMap();
     writableMap.putString("status", "saved: " + Prefs.getJwtToken());
-    //try {
-    //  sendRegistrationToServer();
-    //} catch (Exception e) {
-    //  e.printStackTrace();
-    //}
+    try {
+      sendRegistrationToServer();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
 
     promise.resolve(writableMap);
   }
 
 
-  @ReactMethod
-  public void sendRegistrationToServer(final Promise promise) {
+  private void sendRegistrationToServer() {
     if(!TextUtils.isEmpty(Prefs.getFCMToken())  && !Prefs.isFcmSent()) {
       ServiceBuilder.init(Constants.BASE_URL, getReactApplicationContext());
 
@@ -76,42 +75,42 @@ public class TokenModule extends ReactContextBaseJavaModule {
 
       ServiceBuilder.getFcmService().saveFcmToken(fcmCredentials).enqueue(new Callback<BaseResponse<Object>>() {
         @Override public void onResponse(Call<BaseResponse<Object>> call, Response<BaseResponse<Object>> response) {
-          if(response.code() == 200) {
-            WritableMap writableMap = new WritableNativeMap();
-            writableMap.putInt("code", 200);
-            writableMap.putString("accountId", Prefs.getAccountId());
-            writableMap.putString("fcm", Prefs.getFCMToken());
+          //if(response.code() == 200) {
+          //  WritableMap writableMap = new WritableNativeMap();
+          //  writableMap.putInt("code", 200);
+          //  writableMap.putString("accountId", Prefs.getAccountId());
+          //  writableMap.putString("fcm", Prefs.getFCMToken());
             Prefs.setFcmSent(true);
-            promise.resolve(writableMap);
-          }
-          else {
-            WritableMap writableMap = new WritableNativeMap();
-            writableMap.putInt("code", response.code()  );
-            writableMap.putString("accountId", Prefs.getAccountId());
-            writableMap.putString("fcm", Prefs.getFCMToken());
-            try {
-              writableMap.putString("message", response.errorBody().string());
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
-            promise.resolve(writableMap);
-          }
+          //  promise.resolve(writableMap);
+          //}
+          //else {
+          //  WritableMap writableMap = new WritableNativeMap();
+          //  writableMap.putInt("code", response.code()  );
+          //  writableMap.putString("accountId", Prefs.getAccountId());
+          //  writableMap.putString("fcm", Prefs.getFCMToken());
+          //  try {
+          //    writableMap.putString("message", response.errorBody().string());
+          //  } catch (Exception e) {
+          //    e.printStackTrace();
+          //  }
+          //  promise.resolve(writableMap);
+          //}
         }
 
         @Override public void onFailure(Call<BaseResponse<Object>> call, Throwable t) {
-          WritableMap writableMap = new WritableNativeMap();
-          writableMap.putString("status", "onFailure");
-          writableMap.putInt("code", 400);
-          writableMap.putString("accountId", Prefs.getAccountId());
-          writableMap.putString("fcm", Prefs.getFCMToken());
-          promise.resolve(writableMap);
+          //WritableMap writableMap = new WritableNativeMap();
+          //writableMap.putString("status", "onFailure");
+          //writableMap.putInt("code", 400);
+          //writableMap.putString("accountId", Prefs.getAccountId());
+          //writableMap.putString("fcm", Prefs.getFCMToken());
+          //promise.resolve(writableMap);
         }
       });
     } else {
-      WritableMap writableMap = new WritableNativeMap();
-      writableMap.putString("fcm", Prefs.getFCMToken());
-      writableMap.putString("status", "already sent!");
-      promise.resolve(writableMap);
+      //WritableMap writableMap = new WritableNativeMap();
+      //writableMap.putString("fcm", Prefs.getFCMToken());
+      //writableMap.putString("status", "already sent!");
+      //promise.resolve(writableMap);
     }
   }
 
