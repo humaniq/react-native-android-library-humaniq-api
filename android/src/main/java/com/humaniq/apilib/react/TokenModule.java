@@ -89,6 +89,11 @@ public class TokenModule extends ReactContextBaseJavaModule {
             writableMap.putInt("code", 400);
             writableMap.putString("accountId", Prefs.getAccountId());
             writableMap.putString("fcm", Prefs.getFCMToken());
+            try {
+              writableMap.putString("message", response.errorBody().string());
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
             promise.resolve(writableMap);
           }
         }
