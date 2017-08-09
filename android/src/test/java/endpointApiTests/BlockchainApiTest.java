@@ -30,7 +30,7 @@ public class BlockchainApiTest {
       new Prefs(RuntimeEnvironment.application);
       ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       BlockchainService blockchainService = ServiceBuilder.getBlockchainService();
-      Call<BaseResponse<Object>> responseCall = blockchainService.getUserAddressState("223344556677");
+      Call<BaseResponse<Object>> responseCall = blockchainService.getUserAddressState("1576037290491249690");
       Response<BaseResponse<Object>> response = responseCall.execute();
       //BaseResponse<AddressState> baseResponse = response.body();
       assertTrue(response.isSuccessful());

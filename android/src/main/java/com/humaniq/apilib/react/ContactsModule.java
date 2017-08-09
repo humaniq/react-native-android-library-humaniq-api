@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.provider.ContactsContract;
 import android.util.Log;
 import com.facebook.react.bridge.Promise;
@@ -44,44 +45,9 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
   }
 
-  
-
-
   @Override public String getName() {
     return "HumaniqContactsApiLib";
   }
-
-  private List<String> getAllContacts() {
-    ArrayList<String> result = null;
-
-    Log.d(LOG_TAG, "getContact()");
-    ContentResolver cr = getReactApplicationContext().getContentResolver();
-    Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-
-    if (cur.getCount() > 0) {
-      result = new ArrayList<String>();
-      Log.d(LOG_TAG, "many contacts");
-      while (cur.moveToNext()) {
-        String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-        //                String name = cur.getString(cur.getColumnIndex(
-        //                        ContactsContract.Contacts.DISPLAY_NAME));
-        if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-          Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-              ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[] { id }, null);
-          while (pCur.moveToNext()) {
-            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-            result.add(phoneNo);
-          }
-          pCur.close();
-        }
-      }
-    } else {
-      Log.d(LOG_TAG, "No contacts");
-    }
-
-    return result;
-  }
-
 
   @ReactMethod public void extractSinglePhoneNumber(String phonenumber, final Promise promise) {
     if (phonenumber!= null && !phonenumber.isEmpty()) {
@@ -141,57 +107,10 @@ public class ContactsModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod public void extractAllPhoneNumbers(final Promise promise) {
-    if (getAllContacts() != null) {
-      ServiceBuilder.getContactsService().extractPhoneNumbers(getAllContacts()).enqueue(new Callback<ContactsResponse>() {
-        @Override public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
-          if (response.body() != null && !"".equals(response.body()))  {
-            Log.d(LOG_TAG, "OnResponse - Success request");
-            try {
-              ContactsResponse res = response.body();
-              WritableArray array = new WritableNativeArray();
-              for (Contact contact : res.getData()) {
-                WritableMap phonesWithId =  ModelConverterUtils.
-                      convertJsonToMap(new JSONObject(new Gson().toJson(contact, Contact.class)));
-                array.pushMap(phonesWithId);
-              }
-              promise.resolve(array);
+    new ContactsQueryAsync(promise)
+        .execute();
 
-            } catch (JSONException e) {
-              e.printStackTrace();
-              promise.reject(e);
-            }
-          } else {
-            switch (response.code()) {
-              case 403:
-              case 401: {
-                WritableMap writableMap = new WritableNativeMap();
-                writableMap.putInt("code", 401);
-                promise.resolve(writableMap);
-              }
-              break;
 
-              default:
-                Log.d(LOG_TAG, "OnResponse - Error request");
-                Log.d(LOG_TAG, response.errorBody().toString());
-                try {
-                  promise.reject(String.valueOf(response.code()),
-                      new Throwable(response.errorBody().string()));
-                } catch (IOException e) {
-                  e.printStackTrace();
-                }
-                break;
-            }
-          }
-
-        }
-
-        @Override public void onFailure(Call<ContactsResponse> call, Throwable t) {
-          Log.d(LOG_TAG, "onFailure = " + t);
-        }
-      });
-    } else {
-      promise.reject("-1", "Haven't any contacts on mobile device");
-    }
   }
 
   public void synchronizePhoneNumber(ArrayList<String> contact) {
@@ -212,6 +131,108 @@ public class ContactsModule extends ReactContextBaseJavaModule {
             Log.d(LOG_TAG, "onFailure = " + t);
           }
         });
+  }
+
+  private class ContactsQueryAsync extends AsyncTask<Void, Void, Response<ContactsResponse>> {
+    private final Promise promise;
+
+    public ContactsQueryAsync(Promise promise) {
+      this.promise = promise;
+    }
+
+    @Override protected void onPreExecute() {
+      super.onPreExecute();
+    }
+
+    @Override protected Response<ContactsResponse> doInBackground(Void... voids) {
+
+
+      ArrayList<String> result = null;
+
+      Log.d(LOG_TAG, "getContact()");
+      ContentResolver cr = getReactApplicationContext().getContentResolver();
+      Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+
+      if (cur.getCount() > 0) {
+        result = new ArrayList<String>();
+        Log.d(LOG_TAG, "many contacts");
+        while (cur.moveToNext()) {
+          String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+          if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+            Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?", new String[] { id }, null);
+            while (pCur.moveToNext()) {
+              String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+              result.add(phoneNo);
+            }
+            pCur.close();
+          }
+        }
+      } else {
+        Log.d(LOG_TAG, "No contacts");
+      }
+
+      if(result == null) {
+          return null;
+      }
+
+      Response<ContactsResponse> response = null;
+      Call<ContactsResponse> call = ServiceBuilder.getContactsService().extractPhoneNumbers(result);
+        try {
+          response = call.execute();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    @Override protected void onPostExecute(Response<ContactsResponse> response) {
+      super.onPostExecute(response);
+      if(response != null) {
+        switch (response.code()) {
+          case 200:
+          case 201:
+          case 202:
+          case 203: {
+            if (response.body() != null && !"".equals(response.body())) {
+              Log.d(LOG_TAG, "OnResponse - Success request");
+              try {
+                ContactsResponse res = response.body();
+                WritableArray array = new WritableNativeArray();
+                for (Contact contact : res.getData()) {
+                  WritableMap phonesWithId = ModelConverterUtils.
+                      convertJsonToMap(new JSONObject(new Gson().toJson(contact, Contact.class)));
+                  array.pushMap(phonesWithId);
+                }
+                promise.resolve(array);
+              } catch (JSONException e) {
+                e.printStackTrace();
+                promise.reject(e);
+              }
+            }
+          }
+          break;
+
+          case 403:
+          case 401:
+            WritableMap writableMap = new WritableNativeMap();
+            writableMap.putInt("code", 401);
+            promise.resolve(writableMap);
+            break;
+          default:
+            try {
+              promise.reject(String.valueOf(response.code()),
+                  new Throwable(response.errorBody().string()));
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
+            break;
+        }
+      } else {
+        promise.reject("-1", "Haven't any contacts on mobile device");
+      }
+    }
   }
 
   private class MyContentObserver extends ContentObserver {
