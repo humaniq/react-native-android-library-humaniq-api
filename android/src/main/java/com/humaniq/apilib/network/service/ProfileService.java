@@ -43,7 +43,7 @@ public interface ProfileService {
   Call<BasePayload<Object>> updateAccountPassword(@Body AccountPassword accountPassword);
 
 
-  @POST("/tapatybe/api/v1/account/avatar")
+    @POST("/tapatybe/api/v1/account/avatar")
   Call<BasePayload<AccountAvatarResponse>> updateAccountAvatar(@Body AccountAvatar accountAvatar);
 
 
