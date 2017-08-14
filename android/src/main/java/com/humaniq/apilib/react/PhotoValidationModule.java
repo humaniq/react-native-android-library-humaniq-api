@@ -88,6 +88,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   try {
                     writableMap = ModelConverterUtils.convertJsonToMap(
                         new JSONObject(new Gson().toJson(response.errorBody())));
+                    writableMap.putInt("code", 400);
                     promise.resolve(writableMap);
                   } catch (JSONException e) {
                     e.printStackTrace();
@@ -235,6 +236,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   try {
                     writableMap = ModelConverterUtils.convertJsonToMap(
                         new JSONObject(new Gson().toJson(response.errorBody())));
+                    writableMap.putInt("code", 400);
                     promise.resolve(writableMap);
                   } catch (JSONException e) {
                     e.printStackTrace();
