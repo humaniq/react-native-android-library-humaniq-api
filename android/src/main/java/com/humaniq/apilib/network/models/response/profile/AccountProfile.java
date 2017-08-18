@@ -47,12 +47,20 @@ public class AccountProfile {
     @SerializedName("phone_number")
     private String phoneNumber;
 
+    @SerializedName("validated")
+
+    private boolean validated;
+
     public String getCountryCode() {
       return countryCode;
     }
 
     public String getPhoneNumber() {
       return phoneNumber;
+    }
+
+    public boolean isValidated() {
+      return validated;
     }
   }
 
