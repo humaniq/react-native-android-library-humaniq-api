@@ -14,6 +14,8 @@ public class Balance {
 
   @SerializedName("local") private Currency localCurrency;
 
+  @SerializedName("address") private String address;
+
   public Currency getTokenCurrency() {
     return tokenCurrency;
   }
@@ -24,6 +26,10 @@ public class Balance {
 
   public Currency getLocalCurrency() {
     return localCurrency;
+  }
+
+  public String getAddress() {
+    return address;
   }
 
   private class Currency {
