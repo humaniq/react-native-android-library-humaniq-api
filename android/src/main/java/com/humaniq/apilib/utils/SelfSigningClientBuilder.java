@@ -40,7 +40,7 @@ public class SelfSigningClientBuilder {
         SSLContext sslContext = null;
         try {
             cf = CertificateFactory.getInstance("X.509");
-            cert = context.getResources().openRawResource(R.raw.public_key); // Place your 'my_cert.crt' file in `res/raw`
+            cert = context.getResources().openRawResource(R.raw.staging); // Place your 'my_cert.crt' file in `res/raw`
 
             ca = cf.generateCertificate(cert);
             cert.close();
