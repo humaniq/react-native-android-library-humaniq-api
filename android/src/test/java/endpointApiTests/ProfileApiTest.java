@@ -167,6 +167,48 @@ public class ProfileApiTest {
     }
   }
 
+  @Test public void testValidateAccountAvatar() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
+
+
+    try {
+      Resources res = RuntimeEnvironment.application.getResources();
+      InputStream in_s = res.openRawResource(R.raw.ava);
+
+      byte[] b = new byte[in_s.available()];
+      in_s.read(b);
+      base64 = new String(b);
+    } catch (Exception e) {
+      // e.printStackTrace();
+    }
+
+    try {
+      ValidationService service = ServiceBuilder.getValidationService();
+
+      ValidateRequest validateRequest = new ValidateRequest();
+      validateRequest.setFacialImage(base64);
+      //validateRequest.setFacialImageId();
+      AccountAvatar accountPassword = new AccountAvatar();
+      accountPassword.setAccountId("1587550012009612315");
+      accountPassword.setFacialImage(base64);
+      //AccountPerson.Person person = new AccountPerson.Person();
+      //person.setFirstName("Anton");
+      //person.setLastName("Mozgovoy");
+      //accountPerson.setPerson(person);
+
+      //Call<BasePayload<AccountAvatarResponse>> call = service.validate(accountPassword);
+      //
+      //Response<BasePayload<AccountAvatarResponse>> response = call.execute();
+      //
+      //BasePayload<AccountAvatarResponse> baseResponse = response.body();
+      //
+      //assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   @Test public void testGetTransaction() {
     new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
