@@ -26,6 +26,7 @@ import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.models.response.profile.ExchangeModelHmq;
 import com.humaniq.apilib.network.models.response.profile.ExchangeModelUsd;
 import com.humaniq.apilib.network.service.AuthorizationService;
+import com.humaniq.apilib.network.service.BlockchainService;
 import com.humaniq.apilib.network.service.ProfileService;
 import com.humaniq.apilib.network.service.ValidationService;
 import com.humaniq.apilib.network.service.WalletService;
@@ -224,19 +225,47 @@ public class ProfileApiTest {
     }
   }
 
-  @Test public void testGetAccountProfile() {
+  //@Test public void testGetTransaction() {
+  //  new Prefs(RuntimeEnvironment.application);
+  //  ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
+  //
+  //  try {
+  //    WalletService service = ServiceBuilder.getWalletService();
+  //    Call<BaseResponse<UserTransaction>> call = service.getUserTransaction("1570909452079465500",
+  //        "0xb90c79d12f093c1962bf213397d7ca6a1fd295f7b957328ee23593e0d8047b55");
+  //    Response<BaseResponse<UserTransaction>> payload = call.execute();
+  //    Log.d("profile", payload.body().toString());
+  //  } catch (Exception e) {
+  //    e.printStackTrace();
+  //  }
+  //}
+
+  @Test public void testGetWalletAddress() {
     new Prefs(RuntimeEnvironment.application);
     ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
     try {
-      ProfileService service = ServiceBuilder.getProfileService();
-      Call<BasePayload<AccountProfile>> call = service.getAccountProfile("1576037290491249690");
-      Response<BasePayload<AccountProfile>> payload = call.execute();
-      Log.d("profile", payload.body().payload.getPerson().getFirstName());
+      BlockchainService service = ServiceBuilder.getBlockchainService();
+      Call<BaseResponse<Object>> call = service.getUserAddressState("1587706100549944594");
+      Response<BaseResponse<Object>> payload = call.execute();
+      Log.d("profile", payload.body().data.toString());
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
+ //@Test public void testGetWalletBalance() {
+ //   new Prefs(RuntimeEnvironment.application);
+ //   ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
+ //
+ //   try {
+ //     WalletS service = ServiceBuilder.getBlockchainService();
+ //     Call<BaseResponse<Object>> call = service.getUserAddressState("1587706100549944594");
+ //     Response<BaseResponse<Object>> payload = call.execute();
+ //     Log.d("profile", payload.body().data.toString());
+ //   } catch (Exception e) {
+ //     e.printStackTrace();
+ //   }
+ // }
 
   String facialImageId;
 

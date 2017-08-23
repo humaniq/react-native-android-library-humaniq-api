@@ -16,6 +16,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -26,7 +27,9 @@ import retrofit2.http.Query;
 
 public interface WalletService {
 
-  @GET("/wallet/api/v1/users/{user_id}/balance") Call<BaseResponse<Balance>> getUserBalance(
+  @GET("/wallet/api/v1/users/{user_id}/balance")
+  //@Headers({"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxcExEWk1BV1lUc0J1Wms1NjFaZVdJMFM4WEdVcFZrT1JnRjdIZk1OTWZPaDFiRDBLVWdxeHhBTERVR1NIZUJxaWthWVJuNjFSWnZiR1Q1aWJqQlJUeGNOR2pLRHM1ZW9qdmNneTN5dlp0ZFRrTGJvZ0RqSEoyS1dhWml0NmQ0NiJ9.zDGfoJFRG7foSYK9y_HY2RWGg39Hec6qzZ8oBFP1nBE"})
+  Call<BaseResponse<Balance>> getUserBalance(
       @Path("user_id") String id);
 
   @GET("/wallet/api/v1/users/{user_id}/transactions")

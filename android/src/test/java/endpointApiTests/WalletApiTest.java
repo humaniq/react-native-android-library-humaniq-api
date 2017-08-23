@@ -34,10 +34,11 @@ public class WalletApiTest {
 
   @Test public void testGetBalance() throws Exception {
     try {
+      new Prefs(RuntimeEnvironment.application);
       ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
       WalletService apiEndpoints = ServiceBuilder.getWalletService();
 
-      Call<BaseResponse<Balance>> call = apiEndpoints.getUserBalance("223344556677");
+      Call<BaseResponse<Balance>> call = apiEndpoints.getUserBalance("1587706100549944594");
 
       //Magic is here at .execute() instead of .enqueue()
       Response<BaseResponse<Balance>> response = call.execute();

@@ -25,7 +25,8 @@ public interface BlockchainService {
   @POST("/blockchain-api/transfer")
   Call<TransferResponse> transferHmq (@Body TransferRequest transferRequest);
 
-  @GET("/blockchain-api/v1/get/user/address/state/{user_id}")
+  @GET("/blockchain-api/get/user/address/state/{user_id}")
+  //@Headers({"Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxcExEWk1BV1lUc0J1Wms1NjFaZVdJMFM4WEdVcFZrT1JnRjdIZk1OTWZPaDFiRDBLVWdxeHhBTERVR1NIZUJxaWthWVJuNjFSWnZiR1Q1aWJqQlJUeGNOR2pLRHM1ZW9qdmNneTN5dlp0ZFRrTGJvZ0RqSEoyS1dhWml0NmQ0NiJ9.zDGfoJFRG7foSYK9y_HY2RWGg39Hec6qzZ8oBFP1nBE"})
   Call <BaseResponse<Object>>getUserAddressState(
       @Path("user_id") String id
   );
