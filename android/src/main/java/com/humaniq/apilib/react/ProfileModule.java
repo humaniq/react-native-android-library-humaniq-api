@@ -440,7 +440,8 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     ServiceBuilder.getProfileService()
         .updateAccountAvatar(accountAvatar)
         .enqueue(new Callback<BasePayload<AccountAvatarResponse>>() {
-          @Override public void onResponse(Call<BasePayload<AccountAvatarResponse>> call,
+          @Override public void onResponse(
+              Call<BasePayload<AccountAvatarResponse>> call,
               Response<BasePayload<AccountAvatarResponse>> response) {
             WritableMap avatarRespone = null;
             if(response.body() != null) {
@@ -466,7 +467,8 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                   WritableMap writableMap = new WritableNativeMap();
                   try {
                     writableMap.putString("message", "NOT_UPLOADED! " +
-                        response.code() + ", MESSAGE: " + response.errorBody().string());
+                        response.code() + ", MESSAGE: "
+                        + response.errorBody().string());
                     writableMap.putInt("code", 3013);
                   } catch (IOException e) {
                     e.printStackTrace();
