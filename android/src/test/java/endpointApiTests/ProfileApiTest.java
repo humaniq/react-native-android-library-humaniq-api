@@ -9,6 +9,7 @@ import com.humaniq.apilib.Constants;
 import com.humaniq.apilib.R;
 import com.humaniq.apilib.network.models.request.FcmCredentials;
 import com.humaniq.apilib.network.models.request.ValidateRequest;
+import com.humaniq.apilib.network.models.request.profile.AccountAvatar;
 import com.humaniq.apilib.network.models.request.profile.AccountPassword;
 import com.humaniq.apilib.network.models.request.profile.AccountPerson;
 import com.humaniq.apilib.network.models.request.profile.UserId;
@@ -19,6 +20,7 @@ import com.humaniq.apilib.network.models.response.FacialImage;
 import com.humaniq.apilib.network.models.response.FacialImageValidation;
 import com.humaniq.apilib.network.models.response.TransactionResponse;
 import com.humaniq.apilib.network.models.response.ValidationResponse;
+import com.humaniq.apilib.network.models.response.profile.AccountAvatarResponse;
 import com.humaniq.apilib.network.models.response.profile.AccountProfile;
 import com.humaniq.apilib.network.models.response.profile.DeauthModel;
 import com.humaniq.apilib.network.models.response.profile.ExchangeModelHmq;
@@ -127,7 +129,42 @@ public class ProfileApiTest {
   }
 
   @Test public void testUpdateAccountAvatar() {
+    new Prefs(RuntimeEnvironment.application);
+    ServiceBuilder.init(Constants.BASE_URL, RuntimeEnvironment.application);
 
+
+    try {
+      Resources res = RuntimeEnvironment.application.getResources();
+      InputStream in_s = res.openRawResource(R.raw.ava);
+
+      byte[] b = new byte[in_s.available()];
+      in_s.read(b);
+      base64 = new String(b);
+    } catch (Exception e) {
+      // e.printStackTrace();
+    }
+
+    try {
+      ProfileService service = ServiceBuilder.getProfileService();
+
+      AccountAvatar accountPassword = new AccountAvatar();
+      accountPassword.setAccountId("1587550012009612315");
+      accountPassword.setFacialImage(base64);
+      //AccountPerson.Person person = new AccountPerson.Person();
+      //person.setFirstName("Anton");
+      //person.setLastName("Mozgovoy");
+      //accountPerson.setPerson(person);
+
+      Call<BasePayload<AccountAvatarResponse>> call = service.updateAccountAvatar(accountPassword);
+
+      Response<BasePayload<AccountAvatarResponse>> response = call.execute();
+
+      BasePayload<AccountAvatarResponse> baseResponse = response.body();
+
+      assertTrue(response.isSuccessful());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
   }
 
   @Test public void testGetTransaction() {
