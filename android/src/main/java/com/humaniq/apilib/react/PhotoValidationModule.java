@@ -235,10 +235,10 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   WritableMap writableMap = null;
                   try {
                     writableMap = ModelConverterUtils.convertJsonToMap(
-                        new JSONObject(new Gson().toJson(response.errorBody())));
+                        new JSONObject(new Gson().toJson(response.errorBody().string())));
                     writableMap.putInt("code", 400);
                     promise.resolve(writableMap);
-                  } catch (JSONException e) {
+                  } catch (Exception e) {
                     e.printStackTrace();
                   }
 
