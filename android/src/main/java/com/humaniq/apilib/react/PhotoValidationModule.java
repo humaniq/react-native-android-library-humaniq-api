@@ -231,7 +231,7 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 break;
 
                 case 400: {
-                  WritableMap writableMap = null;
+                  WritableMap writableMap = new WritableNativeMap();
                   try {
                     writableMap.putInt("code", 400);
                     //writableMap = ModelConverterUtils.convertJsonToMap(
