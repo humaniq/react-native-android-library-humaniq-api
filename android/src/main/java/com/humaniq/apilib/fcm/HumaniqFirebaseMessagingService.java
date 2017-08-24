@@ -68,7 +68,7 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
             new NotificationCompat.Builder(getApplicationContext())
-                //.setSmallIcon(R.)
+                .setSmallIcon(R.drawable.ic_launcher)
                 .setContentTitle("Humaniq")
                 .setContentText("You got " + baseResponse.data.getAmount() / 100000000 + " HMQ")
                 .setAutoCancel(true)
@@ -92,7 +92,7 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder =
         new NotificationCompat.Builder(getApplicationContext())
-           // .setSmallIcon(R.drawable.)
+            .setSmallIcon(R.drawable.ic_launcher)
             .setContentTitle("Humaniq")
             .setContentText("You got " + " fake " + " HMQ")
             .setAutoCancel(true)
