@@ -89,24 +89,24 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
       e.printStackTrace();
     }
 
-    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-    NotificationCompat.Builder notificationBuilder =
-        new NotificationCompat.Builder(getApplicationContext())
-            .setSmallIcon(R.drawable.ic_launcher)
-            .setContentTitle("Humaniq")
-            .setContentText("You got " + " fake " + " HMQ")
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setSound(defaultSoundUri);
-    //.setContentIntent(pendingIntent);
-
-    NotificationManager notificationManager =
-        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-    notificationBuilder.setAutoCancel(true);
-
-    notificationManager.notify(hash.hashCode() /* ID of notification */,
-        notificationBuilder.build());
+    //Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    //NotificationCompat.Builder notificationBuilder =
+    //    new NotificationCompat.Builder(getApplicationContext())
+    //        .setSmallIcon(R.drawable.ic_launcher)
+    //        .setContentTitle("Humaniq")
+    //        .setContentText("You got " + " fake " + " HMQ")
+    //        .setAutoCancel(true)
+    //        .setContentIntent(pendingIntent)
+    //        .setPriority(NotificationCompat.PRIORITY_HIGH)
+    //        .setSound(defaultSoundUri);
+    ////.setContentIntent(pendingIntent);
+    //
+    //NotificationManager notificationManager =
+    //    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    //
+    //notificationBuilder.setAutoCancel(true);
+    //
+    //notificationManager.notify(hash.hashCode() /* ID of notification */,
+    //    notificationBuilder.build());
   }
 }
