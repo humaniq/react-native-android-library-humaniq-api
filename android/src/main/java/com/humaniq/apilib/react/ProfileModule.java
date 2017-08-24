@@ -187,6 +187,8 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
             writableMap.putString("hash", remoteMessage.getData().get("hash"));
             sendEvent(writableMap);
 
+
+
           }
         //
         //  writableMap.putString("push", "push_data: " + data);
