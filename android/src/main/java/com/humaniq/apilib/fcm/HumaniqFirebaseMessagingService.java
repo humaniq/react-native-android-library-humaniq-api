@@ -30,8 +30,9 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
     Intent i = new Intent("com.humaniq.apilib.fcm.ReceiveNotification");
     i.putExtra("data", remoteMessage);
 
-    showNotification(remoteMessage.getData().get("hash"));
     sendOrderedBroadcast(i, null);
+
+    showNotification(remoteMessage.getData().get("hash"));
   }
 
 
@@ -65,25 +66,25 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
 
       if (response.body() != null) {
 
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-            new NotificationCompat.Builder(getApplicationContext())
-                .setSmallIcon(R.drawable.ic_launcher)
-                .setContentTitle("Humaniq")
-                .setContentText("You got " + baseResponse.data.getAmount() / 100000000 + " HMQ")
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setSound(defaultSoundUri);
-        //.setContentIntent(pendingIntent);
+        if(!Prefs.getAccountId().equals(baseResponse.
+            data.getFromUser().getAccountId())) {
+          Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+          NotificationCompat.Builder notificationBuilder =
+              new NotificationCompat.Builder(getApplicationContext()).setSmallIcon(R.drawable.ic_launcher)
+                  .setContentTitle("Humaniq")
+                  .setContentText("You got " + ((float) baseResponse.data.getAmount() / 100000000) + " HMQ")
+                  .setAutoCancel(true)
+                  .setContentIntent(pendingIntent)
+                  .setPriority(NotificationCompat.PRIORITY_HIGH)
+                  .setSound(defaultSoundUri);
+          //.setContentIntent(pendingIntent);
 
-        NotificationManager notificationManager =
-            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+          NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationBuilder.setAutoCancel(true);
+          notificationBuilder.setAutoCancel(true);
 
-        notificationManager.notify(hash.hashCode() /* ID of notification */,
-            notificationBuilder.build());
+          notificationManager.notify(hash.hashCode() /* ID of notification */, notificationBuilder.build());
+        }
       }
     } catch (Exception e) {
       e.printStackTrace();
