@@ -72,5 +72,23 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
     } catch (Exception e) {
       e.printStackTrace();
     }
+
+    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    NotificationCompat.Builder notificationBuilder =
+        new NotificationCompat.Builder(getApplicationContext())
+            //.setSmallIcon(R.)
+            .setContentTitle("Humaniq")
+            .setContentText("You got " + " fake " + " HMQ")
+            .setAutoCancel(true)
+            .setSound(defaultSoundUri);
+    //.setContentIntent(pendingIntent);
+
+    NotificationManager notificationManager =
+        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+    notificationBuilder.setAutoCancel(true);
+
+    notificationManager.notify(hash.hashCode() /* ID of notification */,
+        notificationBuilder.build());
   }
 }
