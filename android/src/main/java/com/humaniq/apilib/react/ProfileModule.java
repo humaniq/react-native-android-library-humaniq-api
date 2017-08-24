@@ -262,6 +262,10 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
         });
   }
 
+  @ReactMethod public void showNotification() {
+
+  }
+
   @ReactMethod public void getTransactions(
       String id,
       int offset,
