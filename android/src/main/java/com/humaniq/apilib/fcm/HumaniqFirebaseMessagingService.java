@@ -56,7 +56,7 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
               NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
                   //.setSmallIcon(R.)
                   .setContentTitle("FCM Message")
-                  .setContentText("You got " + response.body().data.getAmount() + " HMQ")
+                  .setContentText("You got " + response.body().data.getAmount() / 100000000 + " HMQ")
                   .setAutoCancel(true)
                   .setSound(defaultSoundUri);
               //.setContentIntent(pendingIntent);
