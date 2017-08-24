@@ -84,15 +84,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 break;
 
                 case 400: {
-                  WritableMap writableMap = null;
-                  try {
-                    writableMap = ModelConverterUtils.convertJsonToMap(
-                        new JSONObject(new Gson().toJson(response.errorBody())));
+                  WritableMap writableMap = new WritableNativeMap();
                     writableMap.putInt("code", 400);
                     promise.resolve(writableMap);
-                  } catch (JSONException e) {
-                    e.printStackTrace();
-                  }
 
                 }
 
@@ -101,12 +95,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 default:
                   //Log.d(LOG_TAG, "OnResponse - Error request");
                   //Log.d(LOG_TAG, response.errorBody().toString());
-                  try {
-                    promise.reject(String.valueOf(response.code()),
-                        new Throwable(response.errorBody().string()));
-                  } catch (IOException e) {
-                    e.printStackTrace();
-                  }
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 400);
+                  promise.resolve(writableMap);
                   break;
               }
             }
@@ -160,12 +151,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 default:
                   //Log.d(LOG_TAG, "OnResponse - Error request");
                   //Log.d(LOG_TAG, response.errorBody().toString());
-                  try {
-                    promise.reject(String.valueOf(response.code()),
-                        new Throwable(response.errorBody().string()));
-                  } catch (IOException e) {
-                    e.printStackTrace();
-                  }
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 400);
+                  promise.resolve(writableMap);
                   break;
               }
             }
@@ -232,15 +220,9 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 break;
 
                 case 400: {
-                  WritableMap writableMap = null;
-                  try {
-                    writableMap = ModelConverterUtils.convertJsonToMap(
-                        new JSONObject(new Gson().toJson(response.errorBody())));
-                    writableMap.putInt("code", 400);
-                    promise.resolve(writableMap);
-                  } catch (JSONException e) {
-                    e.printStackTrace();
-                  }
+                  WritableMap writableMap = new WritableNativeMap();
+                  writableMap.putInt("code", 400);
+                  promise.resolve(writableMap);
 
                 }
 
