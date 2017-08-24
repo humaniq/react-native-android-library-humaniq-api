@@ -137,4 +137,11 @@ public class TokenModule extends ReactContextBaseJavaModule {
     passwordMap.putString("password", Prefs.getPassword());
     promise.resolve(passwordMap);
   }
+
+  @ReactMethod public void savePassword(String password, Promise promise) {
+    Prefs.savePassword(password);
+    WritableMap passwordMap = new WritableNativeMap();
+    passwordMap.putString("password", Prefs.getPassword());
+    promise.resolve(passwordMap);
+  }
 }
