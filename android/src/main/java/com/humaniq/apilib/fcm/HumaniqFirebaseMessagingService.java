@@ -1,6 +1,7 @@
 package com.humaniq.apilib.fcm;
 
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
@@ -9,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.humaniq.apilib.Constants;
+import com.humaniq.apilib.R;
 import com.humaniq.apilib.network.models.request.wallet.UserTransaction;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.WalletService;
@@ -32,11 +34,23 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
     sendOrderedBroadcast(i, null);
   }
 
+
+  public Class getMainActivityClass() {
+    String packageName = getApplicationContext().getPackageName();
+    Intent launchIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
+    String className = launchIntent.getComponent().getClassName();
+    try {
+      return Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
   private void showNotification(final String hash) {
-    //Intent intent = new Intent(this, MainActivity.class);
-    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-    //        PendingIntent.FLAG_ONE_SHOT);
+    Intent intent = new Intent(this, getMainActivityClass());
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0 /* Request code */, intent,
+            PendingIntent.FLAG_ONE_SHOT);
 
     new Prefs(getApplicationContext());
     ServiceBuilder.init(Constants.BASE_URL, getApplicationContext());
@@ -58,6 +72,8 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle("Humaniq")
                 .setContentText("You got " + baseResponse.data.getAmount() / 100000000 + " HMQ")
                 .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setSound(defaultSoundUri);
         //.setContentIntent(pendingIntent);
 
@@ -76,10 +92,12 @@ public class HumaniqFirebaseMessagingService extends FirebaseMessagingService {
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder =
         new NotificationCompat.Builder(getApplicationContext())
-            //.setSmallIcon(R.)
+           // .setSmallIcon(R.drawable.)
             .setContentTitle("Humaniq")
             .setContentText("You got " + " fake " + " HMQ")
             .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setSound(defaultSoundUri);
     //.setContentIntent(pendingIntent);
 
