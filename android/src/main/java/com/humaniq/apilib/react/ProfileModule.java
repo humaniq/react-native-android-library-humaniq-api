@@ -93,7 +93,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
       e.printStackTrace();
     }
 
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     Log.d(LOG_TAG, "Balance Request: " + "id: " + id);
     ServiceBuilder.getWalletService().
@@ -117,7 +117,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             props.put("method", "getBalance");
             props.put("response", new Gson().toJson(response.body()));
             props.put("code", response.code());
-            mixpanel.track("response", props);
+            mixpanel.track("getBalance", props);
           } catch (Exception e) {
             e.printStackTrace();
           }
@@ -147,7 +147,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
             props.put("method", "getBalance");
             props.put("response", response.errorBody().string());
             props.put("code", response.code());
-            mixpanel.track("response", props);
+            mixpanel.track("getBalance", props);
           } catch (Exception e) {
             e.printStackTrace();
           }
@@ -160,7 +160,7 @@ public class ProfileModule extends ReactContextBaseJavaModule {
           props.put("method", "getBalance");
           props.put("response", t.getMessage());
           props.put("code", ((HttpException) t).code());
-          mixpanel.track("response", props);
+          mixpanel.track("getBalance", props);
         } catch (Exception e) {
           e.printStackTrace();
         }
@@ -250,7 +250,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
       e.printStackTrace();
     }
 
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getWalletService()
         .getUserTransaction(accountId, transactionHash)
@@ -273,7 +273,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getUserTransaction");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getUserTransaction", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -303,7 +303,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getUserTransaction");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getUserTransaction", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -317,7 +317,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "getUserTransaction");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("getUserTransaction", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -344,7 +344,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
       e.printStackTrace();
     }
 
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getWalletService()
         .getUserTransactions(id, offset, limit)
@@ -359,7 +359,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getTransactions");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getTransactions", props);
               } catch (JSONException e) {
                 e.printStackTrace();
               }
@@ -405,7 +405,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getTransactions");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getTransactions", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -419,7 +419,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "getTransactions");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("getTransactions", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -447,7 +447,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
       e.printStackTrace();
     }
 
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getWalletService()
         .createTransaction(fromUserId, toUserId, toAddress, amount)
@@ -470,7 +470,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "createTransaction");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("createTransaction", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -500,7 +500,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "createTransaction");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("createTransaction", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -515,7 +515,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "createTransaction");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("createTransaction", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -542,7 +542,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
       e.printStackTrace();
     }
 
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getProfileService()
         .updateAccountPerson(accountPerson)
@@ -566,7 +566,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "updateUserPerson");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("updateUserPerson", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -595,7 +595,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "updateUserPerson");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("updateUserPerson", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -609,7 +609,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "updateUserPerson");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("updateUserPerson", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -632,7 +632,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getProfileService()
         .updateAccountAvatar(accountAvatar)
@@ -654,7 +654,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "uploadProfileAvatar");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("uploadProfileAvatar", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -685,7 +685,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "uploadProfileAvatar");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("uploadProfileAvatar", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -700,7 +700,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "uploadProfileAvatar");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("uploadProfileAvatar", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -725,7 +725,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getProfileService()
         .updateAccountPassword(accountPassword)
@@ -750,7 +750,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "changeProfilePassword");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("changeProfilePassword", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -780,7 +780,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "changeProfilePassword");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("changeProfilePassword", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -794,7 +794,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "changeProfilePassword");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("changeProfilePassword", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -811,7 +811,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getProfileService()
         .getAccountProfile(accountId)
@@ -834,7 +834,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getAccountProfile");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getAccountProfile", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -864,7 +864,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getAccountProfile");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getAccountProfile", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -878,7 +878,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "getAccountProfile");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("getAccountProfile", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -896,7 +896,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getProfileService()
         .getAccountProfiles(new ArrayList<String>(convertReadableArrayToList(accountIds)))
@@ -922,7 +922,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getAccountProfiles");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getAccountProfiles", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -951,7 +951,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getAccountProfiles");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getAccountProfiles", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -966,7 +966,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "getAccountProfiles");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("getAccountProfiles", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -1001,7 +1001,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getProfileService()
         .deauthenticateUser(new UserId(accountId))
@@ -1018,7 +1018,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "deauthenticateUser");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("deauthenticateUser", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -1040,7 +1040,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "deauthenticateUser");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("deauthenticateUser", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -1051,10 +1051,10 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
             promise.reject(t);
 
             try {
-              props.put("method", "uploadProfileAvatar");
+              props.put("method", "deauthenticateUser");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("deauthenticateUser", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -1081,7 +1081,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getWalletService()
         .getExchangeHmq(amount)
@@ -1106,7 +1106,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getExchangeHmq");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getExchangeHmq", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -1136,7 +1136,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getExchangeHmq");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getExchangeHmq", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -1149,7 +1149,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "getExchangeHmq");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("getExchangeHmq", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
@@ -1166,7 +1166,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
     } catch (Exception e) {
       e.printStackTrace();
     }
-    mixpanel.track("request", props);
+    //mixpanel.track("request", props);
 
     ServiceBuilder.getWalletService()
         .getExchangeUsd(amount)
@@ -1190,7 +1190,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getExchangeUsd");
                 props.put("response", new Gson().toJson(response.body()));
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getExchangeUsd", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -1220,7 +1220,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
                 props.put("method", "getExchangeUsd");
                 props.put("response", response.errorBody().string());
                 props.put("code", response.code());
-                mixpanel.track("response", props);
+                mixpanel.track("getExchangeUsd", props);
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -1234,7 +1234,7 @@ Profile.js:110 Object {push: "push_data: type: receipt, transaction_id: {"status
               props.put("method", "getExchangeUsd");
               props.put("response", t.getMessage());
               props.put("code", ((HttpException) t).code());
-              mixpanel.track("response", props);
+              mixpanel.track("getExchangeUsd", props);
             } catch (Exception e) {
               e.printStackTrace();
             }
