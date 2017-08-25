@@ -22,6 +22,7 @@ import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,12 @@ public class ContactsModule extends ReactContextBaseJavaModule {
     super(reactContext);
     new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
+
+    MixpanelAPI mixpanel =
+        MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
+    mixpanel.identify(Prefs.getAccountId());
+    mixpanel.getPeople().identify(Prefs.getAccountId());
+
   }
 
   @Override public String getName() {

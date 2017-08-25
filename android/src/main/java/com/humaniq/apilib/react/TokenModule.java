@@ -14,6 +14,7 @@ import com.humaniq.apilib.network.models.request.FcmCredentials;
 import com.humaniq.apilib.network.models.response.BaseResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.IOException;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +29,11 @@ public class TokenModule extends ReactContextBaseJavaModule {
   public TokenModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
+
+    MixpanelAPI mixpanel =
+        MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
+    mixpanel.identify(Prefs.getAccountId());
+    mixpanel.getPeople().identify(Prefs.getAccountId());
   }
 
   @Override public String getName() {

@@ -26,6 +26,7 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.utils.ResponseWrapperUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +48,12 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
     super(reactContext);
     new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
+
+    MixpanelAPI mixpanel =
+        MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
+    mixpanel.identify(Prefs.getAccountId());
+    mixpanel.getPeople().identify(Prefs.getAccountId());
+
   }
 
   @Override public String getName() {

@@ -17,6 +17,7 @@ import com.humaniq.apilib.network.models.response.blockchain.TransferResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,11 +31,17 @@ import retrofit2.Response;
 
 public class BlockchainModule extends ReactContextBaseJavaModule {
   private final String LOG_TAG = "BlockchainModule";
+  private final MixpanelAPI mixpanel;
 
   public BlockchainModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
+
+    mixpanel =
+        MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
+    mixpanel.identify(Prefs.getAccountId());
+    mixpanel.getPeople().identify(Prefs.getAccountId());
   }
 
   @Override public String getName() {
@@ -98,6 +105,16 @@ public class BlockchainModule extends ReactContextBaseJavaModule {
 
   @ReactMethod public void getUserAddressState(String userId, final Promise promise) {
     Log.d(LOG_TAG, "User id = " + userId);
+
+    JSONObject props = new JSONObject();
+    try {
+      props.put("api", "/blockchain-api/get/user/address/state/" + userId);
+    } catch (JSONException e) {
+      e.printStackTrace();
+    }
+
+    mixpanel.track("getUserAddressState", props);
+
     ServiceBuilder.getBlockchainService()
         .getUserAddressState(userId)
         .enqueue(new Callback<BaseResponse<Object>>() {
