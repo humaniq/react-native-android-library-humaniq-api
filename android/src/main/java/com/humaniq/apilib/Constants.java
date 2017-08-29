@@ -6,8 +6,8 @@ package com.humaniq.apilib;
 
 public class Constants {
   //public static final String BASE_URL = "https://beta-api.humaniq.co";  // test endpoint
-  //public static final String BASE_URL =  "https://api.humaniq.com"; //release endpoint
-  public static final String BASE_URL =  "https://staging.humaniq.com"; //release endpoint
+  public static final String BASE_URL =  "https://api.humaniq.com"; //release endpoint
+  //public static final String BASE_URL =  "https://staging.humaniq.com"; //release endpoint
   //public static final String BASE_URL = "https://beta-api.humaniq.co";
   public static final String EVENT_TRANSACTION_CHANGED = "EVENT_TRANSACTION_CHANGED";
   public static final String EVENT_TRANSACTION_ERROR = "EVENT_TRANSACTION_ERROR";
