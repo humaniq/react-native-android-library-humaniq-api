@@ -61,8 +61,6 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
   private static final String LOG_TAG = "ProfileModule";
   private final MixpanelAPI mixpanel;
-  private Runnable eventRunnable;
-  private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 
   public ProfileModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -72,7 +70,8 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
     mixpanel = MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
     mixpanel.identify(Prefs.getAccountId());
-    mixpanel.getPeople().identify(Prefs.getAccountId());
+    mixpanel.alias(Prefs.getAccountId(), null);
+    mixpanel.getPeople().identify(mixpanel.getDistinctId());
   }
 
   @Override public String getName() {

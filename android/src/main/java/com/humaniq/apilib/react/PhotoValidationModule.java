@@ -26,6 +26,7 @@ import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
 import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.utils.ResponseWrapperUtils;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +36,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
@@ -42,11 +44,17 @@ import retrofit2.Response;
  */
 
 public class PhotoValidationModule extends ReactContextBaseJavaModule {
+  private final MixpanelAPI mixpanel;
 
   public PhotoValidationModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
+
+    mixpanel = MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
+    mixpanel.identify(Prefs.getAccountId());
+    mixpanel.alias(Prefs.getAccountId(), null);
+    mixpanel.getPeople().identify(mixpanel.getDistinctId());
   }
 
   @Override public String getName() {
@@ -57,6 +65,15 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
     JsonObject jsonObject = new JsonObject();
     //String base64 = encodeImage(path);
     jsonObject.addProperty("facial_image", base64);
+
+    final JSONObject props = new JSONObject();
+    try {
+      props.put("name", "isRegistered");
+      props.put("request api", "/tapatybe/api/v1/registered");
+      props.put("request_body", jsonObject.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     ServiceBuilder.getValidationService()
         .isRegistered(jsonObject)
         .enqueue(new Callback<BasePayload<FacialImage>>() {
@@ -69,6 +86,16 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 writableMap.putInt("code", 200);
 
                 promise.resolve(writableMap);
+
+                try {
+                  props.put("method", "isRegistered");
+                  props.put("response", new Gson().toJson(response.body()));
+                  props.put("code", response.code());
+                  mixpanel.track("isRegistered", props);
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+
               } catch (Exception e) {
                 e.printStackTrace();
                 promise.reject(e);
@@ -109,11 +136,28 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   }
                   break;
               }
+
+              try {
+                props.put("method", "isRegistered");
+                props.put("response", response.errorBody().string());
+                props.put("code", response.code());
+                mixpanel.track("isRegistered", props);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             }
           }
 
           @Override public void onFailure(Call<BasePayload<FacialImage>> call, Throwable t) {
             promise.reject(t);
+            try {
+              props.put("method", "isRegistered");
+              props.put("response", t.getMessage());
+              props.put("code", ((HttpException) t).code());
+              mixpanel.track("isRegistered", props);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
         });
   }
@@ -121,6 +165,16 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
   @ReactMethod public void createValidation(String facialImageId, final Promise promise) {
     JsonObject jsonObject = new JsonObject();
     jsonObject.addProperty("facial_image_id", facialImageId);
+
+    final JSONObject props = new JSONObject();
+    try {
+      props.put("name", "createValidation");
+      props.put("request api", "/tapatybe/api/v1/facial_recognition/validation");
+      props.put("request_body", jsonObject.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     ServiceBuilder.getValidationService()
         .createValidation(jsonObject)
         .enqueue(new Callback<BasePayload<FacialImageValidation>>() {
@@ -143,6 +197,16 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 writableMap.putInt("code", 200);
 
                 promise.resolve(writableMap);
+
+                try {
+                  props.put("method", "createValidation");
+                  props.put("response", new Gson().toJson(response.body()));
+                  props.put("code", response.code());
+                  mixpanel.track("createValidation", props);
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+
               } catch (Exception e) {
                 e.printStackTrace();
                 promise.reject(e);
@@ -168,12 +232,30 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   }
                   break;
               }
+
+              try {
+                props.put("method", "createValidation");
+                props.put("response", response.errorBody().string());
+                props.put("code", response.code());
+                mixpanel.track("createValidation", props);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             }
           }
 
           @Override
           public void onFailure(Call<BasePayload<FacialImageValidation>> call, Throwable t) {
             promise.reject(t);
+
+            try {
+              props.put("method", "createValidation");
+              props.put("response", t.getMessage());
+              props.put("code", ((HttpException) t).code());
+              mixpanel.track("createValidation", props);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
         });
   }
@@ -206,6 +288,16 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
     //  JsonObject jsonObject = new JsonObject();
     //jsonObject.addProperty("facial_image_validation_id", facialImageId);
     //  jsonObject.addProperty("facial_image", base64);
+
+    final JSONObject props = new JSONObject();
+    try {
+      props.put("name", "validate");
+      props.put("request api", "/tapatybe/api/v1/facial_recognition/validate");
+      props.put("request_body", new Gson().toJson(validateRequest));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
     ServiceBuilder.getValidationService()
         .validate(validateRequest)
         .enqueue(new Callback<BasePayload<ValidationResponse>>() {
@@ -218,6 +310,16 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                 writableMap.putString("message", "GREAT DONE");
                 writableMap.putInt("code", 3008 );
                 promise.resolve(writableMap);
+
+                try {
+                  props.put("method", "validate");
+                  props.put("response", new Gson().toJson(response.body()));
+                  props.put("code", response.code());
+                  mixpanel.track("validate", props);
+                } catch (Exception e) {
+                  e.printStackTrace();
+                }
+
               } catch (Exception e) {
                 e.printStackTrace();
               }
@@ -258,6 +360,15 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
                   break;
               }
 
+              try {
+                props.put("method", "validate");
+                props.put("response", response.errorBody().string());
+                props.put("code", response.code());
+                mixpanel.track("validate", props);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+
               //promise.reject(ResponseWrapperUtils.wrapErrorBody(response.errorBody()));
             }
           }
@@ -265,6 +376,14 @@ public class PhotoValidationModule extends ReactContextBaseJavaModule {
           @Override public void onFailure(Call<BasePayload<ValidationResponse>> call, Throwable t) {
             promise.reject(t);
 
+            try {
+              props.put("method", "validate");
+              props.put("response", t.getMessage());
+              props.put("code", ((HttpException) t).code());
+              mixpanel.track("validate", props);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
         });
   }

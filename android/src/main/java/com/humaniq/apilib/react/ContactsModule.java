@@ -22,6 +22,7 @@ import com.humaniq.apilib.storage.Prefs;
 import com.humaniq.apilib.utils.ModelConverterUtils;
 import com.humaniq.apilib.network.models.response.contacts.ContactsResponse;
 import com.humaniq.apilib.network.service.providerApi.ServiceBuilder;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 /**
@@ -37,12 +39,18 @@ import retrofit2.Response;
 
 public class ContactsModule extends ReactContextBaseJavaModule {
   private final String LOG_TAG = "ContactsModule";
+  private final MixpanelAPI mixpanel;
   MyContentObserver contentObserver = new MyContentObserver();
 
   public ContactsModule(ReactApplicationContext reactContext) {
     super(reactContext);
     new Prefs(reactContext);
     ServiceBuilder.init(Constants.BASE_URL, reactContext);
+
+    mixpanel = MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
+    mixpanel.identify(Prefs.getAccountId());
+    mixpanel.alias(Prefs.getAccountId(), null);
+    mixpanel.getPeople().identify(mixpanel.getDistinctId());
   }
 
   @Override public String getName() {
@@ -52,8 +60,20 @@ public class ContactsModule extends ReactContextBaseJavaModule {
   @ReactMethod public void extractSinglePhoneNumber(String phonenumber, final Promise promise) {
     if (phonenumber!= null && !phonenumber.isEmpty()) {
 
+
+
       ArrayList<String> phone = new ArrayList<String>();
       phone.add(phonenumber);
+
+      final JSONObject props = new JSONObject();
+      try {
+        props.put("name", "extractSinglePhoneNumber");
+        props.put("request api", "/contact-checker/api/v1/extract_registered_phone_numbers");
+        props.put("request_body", phone.toArray().toString());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
       ServiceBuilder.getContactsService().extractPhoneNumbers(phone).enqueue(new Callback<ContactsResponse>() {
         @Override public void onResponse(Call<ContactsResponse> call, Response<ContactsResponse> response) {
           if (response.body() != null && !"".equals(response.body()))  {
@@ -68,6 +88,14 @@ public class ContactsModule extends ReactContextBaseJavaModule {
               }
               promise.resolve(array);
 
+              try {
+                props.put("method", "extractSinglePhoneNumber");
+                props.put("response", new Gson().toJson(response.body()));
+                props.put("code", response.code());
+                mixpanel.track("extractSinglePhoneNumber", props);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             } catch (JSONException e) {
               e.printStackTrace();
               promise.reject(e);
@@ -93,12 +121,30 @@ public class ContactsModule extends ReactContextBaseJavaModule {
                 }
                 break;
             }
+
+            try {
+              props.put("method", "extractSinglePhoneNumber");
+              props.put("response", response.errorBody().string());
+              props.put("code", response.code());
+              mixpanel.track("extractSinglePhoneNumber", props);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
 
         }
 
         @Override public void onFailure(Call<ContactsResponse> call, Throwable t) {
           Log.d(LOG_TAG, "onFailure = " + t);
+
+          try {
+            props.put("method", "extractSinglePhoneNumber");
+            props.put("response", t.getMessage());
+            props.put("code", ((HttpException) t).code());
+            mixpanel.track("extractSinglePhoneNumber", props);
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
         }
       });
     } else {
@@ -109,11 +155,17 @@ public class ContactsModule extends ReactContextBaseJavaModule {
   @ReactMethod public void extractAllPhoneNumbers(final Promise promise) {
     new ContactsQueryAsync(promise)
         .execute();
-
-
   }
 
   public void synchronizePhoneNumber(ArrayList<String> contact) {
+    final JSONObject props = new JSONObject();
+    try {
+      props.put("name", "synchronizePhoneNumber");
+      props.put("request api", "/contact-checker/api/v1/extract_registered_phone_numbers");
+      props.put("request_body", contact.toArray().toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
     ServiceBuilder.getContactsService()
         .extractPhoneNumbers(contact)
         .enqueue(new Callback<ContactsResponse>() {
@@ -122,13 +174,40 @@ public class ContactsModule extends ReactContextBaseJavaModule {
             if (!response.isSuccessful()) {
               Log.d(LOG_TAG, "OnResponse - Error request");
               Log.d(LOG_TAG, response.errorBody().toString());
+
+              try {
+                props.put("method", "synchronizePhoneNumber");
+                props.put("response", new Gson().toJson(response.body()));
+                props.put("code", response.code());
+                mixpanel.track("synchronizePhoneNumber", props);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             } else {
+
+              try {
+                props.put("method", "synchronizePhoneNumber");
+                props.put("response", response.errorBody().string());
+                props.put("code", response.code());
+                mixpanel.track("synchronizePhoneNumber", props);
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
               Log.d(LOG_TAG, "OnResponse - Success request");
             }
           }
 
           @Override public void onFailure(Call<ContactsResponse> call, Throwable t) {
             Log.d(LOG_TAG, "onFailure = " + t);
+
+            try {
+              props.put("method", "synchronizePhoneNumber");
+              props.put("response", t.getMessage());
+              props.put("code", ((HttpException) t).code());
+              mixpanel.track("synchronizePhoneNumber", props);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
         });
   }
