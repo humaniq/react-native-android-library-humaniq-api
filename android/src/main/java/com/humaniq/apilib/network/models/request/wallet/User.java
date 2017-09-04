@@ -76,6 +76,9 @@ public class User {
     @SerializedName("phone_number")
     private String phoneNumber;
 
+    @SerializedName("validated")
+    private boolean validated;
+
     public String getCountryCode() {
       return countryCode;
     }
