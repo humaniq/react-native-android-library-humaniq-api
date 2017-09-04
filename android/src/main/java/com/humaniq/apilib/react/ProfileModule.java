@@ -70,7 +70,6 @@ public class ProfileModule extends ReactContextBaseJavaModule {
 
     mixpanel = MixpanelAPI.getInstance(reactContext, Constants.MIXPANEL_TOKEN);
     mixpanel.identify(Prefs.getAccountId());
-    mixpanel.alias(Prefs.getAccountId(), null);
     mixpanel.getPeople().identify(mixpanel.getDistinctId());
   }
 
